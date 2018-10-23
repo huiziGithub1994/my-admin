@@ -26,7 +26,6 @@
 
 <script>
 import ScrollPane from '@/components/ScrollPane'
-// import { generateTitle } from '@/utils/i18n'
 
 export default {
   components: { ScrollPane },
@@ -65,11 +64,12 @@ export default {
       return route.path === this.$route.path
     },
     addViewTags() {
-      const { name } = this.$route
-      if (name) {
-        this.$store.dispatch('addView', this.$route)
-      }
-      return false
+      this.$store.dispatch('addView', this.$route)
+      // const { name } = this.$route
+      // if (name) {
+      //   this.$store.dispatch('addView', this.$route)
+      // }
+      // return false
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag
@@ -77,7 +77,6 @@ export default {
         for (const tag of tags) {
           if (tag.to.path === this.$route.path) {
             this.$refs.scrollPane.moveToTarget(tag)
-
             // when query is different then update
             if (tag.to.fullPath !== this.$route.fullPath) {
               this.$store.dispatch('updateVisitedView', this.$route)

@@ -1,7 +1,7 @@
 #app {
   // 主体区域
   .main-container {
-    min-height: 100%;
+    // height: calc(100% - 60px);
     transition: margin-left .28s;
     margin-left: 180px;
     position: relative;
@@ -13,7 +13,7 @@
     height: 100%;
     position: fixed;
     font-size: 0px;
-    top: 0;
+    top: 60px;
     bottom: 0;
     left: 0;
     z-index: 1001;

@@ -29,118 +29,62 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: 'Dashboard',
+    name: 'Dshboard',
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'example' }
     }]
   },
-
   {
-    path: '/example',
+    path: '/zbpk',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    redirect: '/zbpk/pkcx',
+    name: 'zbpk',
+    meta: { title: '走班排课', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
+        path: 'pkcx',
+        name: '排课查询',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '排课查询', icon: 'table' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
+        path: 'jxjh',
+        name: '教学计划',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: '谷慧' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        meta: { title: '教学计划', icon: 'tree' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'pkgz',
+        name: '排课规则',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课规则', icon: 'tree' }
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/ptpk',
     component: Layout,
+    redirect: '/ptpk/kbcx',
+    name: 'ptpk',
+    meta: { title: '普通排课', icon: 'example' },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'kbcx',
+        name: '课表查询',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc',
+        name: '排课过程',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 
