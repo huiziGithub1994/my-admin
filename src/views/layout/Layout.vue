@@ -86,6 +86,7 @@ export default {
     .app-title{
       font-size: 25px;
       color: white;
+      letter-spacing:4px;
     }
   }
 </style>
