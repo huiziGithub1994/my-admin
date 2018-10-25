@@ -4,6 +4,23 @@
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
       <span class="app-title">理水永昌实验中学</span>
+      <div class="buttons">
+        <span>
+          <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
+            <svg-icon icon-class="password1"/>
+          </el-tooltip>
+        </span>
+        <span>
+          <el-tooltip class="item" effect="dark" content="更换皮肤" placement="bottom">
+            <svg-icon icon-class="skin1"/>
+          </el-tooltip>
+        </span>
+        <span @click="logoutBtn">
+          <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
+            <svg-icon icon-class="logout1" class="logout"/>
+          </el-tooltip>
+        </span>
+      </div>
     </div>
     <sidebar class="sidebar-container"/>
     <div class="main-container">
@@ -44,6 +61,13 @@ export default {
     }
   },
   methods: {
+    // 退出登录
+    logoutBtn() {
+      console.log('退出')
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload() // 为了重新实例化vue-router对象 避免bug
+      })
+    },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
     }
@@ -52,41 +76,64 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    &.mobile.openSidebar{
-      position: fixed;
-    }
+@import 'src/styles/mixin.scss';
+.app-wrapper {
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  &.mobile.openSidebar {
+    position: fixed;
   }
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
+}
+.drawer-bg {
+  background: #000;
+  opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+}
+.app-header {
+  height: 60px;
+  line-height: 60px;
+  border-bottom: 1px solid rgb(88, 104, 123);
+  background-color: rgb(48, 65, 86);
+  .logo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin: 5px 30px 5px 60px;
+    float: left;
   }
-  .app-header{
-    height:60px;
-    line-height: 60px;
-    border-bottom: 1px solid rgb(88, 104, 123);
-        background-color: rgb(48, 65, 86);
-    .logo{
-      height: 50px;
-      width: 50px;
+  .app-title {
+    font-size: 25px;
+    color: white;
+    letter-spacing: 4px;
+  }
+  .buttons {
+    float: right;
+    margin-right: 20px;
+    height: 100%;
+    > span {
+      display: inline-block;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      padding-left: 7px;
+      padding-top: 7px;
+      margin-top: 10px;
       border-radius: 50%;
-      margin: 5px 30px 5px 60px;
-      float: left;
+      > svg {
+        width: 25px;
+        height: 25px;
+      }
     }
-    .app-title{
-      font-size: 25px;
-      color: white;
-      letter-spacing:4px;
+    > span:hover {
+      background: rgba(88, 104, 123, 0.7);
+      cursor: pointer;
     }
   }
+}
 </style>
