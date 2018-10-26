@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
-      <span class="app-title">理水永昌实验中学</span>
+      <!-- <span class="app-title">理水永昌实验中学</span> -->
       <div class="buttons">
         <span>
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
@@ -65,7 +65,7 @@ export default {
     logoutBtn() {
       console.log('退出')
       this.$store.dispatch('LogOut').then(() => {
-        this.$router.push({ path: '' })
+        this.$router.push({ path: '/login' })
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
     },

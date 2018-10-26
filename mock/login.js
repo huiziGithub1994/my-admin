@@ -1,10 +1,8 @@
 module.exports = {
   'post /user/login': {
-    SUCCESS: '1',
-    status: 0
+    SUCCESS: '1'
   },
   'post /user/logout': {
-    SUCCESS: '1',
-    status: 0
+    SUCCESS: '1'
   }
 }

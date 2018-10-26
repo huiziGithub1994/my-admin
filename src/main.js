@@ -12,11 +12,18 @@ import router from './router'
 import store from './store'
 
 import NProgress from 'nprogress' // Progress 进度条
-import 'nprogress/nprogress.css'// Progress 进度条样式
+import 'nprogress/nprogress.css' // Progress 进度条样式
 
 import '@/icons' // icon
 
-Vue.use(ElementUI)
+import operation from './components/operation/index'
+import area from './utils/directives/area'
+/* 功能页面操作域组件。将条件域中的条件放入操作域中的“更多条件”下拉按钮中 */
+Vue.component('operation', operation)
+// 全局指令
+Vue.directive('area', area)
+
+Vue.use(ElementUI, { size: 'small' })
 
 Vue.config.productionTip = false
 

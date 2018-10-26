@@ -1,0 +1,15 @@
+#area-condition {
+  display: inline-block;
+}
+#area-operation {
+  display: inline-block;
+}
+.condition {
+  display: inline-block;
+  > label {
+    font-weight: unset;
+    > div {
+      width: auto;
+    }
+  }
+}

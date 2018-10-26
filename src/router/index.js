@@ -22,7 +22,11 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
 
   {
@@ -31,23 +35,25 @@ export const constantRouterMap = [
     redirect: '/dashboard',
     name: 'Dshboard',
     hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'example' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'example' }
+      }
+    ]
   },
   {
     path: '/zbpk',
     component: Layout,
     redirect: '/zbpk/pkcx',
-    name: 'zbpk',
+    name: 'Zbpk',
     meta: { title: '走班排课', icon: 'example' },
     children: [
       {
         path: 'pkcx',
-        name: '排课查询',
-        component: () => import('@/views/table/index'),
+        name: 'Pkcx',
+        component: () => import('@/views/pkcx/index'),
         meta: { title: '排课查询', icon: 'table' }
       },
       {
