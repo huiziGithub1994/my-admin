@@ -3,13 +3,15 @@
   .main-container {
     // height: calc(100% - 60px);
     transition: margin-left 0.28s;
-    margin-left: 180px;
+    margin-left: 17%;
     position: relative;
   }
   // 侧边栏
+  .openSidebar .sidebar-container {
+  }
   .sidebar-container {
     transition: width 0.28s;
-    width: 180px !important;
+    width: 17% !important;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -17,6 +19,7 @@
     bottom: 0;
     left: 0;
     z-index: 1001;
+    background: #dddddd;
     overflow: auto;
     //reset element-ui css
     .horizontal-collapse-transition {
@@ -27,7 +30,7 @@
       right: 0px;
     }
     .scrollbar-wrapper {
-      overflow-x: hidden !important;
+      overflow: auto;
       .el-scrollbar__view {
         height: 100%;
       }

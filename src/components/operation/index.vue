@@ -26,18 +26,23 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
+#area-operation {
+  display: inline-block;
+  float: right;
+  > .el-button + .el-button {
+    margin-left: 2px;
+  }
+}
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
+  font-size: 1rem;
 }
 #dropdown {
   display: none;
 }
 #moreCondition {
   margin: 0 0 -5px 3px;
-}
-#moreCondition .condition {
-  margin-bottom: 5px;
 }
 </style>

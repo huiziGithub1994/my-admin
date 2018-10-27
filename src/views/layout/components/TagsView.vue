@@ -1,5 +1,6 @@
 <template>
   <div class="tags-view-container">
+    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
@@ -25,10 +26,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ScrollPane from '@/components/ScrollPane'
-
+import Hamburger from '@/components/Hamburger'
 export default {
-  components: { ScrollPane },
+  components: { ScrollPane, Hamburger },
   data() {
     return {
       visible: false,
@@ -38,6 +40,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['sidebar']),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     }
@@ -59,6 +62,9 @@ export default {
     this.addViewTags()
   },
   methods: {
+    toggleSideBar() {
+      this.$store.dispatch('ToggleSideBar')
+    },
     // generateTitle, // generateTitle by vue-i18n
     isActive(route) {
       return route.path === this.$route.path
@@ -135,11 +141,17 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
-  height: 34px;
+  height: 36px;
   width: 100%;
   background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  // border-bottom: 1px solid #d8dce5;
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  .hamburger-container {
+    line-height: 43px;
+    height: 34px;
+    float: left;
+    padding: 0 0 0 10px;
+  }
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -188,7 +200,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
     li {
       margin: 0;
       padding: 7px 16px;
@@ -211,10 +223,10 @@ export default {
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }

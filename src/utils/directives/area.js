@@ -2,8 +2,7 @@
 export default {
   inserted: function(el, binding) {
     // 功能页面宽度.25：条件域左边的margin和操作域右边的margin
-    const pageWidth = document.getElementsByClassName('bottom-box')[0]
-      .offsetWidth
+    const pageWidth = document.getElementsByClassName('app-main')[0].offsetWidth
     // 条件域宽度，
     const areaConditionWidth = document.getElementById('area-condition')
       .offsetWidth

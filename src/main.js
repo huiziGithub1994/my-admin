@@ -17,9 +17,16 @@ import 'nprogress/nprogress.css' // Progress 进度条样式
 import '@/icons' // icon
 
 import operation from './components/operation/index'
+import condition from './components/condition/index'
+import selectChild from './components/selectChild/index'
 import area from './utils/directives/area'
+
 /* 功能页面操作域组件。将条件域中的条件放入操作域中的“更多条件”下拉按钮中 */
 Vue.component('operation', operation)
+// 条件域组件
+Vue.component('condition', condition)
+// 下拉列表组件
+Vue.component('selectChild', selectChild)
 // 全局指令
 Vue.directive('area', area)
 

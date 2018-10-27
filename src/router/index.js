@@ -67,6 +67,18 @@ export const constantRouterMap = [
         name: '排课规则',
         component: () => import('@/views/tree/index'),
         meta: { title: '排课规则', icon: 'tree' }
+      },
+      {
+        path: 'jxjh1',
+        name: '教学计划',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '教学计划', icon: 'tree' }
+      },
+      {
+        path: 'pkgz1',
+        name: '排课规则',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课规则', icon: 'tree' }
       }
     ]
   },
@@ -79,13 +91,82 @@ export const constantRouterMap = [
     children: [
       {
         path: 'kbcx',
-        name: '课表查询',
+        name: 'kbcx',
         component: () => import('@/views/tree/index'),
         meta: { title: '课表查询', icon: 'tree' }
       },
       {
         path: 'pkgc',
-        name: '排课过程',
+        name: 'pkgc',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
+      },
+      {
+        path: 'kbcx2',
+        name: 'kbcx2',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc2',
+        name: 'pkgc2',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/ptpk1',
+    component: Layout,
+    redirect: '/ptpk/kbcx1',
+    name: 'ptpk1',
+    meta: { title: '普通排课', icon: 'example' },
+    children: [
+      {
+        path: 'kbcx1',
+        name: 'kbcx1',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc1',
+        name: 'pkgc1',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
+      },
+      {
+        path: 'kbcx12',
+        name: 'kbcx12',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc12',
+        name: 'pkgc12',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
+      },
+      {
+        path: 'kbcx122',
+        name: 'kbcx122',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc122',
+        name: 'pkgc122',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '排课过程', icon: 'tree' }
+      },
+      {
+        path: 'kbcx123',
+        name: 'kbcx123',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '课表查询', icon: 'tree' }
+      },
+      {
+        path: 'pkgc123',
+        name: 'pkgc123',
         component: () => import('@/views/tree/index'),
         meta: { title: '排课过程', icon: 'tree' }
       }

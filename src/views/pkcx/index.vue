@@ -1,7 +1,25 @@
 <template>
   <div>
-    <div>
-      <div id="area-condition">
+    <div v-area>
+      <condition>
+        <div class="condition">
+          <label>学年</label>
+          <selectChild
+            v-model="search['xn']"
+            clearable
+            tp="yearSelect"/>
+        </div>
+        <div class="condition">
+          <label>学期</label>
+          <selectChild
+            v-model="search['xq']"
+            clearable
+            tp="termSelect"/>
+        </div>
+        <div class="condition">
+          <label>学年</label>
+          <el-input v-model="input10" placeholder="请输入内容" clearable/>
+        </div>
         <div class="condition">
           <label>学年</label>
           <el-input v-model="input10" placeholder="请输入内容" clearable/>
@@ -10,8 +28,20 @@
           <label>学年</label>
           <el-input v-model="input10" placeholder="请输入内容" clearable/>
         </div>
-      </div>
-      <operation id="area-operation">
+        <div class="condition">
+          <label>学年</label>
+          <el-input v-model="input10" placeholder="请输入内容" clearable/>
+        </div>
+        <div class="condition">
+          <label>学年</label>
+          <el-input v-model="input10" placeholder="请输入内容" clearable/>
+        </div>
+        <div class="condition">
+          <label>学年</label>
+          <el-input v-model="input10" placeholder="请输入内容" clearable/>
+        </div>
+      </condition>
+      <operation>
         <el-button type="primary" plain>检索</el-button>
         <el-button type="primary" plain>导入</el-button>
         <el-button type="primary" plain>导出</el-button>
@@ -37,6 +67,10 @@ export default {
   },
   data() {
     return {
+      search: {
+        xn: 2018,
+        xq: '1'
+      },
       input10: '',
       options: [{ label: '2018-2019学年', value: '2018' }]
     }

@@ -24,7 +24,7 @@
     </div>
     <sidebar class="sidebar-container"/>
     <div class="main-container">
-      <navbar/>
+      <!-- <navbar/> -->
       <tags-view/>
       <app-main/>
     </div>
@@ -99,8 +99,7 @@ export default {
 .app-header {
   height: 60px;
   line-height: 60px;
-  border-bottom: 1px solid rgb(88, 104, 123);
-  background-color: rgb(48, 65, 86);
+  border-bottom: 1px solid #42b983;
   .logo {
     height: 50px;
     width: 50px;
@@ -126,6 +125,7 @@ export default {
       padding-top: 7px;
       margin-top: 10px;
       border-radius: 50%;
+      background-color: rgb(48, 65, 86);
       > svg {
         width: 25px;
         height: 25px;
