@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
-      <!-- <span class="app-title">理水永昌实验中学</span> -->
+      <span class="app-title">理水永昌实验中学</span>
       <div class="buttons">
         <el-dropdown>
           <span class="el-dropdown-link">

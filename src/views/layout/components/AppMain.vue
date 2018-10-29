@@ -1,10 +1,10 @@
 <template>
   <section class="app-main">
-    <div class="content">
+    <div class="content-wapper">
       <transition name="fade-transform" mode="out-in">
+        <router-view/>
         <!-- or name="fade" -->
         <!-- <router-view :key="key"></router-view> -->
-        <router-view/>
       </transition>
     </div>
   </section>
@@ -27,13 +27,15 @@ export default {
   height: calc(100vh - 96px);
   background: #efefef;
   position: relative;
-  overflow: hidden;
-  padding: 7px 7px 0 10px;
+  overflow-y: auto;
+  overflow-x:hidden;
+  padding: 7px 7px 0 5px;
 }
-.content {
+.content-wapper {
   background: white;
   width: 100%;
-  height: 100%;
-  padding: 10px;
+  min-height:100%;
+  padding: 10px 10px 5px 10px;
 }
 </style>
+
