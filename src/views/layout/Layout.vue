@@ -3,8 +3,22 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
-      <!-- <span class="app-title">理水永昌实验中学</span> -->
+      <span class="app-title">走班排课</span>
       <div class="buttons">
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            <i class="el-icon-arrow-down"/>
+            下拉菜单
+            <i class="el-icon-arrow-down el-icon--right"/>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <span>
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
             <svg-icon icon-class="password1"/>
@@ -109,13 +123,21 @@ export default {
   }
   .app-title {
     font-size: 25px;
-    color: white;
     letter-spacing: 4px;
   }
   .buttons {
     float: right;
     margin-right: 20px;
     height: 100%;
+    >div.el-dropdown{
+      height:25px;
+      line-height:25px;
+      bottom:5px;
+      margin-right:10px;
+      >.el-dropdown-link{
+        color:#008AD4;
+      }
+    }
     > span {
       display: inline-block;
       height: 40px;

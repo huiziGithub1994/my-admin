@@ -58,13 +58,13 @@ export const constantRouterMap = [
       },
       {
         path: 'jxjh',
-        name: '教学计划',
+        name: 'jxjh',
         component: () => import('@/views/tree/index'),
         meta: { title: '教学计划', icon: 'tree' }
       },
       {
         path: 'pkgz',
-        name: '排课规则',
+        name: 'pkgz',
         component: () => import('@/views/tree/index'),
         meta: { title: '排课规则', icon: 'tree' }
       },

@@ -5,55 +5,93 @@
         <div class="condition">
           <label>学年</label>
           <selectChild
-            v-model="search['xn']"
+            v-model="search['schoolYear']"
             clearable
             tp="yearSelect"/>
         </div>
         <div class="condition">
           <label>学期</label>
           <selectChild
-            v-model="search['xq']"
+            v-model="search['termCode']"
             clearable
             tp="termSelect"/>
         </div>
         <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
-        </div>
-        <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
-        </div>
-        <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
-        </div>
-        <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
-        </div>
-        <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
-        </div>
-        <div class="condition">
-          <label>学年</label>
-          <el-input v-model="input10" placeholder="请输入内容" clearable/>
+          <label>排课状态</label>
+          <el-select v-model="search['zt']" clearable placeholder="请选择">
+            <el-option
+              v-for="item in ztOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>检索</el-button>
-        <el-button type="primary" plain>导入</el-button>
-        <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" plain>模板下载</el-button>
+        <el-button type="primary" plain>新增</el-button>
+        <el-button type="primary" plain>合并课表</el-button>
       </operation>
+    </div>
+    <div>
+      <el-table
+        ref="singleTable"
+        :data="tableData"
+        :height="tableH"
+        highlight-current-row
+        style="width: 100%">
+        <el-table-column
+          type="index"
+          width="50"/>
+        <el-table-column
+          property="arrangName"
+          show-overflow-tooltip
+          label="排课名称"/>
+        <el-table-column
+          property="name"
+          label="状态"/>
+        <el-table-column
+          property="schoolYear"
+          label="学年">
+          <template slot-scope="scope">
+            <span>{{ `${scope.row.schoolYear}-${Number(scope.row.schoolYear)+1}学年` }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          property="termCode"
+          label="学期"/>
+        <el-table-column
+          property="gradeCode"
+          label="年级"/>
+        <el-table-column
+          property="createTime"
+          label="创建时间"/>
+        <el-table-column
+          fixed="right"
+          label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" size="mini">排课</el-button>
+            <el-button type="text" size="mini">删除</el-button>
+            <el-button type="text" size="mini">复制</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="pageTot.pageNum"
+        :page-sizes="pageSizes"
+        :page-size="pageTot.pageSize"
+        :total="pageTot.pagetotal"
+        layout="total,sizes,slot ,->, prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
+        <slot/>
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
-
+import { getListInfo } from '@/api/pkcx'
+import { getTableBestRows } from '@/utils/businessUtil'
 export default {
   filters: {
     statusFilter(status) {
@@ -66,25 +104,46 @@ export default {
     }
   },
   data() {
+    const h = 180
+    const tableH = document.body.clientHeight - h
+    const pageSizes = getTableBestRows(tableH)
     return {
       search: {
-        xn: 2018,
-        xq: '1'
+        schoolYear: '2018',
+        termCode: '1'
       },
-      input10: '',
-      options: [{ label: '2018-2019学年', value: '2018' }]
+      ztOptions: [{ label: '完成', value: '1' }],
+      pageSizes: pageSizes,
+      tableH: tableH,
+      pageTot: {
+        pageNum: 1,
+        pageSize: pageSizes[0],
+        pagetotal: 10
+      },
+      tableData: []
     }
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
+      getListInfo(this.listQuery).then(res => {
+        this.pageTot.pagetotal = res.SUM
+        this.tableData = res.DATA
         this.listLoading = false
       })
+    },
+    filterShcoolYear(value) {
+      console.log(value)
+      return value
+    },
+    handleSizeChange() {
+
+    },
+    handleCurrentChange() {
+
     }
   }
 }

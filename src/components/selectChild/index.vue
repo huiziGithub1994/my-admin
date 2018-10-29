@@ -80,7 +80,7 @@ export default {
               if (tp === 'yearSelect') {
                 result.push({ value: i, label: `${i} - ${i + 1} 学年` })
               } else {
-                result.push({ value: i + 1, label: `${i + 1}` })
+                result.push({ value: (i + 1), label: `${i + 1}` })
               }
             }
             break
