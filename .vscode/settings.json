@@ -3,5 +3,5 @@
   "editor.formatOnSave": true,
   "prettier.singleQuote": true,
   "editor.tabSize": 2,
-  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false
 }

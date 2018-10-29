@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { tearmSelect, yearSelect, gradeSelect } from './data.js'
 export default {
   props: {
     value: {
@@ -69,26 +70,15 @@ export default {
       default: function() {
         const tp = this.tp
         let result = []
-        const date = new Date()
-        let year = date.getFullYear()
-        const month = date.getMonth() + 1
         switch (tp) {
+          case 'gradeSelect':
+            result = gradeSelect()
+            break
           case 'yearSelect':
-          case 'entranceSelect':
-            if (month >= 3 && month <= 8) year--
-            for (let i = year; i > year - 7; i--) {
-              if (tp === 'yearSelect') {
-                result.push({ value: i, label: `${i} - ${i + 1} 学年` })
-              } else {
-                result.push({ value: (i + 1), label: `${i + 1}` })
-              }
-            }
+            result = yearSelect()
             break
           case 'termSelect':
-            result = [
-              { value: '1', label: '第一学期' },
-              { value: '2', label: '第二学期' }
-            ]
+            result = tearmSelect
             break
         }
         return result

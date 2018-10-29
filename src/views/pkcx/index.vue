@@ -28,7 +28,7 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>新增</el-button>
+        <el-button type="primary" plain @click="addBtn">新增</el-button>
         <el-button type="primary" plain>合并课表</el-button>
       </operation>
     </div>
@@ -45,12 +45,15 @@
         <el-table-column
           property="arrangName"
           show-overflow-tooltip
+          min-width="160px"
           label="排课名称"/>
         <el-table-column
           property="name"
-          label="状态"/>
+          label="状态"
+          width="80px"/>
         <el-table-column
           property="schoolYear"
+          width="120px"
           label="学年">
           <template slot-scope="scope">
             <span>{{ `${scope.row.schoolYear}-${Number(scope.row.schoolYear)+1}学年` }}</span>
@@ -58,15 +61,23 @@
         </el-table-column>
         <el-table-column
           property="termCode"
-          label="学期"/>
+          label="学期"
+          width="80px">
+          <template slot-scope="scope">
+            <span>第{{ `${scope.row.termCode === '1' ? '一':'二'}` }}学期</span>
+          </template>
+        </el-table-column>
         <el-table-column
+          :formatter="gradeCodFormatter"
           property="gradeCode"
           label="年级"/>
         <el-table-column
           property="createTime"
+          show-overflow-tooltip
           label="创建时间"/>
         <el-table-column
           fixed="right"
+          width="130px"
           label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="mini">排课</el-button>
@@ -127,6 +138,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    // 获取表格数据
     fetchData() {
       this.listLoading = true
       getListInfo(this.listQuery).then(res => {
@@ -135,16 +147,16 @@ export default {
         this.listLoading = false
       })
     },
-    filterShcoolYear(value) {
-      console.log(value)
-      return value
+    // 年级格式化
+    gradeCodFormatter(row, column, cellValue, index) {
+      return cellValue
     },
-    handleSizeChange() {
-
+    // 新增按钮
+    addBtn() {
+      this.$router.push({ name: 'jxjh' })
     },
-    handleCurrentChange() {
-
-    }
+    handleSizeChange() {},
+    handleCurrentChange() {}
   }
 }
 </script>

@@ -1,6 +1,6 @@
- //to reset element-ui default css
+//to reset element-ui default css
 .el-upload {
-  input[type="file"] {
+  input[type='file'] {
     display: none !important;
   }
 }
@@ -28,4 +28,23 @@
   }
 }
 
-// 表格 分页信息的修改
+// 表格
+.el-table {
+  font-size: 1rem;
+}
+
+//教学计划 tabs
+.jxjh-tabs div.el-tabs__item {
+  height: 26px !important;
+  line-height: 16px !important;
+}
+
+//表单中的 日期选择
+.el-form .el-date-editor {
+  width: 100% !important;
+}
+
+// 时间组件
+.el-date-editor .el-range-separator {
+  width: auto;
+}

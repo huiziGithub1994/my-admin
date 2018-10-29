@@ -59,7 +59,7 @@ export const constantRouterMap = [
       {
         path: 'jxjh',
         name: 'jxjh',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/jxjh/index'),
         meta: { title: '教学计划', icon: 'tree' }
       },
       {
@@ -110,63 +110,6 @@ export const constantRouterMap = [
       {
         path: 'pkgc2',
         name: 'pkgc2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/ptpk1',
-    component: Layout,
-    redirect: '/ptpk/kbcx1',
-    name: 'ptpk1',
-    meta: { title: '普通排课', icon: 'example' },
-    children: [
-      {
-        path: 'kbcx1',
-        name: 'kbcx1',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc1',
-        name: 'pkgc1',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      },
-      {
-        path: 'kbcx12',
-        name: 'kbcx12',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc12',
-        name: 'pkgc12',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      },
-      {
-        path: 'kbcx122',
-        name: 'kbcx122',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc122',
-        name: 'pkgc122',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      },
-      {
-        path: 'kbcx123',
-        name: 'kbcx123',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc123',
-        name: 'pkgc123',
         component: () => import('@/views/tree/index'),
         meta: { title: '排课过程', icon: 'tree' }
       }

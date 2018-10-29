@@ -3,12 +3,12 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
-      <span class="app-title">走班排课</span>
+      <!-- <span class="app-title">理水永昌实验中学</span> -->
       <div class="buttons">
         <el-dropdown>
           <span class="el-dropdown-link">
-            <i class="el-icon-arrow-down"/>
-            下拉菜单
+            <!-- <i class="el-icon-arrow-down"/> -->
+            走班排课
             <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -129,13 +129,13 @@ export default {
     float: right;
     margin-right: 20px;
     height: 100%;
-    >div.el-dropdown{
-      height:25px;
-      line-height:25px;
-      bottom:5px;
-      margin-right:10px;
-      >.el-dropdown-link{
-        color:#008AD4;
+    > div.el-dropdown {
+      height: 25px;
+      line-height: 25px;
+      bottom: 5px;
+      margin-right: 10px;
+      > .el-dropdown-link {
+        color: #008ad4;
       }
     }
     > span {

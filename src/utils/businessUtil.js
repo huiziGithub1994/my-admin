@@ -5,7 +5,7 @@
     tableHeight不包含表格底部的分页和页数高度，表头高度：40px;表格不换行的行高：40px;
 */
 export function getTableBestRows(tableHeight) {
-  const bestRows = Number.parseInt((tableHeight - 40) / 40)
+  const bestRows = Number.parseInt((tableHeight - 40) / 45)
   const pageSize = [bestRows]
   let i = bestRows + 10
   do {
@@ -13,7 +13,6 @@ export function getTableBestRows(tableHeight) {
       pageSize.push(i)
     }
     i++
-  }
-  while (pageSize.length < 5)
+  } while (pageSize.length < 5)
   return pageSize
 }
