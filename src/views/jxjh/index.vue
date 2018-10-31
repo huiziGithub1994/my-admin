@@ -6,7 +6,7 @@
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one">
         <el-tab-pane label="基础信息" name="one" >
-          <base-info/>
+          <base-info :data="baseInfo"/>
           <div class="next-wapper">
             <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
           </div>
@@ -52,7 +52,6 @@ export default {
           Reflect.set(tabDisabled, item, true)
         }
       })
-      console.log(tabDisabled)
       return tabDisabled
     }
   },

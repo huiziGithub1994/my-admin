@@ -16,3 +16,59 @@ export function getTableBestRows(tableHeight) {
   } while (pageSize.length < 5)
   return pageSize
 }
+
+/*
+校验
+*/
+export const Validators = {
+  checkNull(rule, value, callback) {
+    if (value === '' || value == null) {
+      callback(new Error('该字段为必填字段'))
+    } else {
+      callback()
+    }
+  },
+  // 大于等于0的整数
+  checkIntGreaterZero(rule, value, callback) {
+    // 含0正整数
+    const reg = /^([0-9]\d*|[0]{1,1})$/
+    if (typeof value === 'number' || value === '' || value === undefined) {
+      callback()
+    } else {
+      if (!reg.test(value)) {
+        callback(new Error('请输入>=0的整数'))
+      } else {
+        callback()
+      }
+    }
+  },
+  checkNumber(rule, value, callback) {
+    const reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/ig
+    if (typeof value === 'number' || value === '' || value === undefined) {
+      callback()
+    } else {
+      if (!reg.test(value)) {
+        callback(new Error('请输入数字值'))
+      } else {
+        callback()
+      }
+    }
+  },
+  checkEnglish(rule, value, callback) {
+    const reg = /^[A-Za-z]+$/
+    if (!reg.test(value)) {
+      callback(new Error('请输入英文字母'))
+    } else {
+      callback()
+    }
+  },
+  checkEmail(rule, value, callback) {
+    const reg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
+    if (!reg.test(value)) {
+      callback(new Error('请输入正确的邮箱地址'))
+    } else {
+      callback()
+    }
+  }
+}
+
