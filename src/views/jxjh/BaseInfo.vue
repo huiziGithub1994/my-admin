@@ -143,7 +143,7 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .center-text {
+.center-text {
   text-align: center;
 }
 .count-arrange .el-select {
@@ -168,8 +168,7 @@ export default {
 .time-title.night {
   background: RGB(254, 172, 50);
 }
-.time-block .el-col{
-margin-bottom:10px;
+.time-block .el-col {
+  margin-bottom: 10px;
 }
-
 </style>

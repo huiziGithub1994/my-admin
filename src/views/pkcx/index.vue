@@ -1,4 +1,4 @@
-<template>
+<template><!-- 排课查询页面-->
   <div>
     <div v-area>
       <condition>

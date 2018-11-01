@@ -11,7 +11,12 @@
             <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">配置管理</el-tab-pane>
+        <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
+          <subject-class/>
+          <div class="next-wapper">
+            <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">角色管理</el-tab-pane>
         <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">定时任务补偿</el-tab-pane>
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
@@ -31,12 +36,13 @@
 </template>
 
 <script>
-import BaseInfo from './BaseInfo'
+import BaseInfo from './BaseInfo' // 基础信息tab页组件
+import SubjectClass from './SubjectClass' // 学科分层及学时tab页组件
 export default {
-  components: { BaseInfo },
+  components: { BaseInfo, SubjectClass },
   data() {
     return {
-      activeTabName: 'one', // tab页高亮
+      activeTabName: 'two', // tab页高亮
       // 基础信息表单model
       baseInfo: {}
     }
@@ -45,7 +51,7 @@ export default {
     tabDisabled() {
       const tabDisabled = {}
       const arr = ['one', 'two', 'three', 'four', 'five', 'six']
-      arr.forEach((item) => {
+      arr.forEach(item => {
         if (item === this.activeTabName) {
           Reflect.set(tabDisabled, item, false)
         } else {
@@ -65,7 +71,7 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.conent{
+.conent {
 }
 .nav-block {
   height: 35px;
@@ -103,10 +109,10 @@ export default {
   margin-left: 17px;
   padding: 0 17px;
 }
-.next-wapper{
-  overflow:auto;
-  >.el-button{
-    float:right;
+.next-wapper {
+  overflow: auto;
+  > .el-button {
+    float: right;
   }
 }
 </style>
