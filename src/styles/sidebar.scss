@@ -20,7 +20,7 @@
     left: 0;
     z-index: 1001;
     overflow: auto;
-    border-right:1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
     //reset element-ui css
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out,
@@ -31,10 +31,10 @@
       display: none;
     }
     .scrollbar-wrapper {
-      margin:7% !important;
+      margin: 7% !important;
       overflow: unset;
       height: auto;
-      // margin: 7% !important;
+      box-shadow: 0px 0px 14px 2px #c1c1c1;
       .el-scrollbar__view {
         // height: 100%;
       }
@@ -54,9 +54,11 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      background: #e8f2f0 !important; // 一级标题背景色
     }
-    .is-active > .el-submenu__title {
-      color: #f4f4f5 !important;
+    .el-submenu__title {
+      background: #e8f2f0 !important; // 一级标题背景色
+      color: #333333 !important; // 一级标题 active 字体颜色
     }
   }
   .hideSidebar {
@@ -99,15 +101,20 @@
   .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
   .sidebar-container .el-submenu .el-menu-item {
     min-width: 180px !important;
-    background-color: $subMenuBg !important;
+    background-color: $subMenuBg !important; // 字体、背景颜色
+    color: #333333 !important;
     &:hover {
-      background-color: $menuHover !important;
+      background-color: $menuHover !important; // hover 字体 、 背景颜色
+      color: white !important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu {
     min-width: 180px !important;
   }
-
+  .sidebar-container .el-submenu .el-menu-item.is-active {
+    background-color: $menuHover !important; // hover 字体颜色
+    color: white !important;
+  }
   //适配移动端
   .mobile {
     .main-container {

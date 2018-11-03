@@ -7,9 +7,6 @@
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one">
         <el-tab-pane label="基础信息" name="one" >
           <base-info :data="baseInfo"/>
-          <div class="next-wapper">
-            <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
           <subject-class/>
@@ -17,7 +14,9 @@
             <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">角色管理</el-tab-pane>
+        <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
+          <choose-class/>
+        </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">定时任务补偿</el-tab-pane>
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
         <el-tab-pane label="评估资源" name="six" :disabled="tabDisabled.six">定时任务补偿</el-tab-pane>
@@ -38,13 +37,16 @@
 <script>
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import SubjectClass from './SubjectClass' // 学科分层及学时tab页组件
+import ChooseClass from './ChooseClass' // 导入学生选课tab页组件
 export default {
-  components: { BaseInfo, SubjectClass },
+  components: { BaseInfo, SubjectClass, ChooseClass },
   data() {
     return {
-      activeTabName: 'two', // tab页高亮
+      activeTabName: 'three', // tab页高亮
       // 基础信息表单model
-      baseInfo: {}
+      baseInfo: {
+        schoolYear: ''
+      }
     }
   },
   computed: {
@@ -52,11 +54,11 @@ export default {
       const tabDisabled = {}
       const arr = ['one', 'two', 'three', 'four', 'five', 'six']
       arr.forEach(item => {
-        if (item === this.activeTabName) {
-          Reflect.set(tabDisabled, item, false)
-        } else {
-          Reflect.set(tabDisabled, item, true)
-        }
+        // if (item === this.activeTabName) {
+        //   Reflect.set(tabDisabled, item, false)
+        // } else {
+        Reflect.set(tabDisabled, item, false)
+        // }
       })
       return tabDisabled
     }

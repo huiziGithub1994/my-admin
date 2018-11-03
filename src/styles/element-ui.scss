@@ -43,14 +43,6 @@
 .el-form .el-date-editor {
   width: 100% !important;
 }
-//表单 自定义 必填字段 * 号
-.el-form-item.require>.el-form-item__label:after {
-  content: "*";
-  color: #f56c6c;
-  margin-left: 3px;
-  position: relative;
-  top:2px;
-}
 // 时间组件
 .el-date-editor .el-range-separator {
   width: auto;

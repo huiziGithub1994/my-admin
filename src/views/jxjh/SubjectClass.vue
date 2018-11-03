@@ -8,24 +8,38 @@
       </div>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" width="55" label="序号"></el-table-column>
-        <el-table-column label="课程名称"></el-table-column>
-        <el-table-column label="分层类型"></el-table-column>
-        <el-table-column label="周课时"></el-table-column>
+        <el-table-column label="课程名称" property="courseName"></el-table-column>
+        <el-table-column label="分层类型" property="courseType"></el-table-column>
+        <el-table-column label="周课时(节)" property="courseTime"></el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
+import { getSbjestClassListInfo } from '@/api/pkcx'
+
 export default {
   data() {
     return {
-      tableData: []
+      tableData: [],
+      height: document.body.clientHeight - 410
     }
   },
-  methods: {}
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    // 获取表格数据
+    async fetchData() {
+      const params = { id: 1 }
+      const res = await getSbjestClassListInfo(params)
+      console.log(res.DAT)
+      this.tableData = res.DATA
+    }
+  }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

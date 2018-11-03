@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
       <img class="logo" src="/src/assets/logo.jpg">
-      <span class="app-title">理水永昌实验中学</span>
+      <!-- <span class="app-title">理水永昌实验中学</span> -->
       <div class="buttons">
         <el-dropdown>
           <span class="el-dropdown-link">
@@ -12,11 +12,7 @@
             <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+            <el-dropdown-item>普通排课</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <span>
@@ -134,8 +130,10 @@ export default {
       line-height: 25px;
       bottom: 5px;
       margin-right: 10px;
+      font-size: 1.1rem;
       > .el-dropdown-link {
         color: #008ad4;
+        cursor: pointer;
       }
     }
     > span {

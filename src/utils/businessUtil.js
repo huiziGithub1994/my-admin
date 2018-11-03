@@ -22,6 +22,7 @@ export function getTableBestRows(tableHeight) {
 */
 export const Validators = {
   checkNull(rule, value, callback) {
+    console.log(value)
     if (value === '' || value == null) {
       callback(new Error('该字段为必填字段'))
     } else {
@@ -43,7 +44,7 @@ export const Validators = {
     }
   },
   checkNumber(rule, value, callback) {
-    const reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/ig
+    const reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/gi
     if (typeof value === 'number' || value === '' || value === undefined) {
       callback()
     } else {
@@ -63,7 +64,9 @@ export const Validators = {
     }
   },
   checkEmail(rule, value, callback) {
-    const reg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
+    const reg = new RegExp(
+      '^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$'
+    )
     if (!reg.test(value)) {
       callback(new Error('请输入正确的邮箱地址'))
     } else {
@@ -71,4 +74,3 @@ export const Validators = {
     }
   }
 }
-
