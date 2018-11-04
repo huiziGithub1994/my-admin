@@ -2,15 +2,11 @@
 
 > A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
 
-**Live demo:** http://panjiachen.github.io/vue-admin-template
-
-[中文文档](https://github.com/PanJiaChen/vue-admin-template/blob/master/README-zh.md)
-
 ## Build Setup
 
 ```bash
 # Clone project
-git clone https://github.com/PanJiaChen/vue-admin-template.git
+git clone https://github.com/huiziGithub1994/my-admin.git
 
 # Install dependencies
 npm install
