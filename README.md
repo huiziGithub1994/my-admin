@@ -6,7 +6,7 @@
 
 ```bash
 # Clone project
-git clone https://github.com/huiziGithub1994/my-admin.git
+git clone git@github.com:huiziGithub1994/my-admin.git
 
 # Install dependencies
 npm install
