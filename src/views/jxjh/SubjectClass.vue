@@ -36,7 +36,6 @@ export default {
     async fetchData() {
       const params = { id: 1 }
       const res = await getSbjestClassListInfo(params)
-      console.log(res.DAT)
       this.tableData = res.DATA
     }
   }

@@ -104,6 +104,13 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      if (view.name === 'Home') {
+        this.$message({
+          message: '首页不可以关闭！',
+          type: 'warning'
+        })
+        return
+      }
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           const latestView = visitedViews.slice(-1)[0]
