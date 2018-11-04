@@ -4,18 +4,15 @@
       <span>1</span>教学计划
     </div>
     <div class="jxjh-tabs">
-      <el-tabs v-model="activeTabName" :disabled="tabDisabled.one">
+      <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
         <el-tab-pane label="基础信息" name="one" >
           <base-info :data="baseInfo"/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
-          <subject-class/>
-          <div class="next-wapper">
-            <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
-          </div>
+          <subject-class v-if="activeTabName === 'two'" />
         </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
-          <choose-class/>
+          <choose-class ref="chooseClassRef"/>
         </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">定时任务补偿</el-tab-pane>
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
@@ -24,6 +21,10 @@
     </div>
     <div class="nav-block next">
       <span>2</span>排课规则
+    </div>
+    <div class="next-wapper">
+      <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
+      <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>
     </div>
     <div class="nav-block">
       <span>3</span>排课过程
@@ -42,7 +43,7 @@ export default {
   components: { BaseInfo, SubjectClass, ChooseClass },
   data() {
     return {
-      activeTabName: 'three', // tab页高亮
+      activeTabName: 'one', // tab页高亮
       // 基础信息表单model
       baseInfo: {
         schoolYear: ''
@@ -65,9 +66,20 @@ export default {
   },
   created() {},
   methods: {
+    // 基础信息 上一步 按钮
+    baseInfoPre() {
+      this.activeTabName = 'two'
+    },
     // 基础信息 下一步 按钮
     baseInfoNext() {
       this.activeTabName = 'two'
+    },
+    // tab页被点击
+    tabClick(tab) {
+      const { name: tabName } = tab
+      if (tabName === 'three') {
+        this.$refs.chooseClassRef.initArea = true
+      }
     }
   }
 }
@@ -99,6 +111,7 @@ export default {
   }
 }
 .nav-block.next {
+  display: inline-block;
   color: black;
   > span {
     color: white;
@@ -112,10 +125,9 @@ export default {
   padding: 0 17px;
 }
 .next-wapper {
-  overflow: auto;
-  > .el-button {
-    float: right;
-  }
+  display: inline-block;
+  float: right;
+  margin-right: 17px;
 }
 </style>
 

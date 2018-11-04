@@ -39,11 +39,34 @@
   line-height: 16px !important;
 }
 
-//表单中的 日期选择
+//表单
+.el-form-item .el-select {
+  display: unset;
+}
+// 日期选择
 .el-form .el-date-editor {
   width: 100% !important;
+}
+// 必填
+.el-form-item.is-required .el-form-item__label:before {
+  content: unset;
+}
+.el-form-item:not(.is-required) .el-form-item__label {
+  padding-right: 21px;
+}
+.el-form-item.is-required .el-form-item__label:after {
+  content: '*';
+  color: #f56c6c;
+  margin-left: 4px;
+  position: relative;
+  top: 3px;
 }
 // 时间组件
 .el-date-editor .el-range-separator {
   width: auto;
+}
+
+// tab页
+.el-tabs > div.el-tabs__header.is-top {
+  margin-bottom: 10px;
 }

@@ -39,6 +39,7 @@ export const constantRouterMap = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
+        name: 'Home',
         meta: { title: '首页', icon: 'example' }
       }
     ]

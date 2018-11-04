@@ -111,38 +111,38 @@
                 <el-row :gutter="40" class="time-block">
                   <el-col :span="3">第1节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第2节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第3节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第4节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                 </el-row>
                 <span class="time-title afternoon">下午</span>
                 <el-row :gutter="40" class="time-block">
                   <el-col :span="3">第1节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第2节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第3节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                   <el-col :span="3">第4节</el-col>
                   <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                   </el-col>
                 </el-row>
                 <span class="time-title night">晚上</span>
@@ -162,9 +162,6 @@
         </div>
       </div>
     </el-form>
-    <div class="next-wapper">
-      <el-button type="success" plain @click="baseInfoNext">下一步</el-button>
-    </div>
   </div>
 </template>
 
@@ -258,6 +255,7 @@ export default {
 .count-arrange .el-form-item {
   display: inline-block;
   .el-select {
+    display: inline-block;
     width: 80px;
     margin-right: 5px;
   }
@@ -282,11 +280,5 @@ export default {
 }
 .time-block .el-col {
   margin-bottom: 10px;
-}
-.next-wapper {
-  overflow: auto;
-  > .el-button {
-    float: right;
-  }
 }
 </style>
