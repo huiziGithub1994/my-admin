@@ -1,7 +1,3 @@
-# vue-admin-template
-
-> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
-
 ## Build Setup
 
 ```bash
@@ -21,9 +17,6 @@ npm run build
 npm run build --report
 ```
 
-## Demo
-
-![demo](https://github.com/PanJiaChen/PanJiaChen.github.io/blob/master/images/demo.gif)
 
 ## Extra
 
