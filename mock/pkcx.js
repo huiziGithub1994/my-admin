@@ -1,26 +1,18 @@
 module.exports = {
   // 排课查询 列表数据
-  '/pkcx/list': {
+  '/base/qryArrangeList': {
     SUCCESS: true,
     MSG: '成功获取数据',
     SUM: 10,
     'DATA|10': [
       {
-        id: '@inc(10000)',
+        arrangeId: '@inc(10000)',
+        schoolId: '001',
         arrangName: '2018-2019学年第一学期高中二年级走班排课',
-        'name|1': ['完成', '未完成'],
-        'schoolYear|1': ['2017', '2018'],
-        'termCode|1': ['1', '2'],
-        'gradeCode|1': [
-          '01,02',
-          '01,03',
-          '01,04',
-          '02,01',
-          '02,02',
-          '03,01',
-          '03,02',
-          '03,03'
-        ],
+        'name|1': ['完成', '冲突', '进行中'],
+        schoolYear: '2018-2019',
+        'termCode|1': ['第一学期', '第二学期'],
+        'gradeCode|1': ['高二', '高一', '高三'],
         createTime: '2018-10-22 10:00'
       }
     ]

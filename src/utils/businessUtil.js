@@ -17,6 +17,21 @@ export function getTableBestRows(tableHeight) {
   return pageSize
 }
 
+// 获取当前学年
+export function getCurSchoolYearTerm() {
+  const date = new Date()
+  let currentYear = date.getFullYear()
+  const month = date.getMonth() + 1
+  let termCode = '1'
+  if (month >= 3 && month <= 8) {
+    termCode = '2'
+    currentYear -= 1
+  }
+  return {
+    currentYear: currentYear.toString(),
+    termCode: termCode
+  }
+}
 /*
 校验
 */
