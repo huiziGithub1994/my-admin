@@ -1,23 +1,25 @@
 import request from '@/utils/request'
+import URL from '@/api/url'
 
+// 排课查询列表
 export function getPKCXListInfo(listQuery) {
   return request({
-    url: '/pkcx/list',
+    url: URL.qryArrangeList,
     method: 'get',
-    parems: listQuery
+    params: listQuery
   })
 }
 export function getSbjestClassListInfo(listQuery) {
   return request({
     url: '/sbjestclass/list',
     method: 'get',
-    parems: listQuery
+    pparams: listQuery
   })
 }
 export function getChooseClassListInfo(listQuery) {
   return request({
     url: '/chooseclass/list',
     method: 'get',
-    parems: listQuery
+    params: listQuery
   })
 }
