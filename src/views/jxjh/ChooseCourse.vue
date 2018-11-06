@@ -1,26 +1,19 @@
 <template><!--  导入学生选课 tab页-->
   <div>
-    <div v-area v-if="initArea">
-      <condition>
+    <div class="operation-btns">
+      <div class="conditions">
         <div class="condition">
           <label>学科分类</label>
-          <selectChild v-model="search['schoolYear']" clearable tp="yearSelect"/>
+          <selectChild v-model="search['type']" clearable tp="yearSelect"/>
         </div>
-        <div class="condition">
-          <label>学号</label>
-          <el-input placeholder="请输入内容" v-model="search['xh']" clearable></el-input>
-        </div>
-      </condition>
-      <operation>
+      </div>
+      <div class="btns">
         <el-button type="primary" plain>查询</el-button>
-        <el-button type="primary" plain>导入</el-button>
-        <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain>模板下载</el-button>
+        <el-button type="primary" plain>导入/导出</el-button>
+        <el-button type="primary" plain>增加</el-button>
+        <el-button type="primary" plain>修改</el-button>
         <el-button type="primary" plain>选课分析</el-button>
-        <el-button type="primary" plain>选课分析</el-button>
-      </operation>
+      </div>
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
@@ -96,11 +89,9 @@ import { Validators } from '@/utils/businessUtil'
 export default {
   data() {
     return {
-      initArea: false,
-      show: false,
-      // 检索字段
-      search: {},
-      // 表格数据
+      search: {
+        type: undefined
+      },
       tableData: [],
       // 表格高度
       height: document.body.clientHeight - 370,
@@ -202,6 +193,22 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.operation-btns {
+  overflow: hidden;
+  margin-bottom: 10px;
+  > div.conditions{
+    float:left;
+    >div.condition{
+      display:inline-block;
+      .el-select{
+        width:auto;
+      }
+    }
+  }
+  > div.btns {
+    float: right;
+  }
+}
 .table-wapper {
   border: 1px solid #dddddd;
   margin: 10px 0;
