@@ -9,6 +9,16 @@ export function getPKCXListInfo(listQuery) {
     params: listQuery
   })
 }
+
+export function qryArrangeDetail(id) {
+  return request({
+    url: URL.qryArrangeDetail,
+    method: 'get',
+    params: {
+      arrangeId: id
+    }
+  })
+}
 export function getSbjestClassListInfo(listQuery) {
   return request({
     url: '/sbjestclass/list',

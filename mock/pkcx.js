@@ -17,6 +17,46 @@ module.exports = {
       }
     ]
   },
+  // 排课查询详情
+  '/base/qryArrangeDetail': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      arrangeId: '001',
+      schoolId: '001',
+      arrangeName: '2018-2019学年第一学期高中二年级走班排课',
+      schoolYear: '2018',
+      termCode: '1',
+      gradeCode: '0302',
+      beginDate: '2018-09-01',
+      endDate: '2019-02-01',
+      workDays: 5,
+      countInMorning: 0,
+      countMorning: 4,
+      countAfternoon: 4,
+      countNight: 0,
+      curStatus: 1,
+      timeArrage: [
+        {
+          lessonsId: '29291jiei',
+          arrangeId: '001',
+          segId: '02',
+          lessionsTime: [
+            {
+              lessionSeq: 1,
+              beginTime: '08:20',
+              endTime: '09:00'
+            },
+            {
+              lessionSeq: 2,
+              beginTime: '09:20',
+              endTime: '10:00'
+            }
+          ]
+        }
+      ]
+    }
+  },
   // 学科分层及课时
   '/sbjestclass/list': {
     SUCCESS: true,

@@ -37,7 +37,6 @@ export function getCurSchoolYearTerm() {
 */
 export const Validators = {
   checkNull(rule, value, callback) {
-    console.log(value)
     if (value === '' || value == null) {
       callback(new Error('该字段为必填字段'))
     } else {

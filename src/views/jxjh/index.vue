@@ -6,7 +6,7 @@
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
         <el-tab-pane label="基础信息" name="one" >
-          <base-info :data="baseInfo"/>
+          <base-info :id="$route.query.arrangeId"/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
           <subject-class v-if="activeTabName === 'two'" />
@@ -34,7 +34,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import SubjectClass from './SubjectClass' // 学科分层及学时tab页组件
@@ -43,11 +42,7 @@ export default {
   components: { BaseInfo, SubjectClass, ChooseClass },
   data() {
     return {
-      activeTabName: 'one', // tab页高亮
-      // 基础信息表单model
-      baseInfo: {
-        schoolYear: ''
-      }
+      activeTabName: 'one' // tab页高亮
     }
   },
   computed: {
