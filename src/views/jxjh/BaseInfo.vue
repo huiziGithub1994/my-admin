@@ -107,55 +107,17 @@
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="24">
-                <span class="time-title morning">上午</span>
-                <el-row :gutter="40" class="time-block">
-                  <el-col :span="3">第1节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第2节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第3节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第4节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                </el-row>
-                <span class="time-title afternoon">下午</span>
-                <el-row :gutter="40" class="time-block">
-                  <el-col :span="3">第1节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第2节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第3节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第4节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                </el-row>
-                <span class="time-title night">晚上</span>
-                <el-row :gutter="40" class="time-block">
-                  <el-col :span="3">第1节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                  <el-col :span="3">第2节</el-col>
-                  <el-col :span="9">
-                    <el-time-picker is-range v-model="data.time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
-                  </el-col>
-                </el-row>
+                <div v-for="(item,index) in data.timeArrage" :key="index">
+                  <span class="time-title " :class="timeClass[item.segId]">{{ item.segId | segIdFilter }}</span>
+                  <el-row :gutter="40" class="time-block">
+                    <div v-for="(lession,indexNo) in item.lessionsTime" :key="indexNo">
+                      <el-col :span="3">第{{ lession.lessionSeq | lessionSeqFilter }}节</el-col>
+                      <el-col :span="9"><!-- [lession.beginTime,lession.endTime]-->
+                        <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                      </el-col>
+                    </div>
+                  </el-row>
+                </div>
               </el-col>
             </el-row>
           </el-form-item>
@@ -167,18 +129,79 @@
 
 <script>
 import { Validators } from '@/utils/businessUtil'
+import { qryArrangeDetail } from '@/api/pkcx'
 export default {
   name: 'BaseInfo',
-  props: {
-    data: {
-      type: Object,
-      default: function() {
-        return {}
+  filters: {
+    segIdFilter(segId) {
+      let val = ''
+      switch (segId) {
+        case '01':
+          val = '早上'
+          break
+        case '02':
+          val = '上午'
+          break
+        case '03':
+          val = '下午'
+          break
+        default:
+          val = '晚上'
       }
+      return val
+    },
+    lessionSeqFilter(lessionSeq) {
+      let val = ''
+      switch (lessionSeq) {
+        case 1:
+          val = '一'
+          break
+        case 2:
+          val = '二'
+          break
+        case 3:
+          val = '三'
+          break
+        default:
+          val = '四'
+      }
+      return val
+    },
+    lessionTimeFilter() {
+      return 9
+    }
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
+      timeClass: {
+        '01': 'earlyMorning',
+        '02': 'morning',
+        '03': 'afternoon',
+        '04': 'night'
+      },
+      data: {
+        arrangeId: undefined,
+        schoolId: undefined,
+        arrangeName: undefined,
+        schoolYear: undefined,
+        termCode: undefined,
+        gradeCode: undefined, // 0302
+        beginDate: undefined,
+        endDate: undefined,
+        workDays: undefined,
+        countInMorning: undefined,
+        countMorning: undefined,
+        countAfternoon: undefined,
+        countNight: undefined,
+        curStatus: undefined,
+        timeArrage: []
+      },
       // 基础信息表单规则
       baseInfoRules: {
         schoolYear: [{ validator: Validators.checkNull, trigger: 'change' }],
@@ -196,15 +219,27 @@ export default {
         countNight: [{ validator: Validators.checkNull, trigger: 'change' }]
       },
       options: [
+        { value: '0', label: '0' },
         { value: '1', label: '1' },
         { value: '2', label: '2' },
         { value: '3', label: '3' },
-        { value: '4', label: '4' }
+        { value: '4', label: '4' },
+        { value: '5', label: '5' },
+        { value: '6', label: '6' },
+        { value: '7', label: '7' },
+        { value: '8', label: '8' }
       ]
     }
   },
-  created() {},
+  created() {
+    this.fetchFormData()
+  },
   methods: {
+    // 获取表单数据
+    async fetchFormData() {
+      const res = await qryArrangeDetail(this.id)
+      this.data = res.DATA
+    },
     // 下一步按钮
     baseInfoNext() {
       this.$refs['baseInfoRef'].validate(valid => {
@@ -269,14 +304,17 @@ export default {
   text-align: center;
   border-radius: 5px;
 }
+.time-title.earlyMorning {
+  background: #409eff;
+}
 .time-title.morning {
-  background: RGB(103, 194, 58);
+  background: #67c23a;
 }
 .time-title.afternoon {
-  background: RGB(70, 168, 224);
+  background: #e6a23c;
 }
 .time-title.night {
-  background: RGB(254, 172, 50);
+  background: #f56c6c;
 }
 .time-block .el-col {
   margin-bottom: 10px;

@@ -123,8 +123,8 @@ export default {
     },
     // 排课按钮
     arrangeClass(arrangeId) {
-      console.log(arrangeId)
-      // this.$router.push({ name: 'jxjh', query: { arrangeId } })
+      const queryParams = { arrangeId }
+      this.$router.push({ name: 'jxjh', query: queryParams })
     },
     handleSizeChange(val) {
       this.pageTot.curPage = 1
