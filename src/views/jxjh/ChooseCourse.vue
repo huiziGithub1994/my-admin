@@ -73,11 +73,12 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="选课">
-              <div>物理</div>
-              <el-radio-group v-model="editForm.xb">
-                <el-radio label="1">物理选考</el-radio>
-                <el-radio label="2">物理学考</el-radio>
-              </el-radio-group>
+              <div v-for="(course,index) in sbjestClass" :key="index">
+                <div> {{ course.courseName }} </div>
+                <el-radio-group v-model="editForm[course.layerId]">
+                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo"> {{ courseLayer.courseLayerName }} </el-radio>
+                </el-radio-group>
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -90,7 +91,7 @@
   </div>
 </template>
 <script>
-import { getChooseClassListInfo } from '@/api/pkcx'
+import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 export default {
   data() {
@@ -130,11 +131,14 @@ export default {
         ]
       },
       // 行政班数据
-      xzbOptions: []
+      xzbOptions: [],
+      // 学生分层及课时数据
+      sbjestClass: []
     }
   },
   created() {
     this.fetchData()
+    this.fetchSbjestClass()
   },
   methods: {
     // 获取表格数据
@@ -142,6 +146,36 @@ export default {
       const params = { id: 1 }
       const res = await getChooseClassListInfo(params)
       this.tableData = res.DATA
+    },
+    // 获取学生分层及课时数据
+    async fetchSbjestClass() {
+      const res = await getSbjestClassListInfo({
+        arrangeId: this.$route.query.arrangeId
+      })
+      const courseIds = []
+      const newData = []
+      res.DATA.forEach(item => {
+        const indexPos = courseIds.indexOf(item.courseId)
+        const tempCourseLayer = {
+          courseLayerName: item.courseLayerName,
+          dispSeq: item.dispSeq,
+          sumWeekClass: item.sumWeekClass
+        }
+
+        if (indexPos > -1) {
+          newData[indexPos].courseLayers.push(tempCourseLayer)
+        } else {
+          newData.push({
+            layerId: item.layerId,
+            arrangeId: item.arrangeId,
+            courseId: item.courseId,
+            courseLayers: [tempCourseLayer],
+            courseName: item.courseName
+          })
+          courseIds.push(item.courseId)
+        }
+      })
+      this.sbjestClass = newData
     },
     // 新增按钮
     addBtn() {

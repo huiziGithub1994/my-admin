@@ -58,21 +58,50 @@ module.exports = {
     }
   },
   // 学科分层及课时
-  '/sbjestclass/list': {
+  '/base/qrylayerList': {
     SUCCESS: true,
     MSG: '成功获取数据',
-    SUM: 20,
-    'DATA|20': [
+    SUM: 6,
+    DATA: [
       {
-        id: '@inc(10000)',
-        'courseName|1': ['物理', '化学', '生物'],
-        'schoolYear|1': ['2017', '2018'],
-        'courseType|1': ['学考A', '选考A'],
-        'courseTime|1': [2, 4]
+        layerId: '10000',
+        arrangeId: 'a001',
+        courseId: 'w001',
+        courseName: '物理',
+        courseLayerName: '物理选考A',
+        dispSeq: '1',
+        sumWeekClass: 2
+      },
+      {
+        layerId: '10001',
+        arrangeId: 'a001',
+        courseId: 'w001',
+        courseName: '物理',
+        courseLayerName: '物理选考B',
+        dispSeq: '2',
+        sumWeekClass: 2
+      },
+      {
+        layerId: '10003',
+        arrangeId: 'a001',
+        courseId: 'w002',
+        courseName: '化学',
+        courseLayerName: '化学选考A',
+        dispSeq: '1',
+        sumWeekClass: 2
+      },
+      {
+        layerId: '10004',
+        arrangeId: 'a001',
+        courseId: 'w002',
+        courseName: '化学',
+        courseLayerName: '化学选考B',
+        dispSeq: '2',
+        sumWeekClass: 2
       }
     ]
   },
-  // 学科分层及课时
+  // 倒入学生选课
   '/chooseclass/list': {
     SUCCESS: true,
     MSG: '成功获取数据',

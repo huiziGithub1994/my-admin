@@ -10,20 +10,21 @@ export function getPKCXListInfo(listQuery) {
   })
 }
 
-export function qryArrangeDetail(id) {
+// 排课查询详情接口
+export function qryArrangeDetail(params) {
   return request({
     url: URL.qryArrangeDetail,
     method: 'get',
-    params: {
-      arrangeId: id
-    }
+    params: params
   })
 }
-export function getSbjestClassListInfo(listQuery) {
+
+// 学科分层查询列表接口
+export function getSbjestClassListInfo(params) {
   return request({
-    url: '/sbjestclass/list',
+    url: URL.qrylayerList,
     method: 'get',
-    pparams: listQuery
+    params: params
   })
 }
 export function getChooseClassListInfo(listQuery) {
