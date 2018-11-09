@@ -113,7 +113,7 @@
                     <div v-for="(lession,indexNo) in item.lessionsTime" :key="indexNo">
                       <el-col :span="3">第{{ lession.lessionSeq | lessionSeqFilter }}节</el-col>
                       <el-col :span="9"><!-- [lession.beginTime,lession.endTime]-->
-                        <el-time-picker is-range v-model="data.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+                        <el-time-picker is-range v-model="lession.time" range-separator="至" format="HH:mm" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
                       </el-col>
                     </div>
                   </el-row>
@@ -130,6 +130,7 @@
 <script>
 import { Validators } from '@/utils/businessUtil'
 import { qryArrangeDetail } from '@/api/pkcx'
+import moment from 'moment'
 export default {
   name: 'BaseInfo',
   filters: {
@@ -171,14 +172,9 @@ export default {
       return 9
     }
   },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
+      time: ['09:23', '13:08'],
       timeClass: {
         '01': 'earlyMorning',
         '02': 'morning',
@@ -237,8 +233,14 @@ export default {
   methods: {
     // 获取表单数据
     async fetchFormData() {
-      const res = await qryArrangeDetail(this.id)
+      const res = await qryArrangeDetail({
+        arrangeId: this.$route.query.arrangeId
+      })
+      this.assembleLession(res.DATA.timeArrage)
       this.data = res.DATA
+      this.$nextTick(function() {
+        this.$refs['baseInfoRef'].clearValidate()
+      })
     },
     // 下一步按钮
     baseInfoNext() {
@@ -249,6 +251,19 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    // 节次时间数据的重组
+    assembleLession(data) {
+      data.forEach(item => {
+        item.lessionsTime.forEach(lession => {
+          Object.assign(lession, {
+            time: [
+              moment(lession.beginTime, 'HH:mm'),
+              moment(lession.endTime, 'HH:mm')
+            ]
+          })
+        })
       })
     }
   }

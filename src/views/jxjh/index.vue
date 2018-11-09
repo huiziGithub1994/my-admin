@@ -6,15 +6,17 @@
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
         <el-tab-pane label="基础信息" name="one" >
-          <base-info :id="$route.query.arrangeId"/>
+          <base-info />
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
-          <subject-class v-if="activeTabName === 'two'" />
+          <subject-layer v-if="activeTabName === 'two'" />
         </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
-          <choose-class ref="chooseClassRef"/>
+          <choose-course ref="chooseClassRef"/>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">
+          <split-class-manage/>
+        </el-tab-pane>
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
         <el-tab-pane label="评估资源" name="six" :disabled="tabDisabled.six">定时任务补偿</el-tab-pane>
       </el-tabs>
@@ -36,10 +38,11 @@
 </template>
 <script>
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
-import SubjectClass from './SubjectClass' // 学科分层及学时tab页组件
-import ChooseClass from './ChooseClass' // 导入学生选课tab页组件
+import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
+import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
+import SplitClassManage from './SplitClassManage' // 教学分班管理tab页组件
 export default {
-  components: { BaseInfo, SubjectClass, ChooseClass },
+  components: { BaseInfo, SubjectLayer, ChooseCourse, SplitClassManage },
   data() {
     return {
       activeTabName: 'one' // tab页高亮
