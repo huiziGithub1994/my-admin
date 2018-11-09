@@ -27,9 +27,19 @@ export function getSbjestClassListInfo(params) {
     params: params
   })
 }
+
 export function getChooseClassListInfo(listQuery) {
   return request({
     url: '/chooseclass/list',
+    method: 'get',
+    params: listQuery
+  })
+}
+
+// 教学分班管理
+export function getSplitClassManage(listQuery) {
+  return request({
+    url: '/splitClassManage/list',
     method: 'get',
     params: listQuery
   })

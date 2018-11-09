@@ -1,15 +1,10 @@
-<template><!--  教学分班管理 tab页-->
+<template><!--  走班教室 tab页-->
   <div>
     <div>
-      <condition>
-        <div class="condition">
-          <label>班额范围(人/班)</label>
-          <el-input placeholder="38-45" v-model="search['xh']" clearable></el-input>
-        </div>
-      </condition>
       <operation>
-        <el-button type="primary" plain>试分班</el-button>
-        <el-button type="primary" plain>任课统计</el-button>
+        <el-button type="primary" plain>新增</el-button>
+        <el-button type="primary" plain>修改</el-button>
+        <el-button type="primary" plain>删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">

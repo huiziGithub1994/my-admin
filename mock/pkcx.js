@@ -119,5 +119,17 @@ module.exports = {
         'hxxk|1': ['', '√']
       }
     ]
+  },
+  // 教学分班管理
+  '/splitClassManage/list': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: [
+      { id: '001', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: '物理学考A1班', expectNum: '32', teachers: '王玲', classTime: '2' },
+      { id: '002', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: '物理学考A2班', expectNum: '33', teachers: '张亮', classTime: '2' },
+      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A1班', expectNum: '41', teachers: '张丽', classTime: '4' },
+      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A2班', expectNum: '41', teachers: '彭家', classTime: '4' },
+      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A3班', expectNum: '42', teachers: '黄鹂', classTime: '4' }
+    ]
   }
 }

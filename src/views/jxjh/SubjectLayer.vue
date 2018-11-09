@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       tableData: [],
-      height: document.body.clientHeight - 410
+      height: document.body.clientHeight - 365
     }
   },
   created() {

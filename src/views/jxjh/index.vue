@@ -17,9 +17,6 @@
         <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">
           <split-class-manage/>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">
-          <class-manage></class-manage>
-        </el-tab-pane>
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
         <el-tab-pane label="评估资源" name="six" :disabled="tabDisabled.six">定时任务补偿</el-tab-pane>
       </el-tabs>
@@ -41,11 +38,14 @@
 </template>
 <script>
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
-import SubjectClass from './SubjectClass' // 学科分层及学时tab页组件
-import ChooseClass from './ChooseClass' // 导入学生选课tab页组件
+import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
+import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 import ClassManage from './ClassManage' // 学生分班管理tab页组件
+import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
+import Classroom from './Classroom' // 走班教室tab页组件
+
 export default {
-  components: { BaseInfo, SubjectClass, ChooseClass, ClassManage },
+  components: { BaseInfo, SubjectLayer, ChooseCourse, ClassManage, SplitClassManage, Classroom },
   data() {
     return {
       activeTabName: 'four', // tab页高亮

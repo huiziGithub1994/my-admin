@@ -10,8 +10,8 @@
       <div class="btns">
         <el-button type="primary" plain>查询</el-button>
         <el-button type="primary" plain>导入/导出</el-button>
-        <el-button type="primary" plain>增加</el-button>
-        <el-button type="primary" plain>修改</el-button>
+        <el-button type="primary" plain @click="addBtn">增加</el-button>
+        <el-button type="primary" plain @click="editBtn">修改</el-button>
         <el-button type="primary" plain>选课分析</el-button>
       </div>
     </div>
@@ -94,7 +94,7 @@ export default {
       },
       tableData: [],
       // 表格高度
-      height: document.body.clientHeight - 370,
+      height: document.body.clientHeight - 365,
       // 新增修改弹窗的显示和隐藏
       editDialogFormVisible: false,
       // 新增修改弹窗的标题
