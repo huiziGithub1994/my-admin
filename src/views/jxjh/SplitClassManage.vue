@@ -20,13 +20,13 @@
         <el-table-column label="开班数" property="classesNum"></el-table-column>
         <el-table-column label="教学班" property="classNames">
           <template slot-scope="scope">
-            <el-tag size="medium">{{ scope.row.classNames }}</el-tag>
+            <el-tag size="medium" v-for="(className,index) in scope.row.className" :key="index">{{ className }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="预计人数" property="expectNum"></el-table-column>
         <el-table-column label="任课教师" property="teachers">
           <template slot-scope="scope">
-            <div><el-input v-model="scope.row.teachers"/></div>
+            <div v-for="(teacher,index) in scope.row.teachers" :key="index"><el-input v-model="scope.row.teacher"/></div>
           </template>
         </el-table-column>
         <el-table-column label="课时" property="classTime"></el-table-column>
