@@ -1,4 +1,4 @@
-<template><!--  导入学生选课 tab页-->
+<template><!-- 走班教室 tab页-->
   <div>
     <div v-area v-if="initArea">
       <condition>
@@ -7,29 +7,22 @@
           <selectChild v-model="search['type']" clearable tp="yearSelect"/>
         </div>
         <div class="condition">
-          <label>学号</label>
+          <label>教室名称</label>
           <el-input v-model="search['type']"></el-input>
         </div>
       </condition>
       <operation>
         <el-button type="primary" plain>查询</el-button>
-        <el-button type="primary" plain>导入</el-button>
-        <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" plain>模板下载</el-button>
         <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain>引入</el-button>
-        <el-button type="primary" plain>分析</el-button>
       </operation>
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
-        <el-table-column label="年级" property="grade" fixed></el-table-column>
-        <el-table-column label="行政班" property="classes" fixed></el-table-column>
-        <el-table-column label="学号" property="stuno" width="100" fixed></el-table-column>
-        <el-table-column label="姓名" property="stuname" fixed></el-table-column>
-        <el-table-column label="性别" property="sex" width="55" fixed></el-table-column>
-        <el-table-column label="课程组合" property="courses" min-width="900"></el-table-column>
+        <el-table-column label="教学楼" property="grade" fixed></el-table-column>
+        <el-table-column label="教室名称" property="classes" fixed></el-table-column>
+        <el-table-column label="可上课门数" property="stuno" width="100" fixed></el-table-column>
+        <el-table-column label="课程列表" property="stuname"></el-table-column>
         <el-table-column fixed="right" width="90px" label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="mini">修改</el-button>

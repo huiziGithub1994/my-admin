@@ -113,10 +113,8 @@ module.exports = {
         'classes|1': ['1班', '2班'],
         stuno: '20170002',
         stuname: '@cstr(3)',
-        'wlxk|1': ['', '√'],
-        'wlxuk|1': ['', '√'],
-        'hxxuk|1': ['', '√'],
-        'hxxk|1': ['', '√']
+        'sex|1': ['男', '女'],
+        'courses': ['化学1选考、', '政治1选考、', '数学1选考、', '物理1选考、', '生物1选考、', '英语1选考、', '语文1选考、']
       }
     ]
   },
@@ -125,11 +123,8 @@ module.exports = {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: [
-      { id: '001', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: '物理学考A1班', expectNum: '32', teachers: '王玲', classTime: '2' },
-      { id: '002', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: '物理学考A2班', expectNum: '33', teachers: '张亮', classTime: '2' },
-      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A1班', expectNum: '41', teachers: '张丽', classTime: '4' },
-      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A2班', expectNum: '41', teachers: '彭家', classTime: '4' },
-      { id: '003', courseLayerId: '002', courseLayer: '物理选考A', studentNum: '123', classesNum: '3', classNames: '物理选考A3班', expectNum: '42', teachers: '黄鹂', classTime: '4' }
+      { id: '001', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: ['物理学考A1班', '物理学考A2班'], expectNum: '32', teachers: [{ name: '王玲' }, { name: '张亮' }], classTime: '2' },
+      { id: '002', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: ['物理选考A1班', '物理选考A2班', '物理选考A3班'], expectNum: '33', teachers: [{ name: '白宇' }, { name: '姜宇' }, { name: '张丽' }], classTime: '2' },
     ]
   }
 }

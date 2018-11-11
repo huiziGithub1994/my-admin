@@ -83,39 +83,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  {
-    path: '/ptpk',
-    component: Layout,
-    redirect: '/ptpk/kbcx',
-    name: 'ptpk',
-    meta: { title: '普通排课', icon: 'example' },
-    children: [
-      {
-        path: 'kbcx',
-        name: 'kbcx',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc',
-        name: 'pkgc',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      },
-      {
-        path: 'kbcx2',
-        name: 'kbcx2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc2',
-        name: 'pkgc2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
