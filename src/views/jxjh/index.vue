@@ -47,10 +47,17 @@ import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 
 export default {
-  components: { BaseInfo, SubjectLayer, ChooseCourse, ClassManage, SplitClassManage, ZbClassroom },
+  components: {
+    BaseInfo,
+    SubjectLayer,
+    ChooseCourse,
+    ClassManage,
+    SplitClassManage,
+    ZbClassroom
+  },
   data() {
     return {
-      activeTabName: 'five', // tab页高亮
+      activeTabName: 'two', // tab页高亮
       // 基础信息表单model
       baseInfo: {
         schoolYear: ''

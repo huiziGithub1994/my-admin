@@ -91,4 +91,11 @@ a:hover {
   }
 }
 
-// 左边菜单样式
+// 公共样式
+.text-red {
+  color: #f56c6c;
+}
+.el-button--text.text-red:focus,
+.el-button--text.text-red:hover {
+  color: #f56c6c;
+}
