@@ -124,7 +124,7 @@ export default {
     },
     // 新增按钮
     addBtn() {
-      this.$router.push({ name: 'jxjh' })
+      this.$router.push({ name: 'Jxjh' })
     },
     // 查询按钮
     queryBtn() {
@@ -157,7 +157,7 @@ export default {
     // 排课按钮
     arrangeClass(arrangeId) {
       const queryParams = { arrangeId }
-      this.$router.push({ name: 'jxjh', query: queryParams })
+      this.$router.push({ name: 'Jxjh', query: queryParams })
     },
     handleSizeChange(val) {
       this.pageTot.curPage = 1

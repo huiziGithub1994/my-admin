@@ -64,16 +64,16 @@ export const constantRouterMap = [
         meta: { title: '教学计划', icon: 'tree' }
       },
       {
-        path: 'pkgc',
-        name: 'Pkgc',
+        path: 'pkgz',
+        name: 'Pkgz',
         component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
+        meta: { title: '教学规则', icon: 'tree' }
       },
       {
         path: 'pkgc',
         name: 'Pkgc',
         component: () => import('@/views/tree/index'),
-        meta: { title: '教学计划', icon: 'tree' }
+        meta: { title: '排课过程', icon: 'tree' }
       },
       {
         path: 'kbcx',
