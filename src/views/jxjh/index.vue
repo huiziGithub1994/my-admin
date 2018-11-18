@@ -12,13 +12,14 @@
           <subject-layer v-if="activeTabName === 'two'" />
         </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
-          <choose-course ref="chooseClassRef"/>
+          <choose-course ref="chooseCourseRef"/>
         </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">
           <split-class-manage/>
         </el-tab-pane>
-        <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">定时任务补偿</el-tab-pane>
-        <el-tab-pane label="评估资源" name="six" :disabled="tabDisabled.six">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">
+          <zb-classroom ref="zbClassroomRef"/>
+        </el-tab-pane>
       </el-tabs>
     </div>
     <div class="nav-block next">
@@ -42,13 +43,20 @@ import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 import ClassManage from './ClassManage' // 学生分班管理tab页组件
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
-import Classroom from './Classroom' // 走班教室tab页组件
+import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 
 export default {
-  components: { BaseInfo, SubjectLayer, ChooseCourse, ClassManage, SplitClassManage, Classroom },
+  components: {
+    BaseInfo,
+    SubjectLayer,
+    ChooseCourse,
+    ClassManage,
+    SplitClassManage,
+    ZbClassroom
+  },
   data() {
     return {
-      activeTabName: 'four', // tab页高亮
+      activeTabName: 'one', // tab页高亮
       // 基础信息表单model
       baseInfo: {
         schoolYear: ''
@@ -83,7 +91,9 @@ export default {
     tabClick(tab) {
       const { name: tabName } = tab
       if (tabName === 'three') {
-        this.$refs.chooseClassRef.initArea = true
+        this.$refs.chooseCourseRef.initArea = true
+      } else if (tabName === 'five') {
+        this.$refs.zbClassroomRef.initArea = true
       }
     }
   }

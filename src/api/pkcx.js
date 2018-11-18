@@ -5,7 +5,6 @@ import URL from '@/api/url'
 export function getPKCXListInfo(listQuery) {
   return request({
     url: URL.qryArrangeList,
-    method: 'get',
     params: listQuery
   })
 }
@@ -14,7 +13,6 @@ export function getPKCXListInfo(listQuery) {
 export function qryArrangeDetail(params) {
   return request({
     url: URL.qryArrangeDetail,
-    method: 'get',
     params: params
   })
 }
@@ -23,7 +21,22 @@ export function qryArrangeDetail(params) {
 export function getSbjestClassListInfo(params) {
   return request({
     url: URL.qrylayerList,
-    method: 'get',
+    params: params
+  })
+}
+
+// 学科分层课程名称查询接口
+export function getlayerCourseName(params) {
+  return request({
+    url: URL.qrylayerCourseName,
+    params: params
+  })
+}
+
+// 学科分层详情查询接口
+export function qrylayerInfo(params) {
+  return request({
+    url: URL.qrylayerInfo,
     params: params
   })
 }
@@ -31,7 +44,6 @@ export function getSbjestClassListInfo(params) {
 export function getChooseClassListInfo(listQuery) {
   return request({
     url: '/chooseclass/list',
-    method: 'get',
     params: listQuery
   })
 }
@@ -40,7 +52,6 @@ export function getChooseClassListInfo(listQuery) {
 export function getSplitClassManage(listQuery) {
   return request({
     url: '/splitClassManage/list',
-    method: 'get',
     params: listQuery
   })
 }

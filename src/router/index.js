@@ -59,60 +59,48 @@ export const constantRouterMap = [
       },
       {
         path: 'jxjh',
-        name: 'jxjh',
+        name: 'Jxjh',
         component: () => import('@/views/jxjh/index'),
         meta: { title: '教学计划', icon: 'tree' }
       },
       {
         path: 'pkgz',
-        name: 'pkgz',
+        name: 'Pkgz',
         component: () => import('@/views/tree/index'),
-        meta: { title: '排课规则', icon: 'tree' }
+        meta: { title: '教学规则', icon: 'tree' }
       },
       {
-        path: 'jxjh1',
-        name: '教学计划',
+        path: 'pkgc',
+        name: 'Pkgc',
         component: () => import('@/views/tree/index'),
-        meta: { title: '教学计划', icon: 'tree' }
+        meta: { title: '排课过程', icon: 'tree' }
       },
       {
-        path: 'pkgz1',
-        name: '排课规则',
+        path: 'kbcx',
+        name: 'Kbxc',
         component: () => import('@/views/tree/index'),
-        meta: { title: '排课规则', icon: 'tree' }
+        meta: { title: '课表查询', icon: 'tree' }
       }
     ]
   },
   {
-    path: '/ptpk',
+    path: '/xtgl',
     component: Layout,
-    redirect: '/ptpk/kbcx',
-    name: 'ptpk',
-    meta: { title: '普通排课', icon: 'example' },
+    redirect: '/xtgl/sjzd',
+    name: 'Xtgl',
+    meta: { title: '系统管理', icon: 'example' },
     children: [
       {
-        path: 'kbcx',
-        name: 'kbcx',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
+        path: 'sjzd',
+        name: 'Sjzd',
+        component: () => import('@/views/sjzd/index'),
+        meta: { title: '数据字典', icon: 'table' }
       },
       {
-        path: 'pkgc',
-        name: 'pkgc',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
-      },
-      {
-        path: 'kbcx2',
-        name: 'kbcx2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
-      },
-      {
-        path: 'pkgc2',
-        name: 'pkgc2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
+        path: 'sjzd1',
+        name: 'Sjzd1',
+        component: () => import('@/views/pkcx/index'),
+        meta: { title: '数据字典', icon: 'table' }
       }
     ]
   },

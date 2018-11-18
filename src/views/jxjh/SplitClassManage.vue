@@ -13,20 +13,22 @@
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
         <el-table-column label="课程" property="courseLayer"></el-table-column>
         <el-table-column label="选课人数" property="studentNum"></el-table-column>
         <el-table-column label="开班数" property="classesNum"></el-table-column>
+        <el-table-column label="预计人数" property="expectNum"></el-table-column>
         <el-table-column label="教学班" property="classNames">
           <template slot-scope="scope">
-            <el-tag size="medium">{{ scope.row.classNames }}</el-tag>
+            <el-tag size="medium" v-for="(item,index) in scope.row.classNames" :key="index">{{ item }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="预计人数" property="expectNum"></el-table-column>
         <el-table-column label="任课教师" property="teachers">
           <template slot-scope="scope">
-            <div><el-input v-model="scope.row.teachers"/></div>
+            <div v-for="(item,index) in scope.row.teachers" :key="index">
+              <el-input size="mini" v-model="item.name"/>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="课时" property="classTime"></el-table-column>
