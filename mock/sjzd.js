@@ -1,5 +1,9 @@
 module.exports = {
   // 数据字典表格数据
+  'post /base/qryKeyList': {
+    SUCCESS: true,
+    MSG: '成功获取数据'
+  },
   '/base/qryKeyList': {
     SUCCESS: true,
     MSG: '成功获取数据',

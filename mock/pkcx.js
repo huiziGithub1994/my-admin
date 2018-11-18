@@ -101,6 +101,43 @@ module.exports = {
       }
     ]
   },
+  // 学科分层课程名称查询接口
+  '/base/qrylayerCourseName': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: [
+      {
+        layerId: '10000',
+        arrangeId: 'a001',
+        courseId: 'w001',
+        courseName: '物理'
+      },
+      {
+        layerId: '10001',
+        arrangeId: 'a001',
+        courseId: 'w002',
+        courseName: '化学'
+      }
+    ]
+  },
+  // 学科分层详情查询接口
+  'post /base/qrylayerInfo': {
+    SUCCESS: true,
+    MSG: '成功获取数据'
+  },
+  '/base/qrylayerInfo': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      'layerId': '3993494',
+      'arrangeId': '001',
+      'courseId': '100',
+      'courseName': '物理',
+      'courseLayerName': '物理选考B',
+      'dispSeq': 2,
+      'sumWeekClass': 4
+    }
+  },
   // 倒入学生选课
   '/chooseclass/list': {
     SUCCESS: true,

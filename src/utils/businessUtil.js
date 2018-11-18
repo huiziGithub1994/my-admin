@@ -1,3 +1,5 @@
+import request from '@/utils/request'
+import URL from '@/api/url'
 /* 业务帮助类 */
 /* 2.根据表格高度，自动计算出表格显示数据的最佳行数。
     入参：tableHeight(el-table表格高度)
@@ -87,4 +89,102 @@ export const Validators = {
       callback()
     }
   }
+}
+
+/**
+ * 重置表单
+ * @param {Object} obj 参数
+ */
+export function resetForm(obj) {
+  // typeof: boolean number string function object undefined
+  for (const [key, val] of Object.entries(obj)) {
+    switch (typeof val) {
+      case 'boolean':
+      case 'number':
+        obj[key] = undefined
+        break
+      case 'string':
+        obj[key] = ''
+        break
+      default:
+        if (obj[key] instanceof Array) {
+          obj[key] = []
+        }
+    }
+  }
+}
+/**
+ * 表格数据 校验修改按钮
+ * @param {Object} ins 参数：this 对象
+ */
+export function validEditBtn(ins) {
+  const len = ins.multipleSelection.length
+  if (len === 0) {
+    ins.$message({
+      message: '请选择要修改的数据',
+      type: 'warning'
+    })
+    return false
+  }
+  if (len > 1) {
+    ins.$message({
+      message: '一次只能修改一条数据',
+      type: 'warning'
+    })
+    return false
+  }
+  ins.dialogFormVisible = true
+  ins.dialogTitle = '修改'
+  return true
+  // for (const key of Object.keys(ins.formData)) {
+  //   ins.formData[key] = ins.multipleSelection[0][key]
+  // }
+}
+
+/**
+ * 删除表格多条数据
+ * @param {} ins this 对象
+ * @param {*} deleteKey 删除的键名
+ * @param {*} deleteUrl 请求url
+ */
+export function deleteTableDatas(ins, deleteKey, deleteUrl) {
+  if (ins.multipleSelection.length === 0) {
+    ins.$message({
+      message: '请选择要删除的数据',
+      type: 'warning'
+    })
+    return
+  }
+  const ids = []
+  ins.multipleSelection.forEach(item => {
+    ids.push(item[deleteKey])
+  })
+  ins.$confirm('确定删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      const params = {
+        a: '2'
+      }
+      params[deleteKey] = ids.join(',')
+      const res = await request({
+        url: URL[deleteUrl],
+        method: 'get',
+        params: params
+      })
+      ins.$message({
+        type: res.SUCCESS ? 'success' : 'error',
+        message: res.SUCCESS ? '删除成功!' : '删除失败'
+      })
+      // 重新加载数据
+      if (res.SUCCESS) ins.queryBtn()
+    })
+    .catch(() => {
+      ins.$message({
+        type: 'info',
+        message: '已取消删除'
+      })
+    })
 }

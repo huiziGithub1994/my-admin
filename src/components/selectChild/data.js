@@ -12,7 +12,7 @@ export function yearSelect() {
   const month = date.getMonth() + 1
   const resultArr = []
   if (month >= 3 && month <= 8) year--
-  for (let i = year; i > year - 7; i--) {
+  for (let i = year; i > year - 3; i--) {
     resultArr.push({ value: i, label: `${i} - ${i + 1} 学年` })
   }
   return resultArr

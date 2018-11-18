@@ -20,7 +20,6 @@
         <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">
           <zb-classroom ref="zbClassroomRef"/>
         </el-tab-pane>
-        <el-tab-pane label="评估资源" name="six" :disabled="tabDisabled.six">定时任务补偿</el-tab-pane>
       </el-tabs>
     </div>
     <div class="nav-block next">
@@ -57,7 +56,7 @@ export default {
   },
   data() {
     return {
-      activeTabName: 'two', // tab页高亮
+      activeTabName: 'one', // tab页高亮
       // 基础信息表单model
       baseInfo: {
         schoolYear: ''

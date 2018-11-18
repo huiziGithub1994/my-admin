@@ -4,11 +4,11 @@
       <condition>
         <div class="condition">
           <label>学年</label>
-          <selectChild v-model="listQuery['schoolYear']" clearable tp="yearSelect"/>
+          <selectChild v-model="listQuery['schoolYear']" :clearable="false" tp="yearSelect"/>
         </div>
         <div class="condition">
           <label>学期</label>
-          <selectChild v-model="listQuery['termCode']" clearable tp="termSelect"/>
+          <selectChild v-model="listQuery['termCode']" :clearable="false" tp="termSelect"/>
         </div>
         <div class="condition">
           <label>排课状态</label>
@@ -29,7 +29,7 @@
         <el-table-column property="arrangName" show-overflow-tooltip min-width="160px" label="排课名称"/>
         <el-table-column property="name" label="状态" width="80px">
           <template slot-scope="scope">
-            <el-tag size="medium" :type="scope.row.name === '完成' ? 'success': scope.row.name === '进行中' ? 'primary' : 'danger'">{{ scope.row.name }}</el-tag>
+            <el-tag size="mini" :type="scope.row.name === '完成' ? 'success': scope.row.name === '进行中' ? 'primary' : 'danger'">{{ scope.row.name }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column property="schoolYear" width="120px" label="学年">
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getPKCXListInfo } from '@/api/pkcx'
+import { getPKCXListInfo, qryArrangeDetail } from '@/api/pkcx'
 import { getTableBestRows, getCurSchoolYearTerm } from '@/utils/businessUtil'
 export default {
   filters: {
@@ -139,7 +139,7 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await getPKCXListInfo({ arrangeId: arrangeId, a: '2' })
+          const res = await qryArrangeDetail({ arrangeId: arrangeId, a: '2' })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
             message: res.SUCCESS ? '删除成功!' : '删除失败'

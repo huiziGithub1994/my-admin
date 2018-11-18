@@ -5,7 +5,6 @@ import URL from '@/api/url'
 export function getKeyList(listQuery) {
   return request({
     url: URL.qryKeyList,
-    method: 'get',
     params: listQuery
   })
 }

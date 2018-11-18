@@ -3,8 +3,10 @@
     <div>
       <condition>
         <div class="condition">
-          <label>课程分类</label>
-          <selectChild v-model="search['courseName']" clearable tp="yearSelect" @change="selectChange"/>
+          <label>课程名称</label>
+          <el-select v-model="search['courseId']" clearable @change="fetchData">
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"> </el-option>
+          </el-select>
         </div>
       </condition>
       <operation>
@@ -36,18 +38,29 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveBtn">保 存</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getSbjestClassListInfo } from '@/api/pkcx'
+import {
+  getSbjestClassListInfo,
+  getlayerCourseName,
+  qrylayerInfo
+} from '@/api/pkcx'
+import { validEditBtn, resetForm } from '@/utils/businessUtil'
 
 export default {
   data() {
     return {
+      // 表格数据
       tableData: [],
+      search: {
+        courseId: ''
+      },
+      // 课程名称下拉菜单数据
+      courseOptions: [],
       multipleSelection: [], // 表格选中项
       height: document.body.clientHeight - 365,
       dialogFormVisible: false,
@@ -65,53 +78,80 @@ export default {
           trigger: 'blur'
         }
       },
-      formData: {},
-      search: {
-        courseName: ''
+      // 表单数据
+      formData: {
+        layerId: '',
+        arrangeId: '',
+        courseId: '',
+        courseName: '',
+        courseLayerName: '',
+        dispSeq: 0,
+        sumWeekClass: 0
       }
     }
   },
   created() {
     this.fetchData()
+    this.getCourseName()
   },
   methods: {
     // 获取表格数据
     async fetchData() {
       const res = await getSbjestClassListInfo({
-        arrangeId: this.$route.query.arrangeId
+        arrangeId: this.$route.query.arrangeId,
+        courseId: this.search.courseId
       })
       this.tableData = res.DATA
     },
-    selectChange(val) {
-      if (val === '') return
-      console.log(val)
+    // 课程名称下拉列表数据
+    async getCourseName() {
+      const res = await getlayerCourseName({
+        arrangeId: this.$route.query.arrangeId
+      })
+      this.courseOptions = res.DATA
     },
     // 新增按钮
     addBtn() {
       this.dialogFormVisible = true
       this.dialogTitle = '新增'
-      this.formData = {}
+      resetForm(this.formData)
+      this.formData.arrangeId = this.$route.query.arrangeId
+      console.log(this.formData.arrangeId)
     },
     // 修改按钮
-    editBtn() {
-      const len = this.multipleSelection.length
-      if (len === 0) {
-        this.$message({
-          message: '请选择要修改的数据',
-          type: 'warning'
-        })
-        return
-      }
-      if (len > 1) {
-        this.$message({
-          message: '一次只能修改一条数据',
-          type: 'warning'
-        })
-        return
-      }
-      this.dialogFormVisible = true
-      this.dialogTitle = '修改'
-      this.formData = this.multipleSelection[0]
+    async editBtn() {
+      if (!validEditBtn(this)) return
+      const res = await qrylayerInfo({
+        layerId: this.multipleSelection[0].layerId
+      })
+      this.formData = res.DATA
+    },
+    // 弹窗中的保存按钮
+    saveBtn() {
+      this.$refs['ruleForm'].validate(async valid => {
+        if (valid) {
+          const res = await qrylayerInfo(
+            Object.assign(this.formData, { a: '1' })
+          )
+          if (res.SUCCESS) {
+            this.fetchData()
+            this.getCourseName()
+          }
+          this.$message({
+            type: res.SUCCESS ? 'success' : 'error',
+            message: res.SUCCESS ? '保存成功!' : '保存失败'
+          })
+          if (this.dialogTitle === '修改') {
+            this.dialogFormVisible = false
+          } else {
+            if (res.SUCCESS) {
+              resetForm(this.formData)
+            }
+          }
+        } else {
+          return false
+        }
+      })
     },
     // 删除按钮
     deleteBtn() {
@@ -124,7 +164,7 @@ export default {
       }
       const ids = []
       this.multipleSelection.forEach(item => {
-        ids.push(item.arrangeId)
+        ids.push(item.layerId)
       })
       this.$confirm('确定删除吗?', '提示', {
         confirmButtonText: '确定',
@@ -132,8 +172,9 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await getSbjestClassListInfo({
-            arrangeId: ids.join(','),
+          const res = await qrylayerInfo({
+            layerId: ids.join(','),
+            arrangeId: this.$route.query.arrangeId,
             a: '2'
           })
           this.$message({
@@ -141,7 +182,10 @@ export default {
             message: res.SUCCESS ? '删除成功!' : '删除失败'
           })
           // 重新加载数据
-          if (res.SUCCESS) this.queryBtn()
+          if (res.SUCCESS) {
+            this.fetchData()
+            this.getCourseName()
+          }
         })
         .catch(() => {
           this.$message({
