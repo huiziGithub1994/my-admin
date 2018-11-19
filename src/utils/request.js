@@ -42,29 +42,49 @@ export default function service(settings) {
     baseURL: process.env.BASE_API, // api 的 base_url
     timeout: 5000, // 请求超时时间
     url: settings.url,
-    method: 'get'
+    method: settings.method ? settings.method : 'get'
   }
+
+  const params = settings.params
   // a：'0' 新增     '1'：修改      '2'：删除
-  if (settings.params.a === '0' || settings.params.a === '1') {
+  if (params && (params.a === '0' || params.a === '1')) {
     defaultOption.method = 'post'
-    defaultOption.data = settings.params
-    defaultOption.headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
-    defaultOption.transformRequest = [function(data) {
-      data = Qs.stringify(data)
-      return data
-    }]
   } else {
     defaultOption.params = settings.params
   }
-  return new Promise(function(resolve, reject) {
-    axiosIns.request(defaultOption).then((response) => {
-      resolve(response)
-    }).catch((error) => {
-      //  1.判断请求超时
-      if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-        Message({ message: '请求超时，请稍后再试！', type: 'error', duration: 5 * 1000 })
+
+  if (defaultOption.method === 'post') {
+    defaultOption.data = settings.params
+    defaultOption.headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    }
+    defaultOption.transformRequest = [
+      function(data) {
+        data = Qs.stringify(data)
+        return data
       }
-      resolve(error)
-    })
+    ]
+  }
+
+  return new Promise(function(resolve, reject) {
+    axiosIns
+      .request(defaultOption)
+      .then(response => {
+        resolve(response)
+      })
+      .catch(error => {
+        //  1.判断请求超时
+        if (
+          error.code === 'ECONNABORTED' &&
+          error.message.indexOf('timeout') !== -1
+        ) {
+          Message({
+            message: '请求超时，请稍后再试！',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+        resolve(error)
+      })
   })
 }

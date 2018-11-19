@@ -97,10 +97,10 @@ export const constantRouterMap = [
         meta: { title: '数据字典', icon: 'table' }
       },
       {
-        path: 'sjzd1',
-        name: 'Sjzd1',
-        component: () => import('@/views/pkcx/index'),
-        meta: { title: '数据字典', icon: 'table' }
+        path: 'xlwh',
+        name: 'Xlwh',
+        component: () => import('@/views/Xlwh/index'),
+        meta: { title: '校历维护', icon: 'table' }
       }
     ]
   },

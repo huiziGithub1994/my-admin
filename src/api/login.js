@@ -4,7 +4,7 @@ export function login(username, password) {
   return request({
     url: '/user/login',
     method: 'post',
-    data: {
+    params: {
       username,
       password
     }
@@ -19,9 +19,10 @@ export function getInfo(token) {
   })
 }
 
-export function logout() {
+export function logout(params) {
   return request({
     url: '/user/logout',
-    method: 'post'
+    method: 'post',
+    params
   })
 }
