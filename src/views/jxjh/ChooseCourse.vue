@@ -32,8 +32,8 @@
         <el-table-column label="课程组合" property="courses" min-width="900"></el-table-column>
         <el-table-column fixed="right" width="90px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini">修改</el-button>
-            <el-button type="text" size="mini" class="deleteBtn">删除</el-button>
+            <el-button type="text" size="mini" @click="editBtn(scope.row.id)">修改</el-button>
+            <el-button type="text" size="mini" class="deleteBtn" @click="deleteBtn(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -162,7 +162,6 @@ export default {
           dispSeq: item.dispSeq,
           sumWeekClass: item.sumWeekClass
         }
-
         if (indexPos > -1) {
           newData[indexPos].courseLayers.push(tempCourseLayer)
         } else {
@@ -188,6 +187,8 @@ export default {
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改学生选课'
     },
+    // 删除接口
+    deleteBtn() {},
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
       this.$refs['ruleFormRef'].validate(valid => {
@@ -203,8 +204,8 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.deleteBtn{
-  color:red;
+.deleteBtn {
+  color: red;
 }
 .table-wapper {
   border: 1px solid #dddddd;

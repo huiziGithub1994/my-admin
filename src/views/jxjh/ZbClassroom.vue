@@ -174,12 +174,12 @@ export default {
     // 新增按钮
     addBtn() {
       this.editDialogFormVisible = true
-      this.editDialogTitle = '新增学生选课'
+      this.editDialogTitle = '新增走班教室'
     },
     // 修改按钮
     editBtn() {
       this.editDialogFormVisible = true
-      this.editDialogTitle = '修改学生选课'
+      this.editDialogTitle = '修改走班教室'
     },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
@@ -196,8 +196,8 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.deleteBtn{
-  color:red;
+.deleteBtn {
+  color: red;
 }
 .table-wapper {
   border: 1px solid #dddddd;

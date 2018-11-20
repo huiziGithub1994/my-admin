@@ -1,7 +1,11 @@
 <template>
   <div class="conent">
-    <div class="nav-block active">
-      <span>1</span>教学计划
+    <div class="nav-block">
+      <el-steps :active="1" finish-status="success" simple>
+        <el-step title="步骤 1" ></el-step>
+        <el-step title="步骤 2" ></el-step>
+        <el-step title="步骤 3" ></el-step>
+      </el-steps>
     </div>
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
@@ -21,19 +25,12 @@
           <zb-classroom ref="zbClassroomRef"/>
         </el-tab-pane>
       </el-tabs>
-    </div>
-    <div class="nav-block next">
-      <span>2</span>排课规则
-    </div>
-    <div class="next-wapper">
-      <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
-      <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>
-    </div>
-    <div class="nav-block">
-      <span>3</span>排课过程
-    </div>
-    <div class="nav-block">
-      <span>4</span>课表查询
+      <div class="next-wapper">
+        <div>
+          <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
+          <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -100,49 +97,15 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.conent {
-}
 .nav-block {
-  height: 35px;
-  line-height: 35px;
-  color: RGB(173, 173, 173);
-  > span {
-    border: 1px solid RGB(173, 173, 173);
-    display: inline-block;
-    width: 35px;
-    height: 100%;
-    border-radius: 50%;
-    text-align: center;
-    margin-right: 10px;
-  }
-}
-.nav-block:not(:first-child) {
-  margin-bottom: 5px;
-}
-.nav-block.active {
-  color: RGB(51, 153, 255);
-  > span {
-    border: 1px solid RGB(51, 153, 255);
-  }
-}
-.nav-block.next {
-  display: inline-block;
-  color: black;
-  > span {
-    color: white;
-    background: RGB(51, 153, 255);
-    border: 1px solid RGB(51, 153, 255);
-  }
-}
-.jxjh-tabs {
-  border-left: 1px solid RGB(51, 153, 255);
-  margin-left: 17px;
-  padding: 0 17px;
 }
 .next-wapper {
-  display: inline-block;
-  float: right;
-  margin-right: 17px;
+  overflow: hidden;
+  > div {
+    display: inline-block;
+    float: right;
+    margin-right: 17px;
+  }
 }
 </style>
 
