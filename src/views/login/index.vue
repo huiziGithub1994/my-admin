@@ -1,11 +1,9 @@
 <template>
   <div class="personLogin">
     <div class="login-header">
-      <div class="header-content c-f">
-        <div class="c-l-f">
-          <img src="../../assets/login/logo.png" class="logo-img">
-        </div>
-        <div class="c-l-r time-font">{{ time }}</div>
+      <div class="header-content">
+        <img src="../../assets/login/logo.png" class="logo-img">
+        <div class="time-font">{{ time }}</div>
       </div>
     </div>
     <div class="login-middle">
@@ -13,24 +11,15 @@
         <div class="form-box">
         </div>
         <div class="form-area">
-          <transition name="custom-classes-transition" enter-active-class="animated tada" leave-active-class="animated bounceOutRight">
-            <div class="img-login" v-show="Showanimat">
-              <img style="margin-top:-8.5px;" v-if="ShowImg=='1'" src="../../assets/login/show-logid.png" alt="">
-              <img style="margin-top:5px;" v-else-if="ShowImg=='2'" src="../../assets/login/show-paswd.png" alt="">
-              <img v-else src="../../assets/login/show-noblue.png" alt="">
-            </div>
-          </transition>
           <div class="form-conter">
-            <p style="width:95px;margin:30px auto;font-size:20px;letter-spacing: 3px;">用户登录</p>
+            <p class="login-title">用户登录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
-              <el-form-item prop="loginid" class="input-padding">
-                <el-input @focus="iptFocus('1')" @blur="iptFocus('0')" class="input-margin" placeholder="用户名" v-model.trim="ruleForm.loginid">
-                  <i slot="prefix" class="fa fa-user-o fa-lg"></i>
+              <el-form-item prop="loginid">
+                <el-input class="input-margin" placeholder="用户名" v-model.trim="ruleForm.loginid">
                 </el-input>
               </el-form-item>
-              <el-form-item prop="loginpwd" class="input-padding">
-                <el-input @focus="iptFocus('2')" @blur="iptFocus('0')" class="input-margin" placeholder="密码" type="password" v-model.trim="ruleForm.loginpwd" auto-complete="off">
-                  <i slot="prefix" class="fa fa-lock fa-lg"></i>
+              <el-form-item prop="loginpwd">
+                <el-input class="input-margin" placeholder="密码" type="password" v-model.trim="ruleForm.loginpwd" auto-complete="off">
                 </el-input>
               </el-form-item>
               <el-form-item prop="validateCode">
@@ -63,6 +52,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -96,10 +86,13 @@ export default {
   methods: {
     ...mapMutations(['SET_LOGINID']),
     // 登录
-    submitForm(fromRes) {},
+    submitForm(fromRes) {
+      console.log('nm')
+      this.$router.push({ name: 'Dshboard' })
+    },
     requestVali() {},
     getTime: function() {
-      this.time = '2018年08月10日 12:09'
+      this.time = moment().format('YYYY 年 MM 月 DD 日 HH:mm')
     }
   }
 }
@@ -110,9 +103,6 @@ export default {
   height: 38px;
   line-height: 38px;
 }
-.input-padding .el-input--small .el-input__inner {
-  padding-left: 40px;
-}
 .form-conter .el-input--small .el-input__inner:focus {
   box-shadow: #409eff 0px 0px 8px;
 }
@@ -122,6 +112,12 @@ export default {
 </style>
 
 <style scoped>
+.login-title {
+  width: 95px;
+  margin: 30px auto;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
 .logo-img {
   vertical-align: middle;
 }
@@ -134,7 +130,8 @@ export default {
   height: 100%;
 }
 .time-font {
-  font-size: 13px;
+  font-size: 15px;
+  float: right;
 }
 .header-content {
   width: 72%;
