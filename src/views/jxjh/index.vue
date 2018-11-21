@@ -2,9 +2,10 @@
   <div class="conent">
     <div class="nav-block">
       <el-steps :active="1" finish-status="success" simple>
-        <el-step title="步骤 1" ></el-step>
-        <el-step title="步骤 2" ></el-step>
-        <el-step title="步骤 3" ></el-step>
+        <el-step title="教学计划" ></el-step>
+        <el-step title="排课规则" ></el-step>
+        <el-step title="排课过程" ></el-step>
+        <el-step title="课表查询" ></el-step>
       </el-steps>
     </div>
     <div class="jxjh-tabs">
@@ -98,6 +99,10 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .nav-block {
+  margin-bottom: 10px;
+  > .el-steps--simple {
+    padding: 8px 8%;
+  }
 }
 .next-wapper {
   overflow: hidden;

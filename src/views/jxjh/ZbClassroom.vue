@@ -17,7 +17,7 @@
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
         <el-table-column label="教学楼" property="grade" fixed></el-table-column>
         <el-table-column label="教室名称" property="classes" fixed></el-table-column>

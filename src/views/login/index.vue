@@ -88,7 +88,7 @@ export default {
     // 登录
     submitForm(fromRes) {
       console.log('nm')
-      this.$router.push({ name: 'Dshboard' })
+      this.$router.push({ name: 'Home' })
     },
     requestVali() {},
     getTime: function() {
@@ -142,7 +142,7 @@ export default {
   line-height: 100px;
 }
 .login-middle {
-  height: 442px;
+  height: 60%;
   background: url('../../assets/login/Newlogin.png') no-repeat left center;
   background-size: 100%;
 }

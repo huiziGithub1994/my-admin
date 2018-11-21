@@ -74,7 +74,7 @@ import { getTableBestRows, validEditBtn, resetForm } from '@/utils/businessUtil'
 
 export default {
   data() {
-    const h = 190
+    const h = 175
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {

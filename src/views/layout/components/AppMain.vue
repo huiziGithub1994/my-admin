@@ -28,13 +28,12 @@ export default {
   background: #efefef;
   position: relative;
   overflow-y: auto;
-  overflow-x:hidden;
-  padding: 7px 7px 0 5px;
+  overflow-x: hidden;
 }
 .content-wapper {
   background: white;
   width: 100%;
-  min-height:100%;
+  min-height: 100%;
   padding: 10px 10px 5px 10px;
 }
 </style>
