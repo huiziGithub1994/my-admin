@@ -160,10 +160,7 @@ export default {
         this.tabHeader = weeks.slice(0, workDays)
         const count =
           countInMorning + countMorning + countAfternoon + countNight
-        const tempTabData = []
-        for (let i = 1; i <= count; i++) {
-          tempTabData.push({ time: '09:20-10:00' })
-        }
+        console.log(count)
       }
     },
     // 获取表单数据

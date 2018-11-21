@@ -19,10 +19,10 @@
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
-        <el-table-column label="教学楼" property="grade" fixed></el-table-column>
-        <el-table-column label="教室名称" property="classes" fixed></el-table-column>
-        <el-table-column label="可上课门数" property="stuno" width="100" fixed></el-table-column>
-        <el-table-column label="课程列表" property="stuname"></el-table-column>
+        <el-table-column label="教学楼" property="building" width="130" fixed></el-table-column>
+        <el-table-column label="教室名称" property="room" width="130" fixed></el-table-column>
+        <el-table-column label="可上课门数" property="number" width="100" fixed></el-table-column>
+        <el-table-column label="课程列表" property="courses"></el-table-column>
         <el-table-column fixed="right" width="90px" label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="mini">修改</el-button>
@@ -33,37 +33,21 @@
     </div>
     <!-- 新增修改弹窗-->
     <el-dialog :title="editDialogTitle" :visible.sync="editDialogFormVisible" width="700px">
-      <el-form :model="editForm" :rules="editRules" ref="ruleFormRef" label-width="70px">
+      <el-form :model="editForm" :rules="editRules" ref="ruleFormRef" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="学号" prop="xh">
-              <el-input v-model="editForm.xh" placeholder="请输入学号"></el-input>
+            <el-form-item label="教学楼" prop="building">
+              <el-input v-model="editForm.building"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="xm">
-              <el-input v-model="editForm.xm" placeholder="请输入姓名"></el-input>
+            <el-form-item label="教室名称" prop="room">
+              <el-input v-model="editForm.room"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="年级" prop="gradeCode">
-              <selectChild v-model="editForm.gradeCode" tp="gradeSelect"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="行政班" prop="xzb">
-              <el-select v-model="editForm.xzb" clearable placeholder="请选择">
-                <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
-              <el-radio-group v-model="editForm.xb">
-                <el-radio label="1">男</el-radio>
-                <el-radio label="2">女</el-radio>
-              </el-radio-group>
+            <el-form-item label="可上课程">
+              <el-checkbox v-model="editForm.number">全选</el-checkbox>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -86,7 +70,7 @@
   </div>
 </template>
 <script>
-import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
+import { getZbClassroom, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 export default {
   data() {
@@ -108,7 +92,7 @@ export default {
       },
       // 表单规则
       editRules: {
-        xh: [
+        building: [
           { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ],
         xm: [
@@ -138,7 +122,7 @@ export default {
     // 获取表格数据
     async fetchData() {
       const params = { id: 1 }
-      const res = await getChooseClassListInfo(params)
+      const res = await getZbClassroom(params)
       this.tableData = res.DATA
     },
     // 获取学生分层及课时数据

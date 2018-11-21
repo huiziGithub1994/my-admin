@@ -129,13 +129,13 @@ module.exports = {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: {
-      'layerId': '3993494',
-      'arrangeId': '001',
-      'courseId': '100',
-      'courseName': '物理',
-      'courseLayerName': '物理选考B',
-      'dispSeq': 2,
-      'sumWeekClass': 4
+      layerId: '3993494',
+      arrangeId: '001',
+      courseId: '100',
+      courseName: '物理',
+      courseLayerName: '物理选考B',
+      dispSeq: 2,
+      sumWeekClass: 4
     }
   },
   // 倒入学生选课
@@ -151,7 +151,15 @@ module.exports = {
         stuno: '20170002',
         stuname: '@cstr(3)',
         'sex|1': ['男', '女'],
-        'courses': ['化学1选考、', '政治1选考、', '数学1选考、', '物理1选考、', '生物1选考、', '英语1选考、', '语文1选考、']
+        courses: [
+          '化学1选考、',
+          '政治1选考、',
+          '数学1选考、',
+          '物理1选考、',
+          '生物1选考、',
+          '英语1选考、',
+          '语文1选考、'
+        ]
       }
     ]
   },
@@ -160,8 +168,44 @@ module.exports = {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: [
-      { id: '001', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: ['物理学考A1班', '物理学考A2班'], expectNum: '32', teachers: [{ name: '王玲' }, { name: '张亮' }], classTime: '2' },
-      { id: '002', courseLayerId: '001', courseLayer: '物理学考A', studentNum: '65', classesNum: '2', classNames: ['物理选考A1班', '物理选考A2班', '物理选考A3班'], expectNum: '33', teachers: [{ name: '白宇' }, { name: '姜宇' }, { name: '张丽' }], classTime: '2' },
+      {
+        id: '001',
+        courseLayerId: '001',
+        courseLayer: '物理学考A',
+        studentNum: '65',
+        classesNum: '2',
+        classNames: ['物理学考A1班', '物理学考A2班'],
+        expectNum: '32',
+        teachers: [{ name: '王玲' }, { name: '张亮' }],
+        classTime: '2'
+      },
+      {
+        id: '002',
+        courseLayerId: '001',
+        courseLayer: '物理学考A',
+        studentNum: '65',
+        classesNum: '2',
+        classNames: ['物理选考A1班', '物理选考A2班', '物理选考A3班'],
+        expectNum: '33',
+        teachers: [{ name: '白宇' }, { name: '姜宇' }, { name: '张丽' }],
+        classTime: '2'
+      }
+    ]
+  },
+  // 走班排课
+  '/zbClassroom/list': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    'DATA|5': [
+      {
+        id: '@inc(10000)',
+        zbClassroomId: '@inc(10)',
+        building: '综合教学楼',
+        room: '高二1班',
+        number: '7',
+        courses:
+          '化学1选考、政治1选考、数学1选考、物理1选考、生物1选考、英语1选考、语文1选考'
+      }
     ]
   }
 }

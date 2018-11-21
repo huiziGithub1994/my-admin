@@ -55,3 +55,11 @@ export function getSplitClassManage(listQuery) {
     params: listQuery
   })
 }
+
+// 走班教室
+export function getZbClassroom(listQuery) {
+  return request({
+    url: '/zbClassroom/list',
+    params: listQuery
+  })
+}
