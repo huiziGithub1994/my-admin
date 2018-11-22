@@ -192,8 +192,8 @@ module.exports = {
       }
     ]
   },
-  // 走班排课
-  '/zbClassroom/list': {
+  // 走班教室排课列表查询
+  '/base/qryzbClassroomList': {
     SUCCESS: true,
     MSG: '成功获取数据',
     'DATA|5': [
@@ -207,5 +207,18 @@ module.exports = {
           '化学1选考、政治1选考、数学1选考、物理1选考、生物1选考、英语1选考、语文1选考'
       }
     ]
+  },
+  // 走班排课详情查询
+  '/base/zbClassroom': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      id: '2323',
+      zbClassroomId: '22',
+      building: '综合教学楼',
+      room: '高二1班',
+      number: '7',
+      courses: ['10000', '10001']
+    }
   }
 }

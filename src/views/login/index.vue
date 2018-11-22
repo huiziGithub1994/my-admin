@@ -2,7 +2,7 @@
   <div class="personLogin">
     <div class="login-header">
       <div class="header-content">
-        <img src="../../assets/login/logo.png" class="logo-img">
+        <span>理水永昌实验中学</span>
         <div class="time-font">{{ time }}</div>
       </div>
     </div>
@@ -111,15 +111,12 @@ export default {
 }
 </style>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 .login-title {
   width: 95px;
   margin: 30px auto;
   font-size: 20px;
   letter-spacing: 3px;
-}
-.logo-img {
-  vertical-align: middle;
 }
 .fa {
   margin: 13px 8px 0 5px;
@@ -136,6 +133,9 @@ export default {
 .header-content {
   width: 72%;
   margin: 0 auto;
+  > span {
+    font-size: 1.5rem;
+  }
 }
 .login-header {
   height: 100px;

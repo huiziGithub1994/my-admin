@@ -4,15 +4,17 @@
       <condition>
         <div class="condition">
           <label>课程分类</label>
-          <selectChild v-model="search['type']" clearable tp="yearSelect"/>
+          <el-select v-model="search['layerId']" clearable @change="fetchData">
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseLayerName" :value="item.layerId"> </el-option>
+          </el-select>
         </div>
         <div class="condition">
           <label>教室名称</label>
-          <el-input v-model="search['type']"></el-input>
+          <el-input v-model="search['building']"></el-input>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>查询</el-button>
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
         <el-button type="primary" plain @click="addBtn">增加</el-button>
       </operation>
     </div>
@@ -25,8 +27,8 @@
         <el-table-column label="课程列表" property="courses"></el-table-column>
         <el-table-column fixed="right" width="90px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini">修改</el-button>
-            <el-button type="text" size="mini" class="deleteBtn">删除</el-button>
+            <el-button type="text" size="mini" @click="editBtn(scope.row.zbClassroomId)">修改</el-button>
+            <el-button type="text" size="mini" class="deleteBtn" @click="deleteBtn(scope.row.zbClassroomId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,15 +72,21 @@
   </div>
 </template>
 <script>
-import { getZbClassroom, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
+import {
+  getZbClassroomListInfo,
+  getZbClassroomInfo,
+  getSbjestClassListInfo
+} from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 export default {
   data() {
     return {
       initArea: false,
       search: {
-        type: undefined
+        courseId: '',
+        building: ''
       },
+      courseOptions: [], // 课程分类选项
       tableData: [],
       // 表格高度
       height: document.body.clientHeight - 365,
@@ -88,24 +96,19 @@ export default {
       editDialogTitle: '',
       // 表单数据
       editForm: {
-        xh: undefined
+        building: '',
+        room: ''
       },
       // 表单规则
       editRules: {
         building: [
           { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ],
-        xm: [
+        room: [
           { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ],
         gradeCode: [
           { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xzb: [
-          { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xb: [
-          { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ]
       },
       // 行政班数据
@@ -119,13 +122,18 @@ export default {
     this.fetchSbjestClass()
   },
   methods: {
+    // 查询按钮
+    queryBtn() {
+      this.fetchData()
+    },
     // 获取表格数据
     async fetchData() {
       const params = { id: 1 }
-      const res = await getZbClassroom(params)
+      Object.assign(params, this.search)
+      const res = await getZbClassroomListInfo(params)
       this.tableData = res.DATA
     },
-    // 获取学生分层及课时数据
+    // 获取学科分层及课时数据, 重组数据成弹窗中的可选科目
     async fetchSbjestClass() {
       const res = await getSbjestClassListInfo({
         arrangeId: this.$route.query.arrangeId
@@ -139,7 +147,6 @@ export default {
           dispSeq: item.dispSeq,
           sumWeekClass: item.sumWeekClass
         }
-
         if (indexPos > -1) {
           newData[indexPos].courseLayers.push(tempCourseLayer)
         } else {
@@ -154,6 +161,7 @@ export default {
         }
       })
       this.sbjestClass = newData
+      this.courseOptions = [...res.DATA]
     },
     // 新增按钮
     addBtn() {
@@ -161,9 +169,34 @@ export default {
       this.editDialogTitle = '新增走班教室'
     },
     // 修改按钮
-    editBtn() {
+    async editBtn(id) {
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改走班教室'
+      const res = await getZbClassroomInfo({ id })
+      this.editForm = res.DATA
+    },
+    // 删除按钮
+    deleteBtn(id) {
+      this.$confirm('确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const res = await getZbClassroomInfo({ id, a: '2' })
+          this.$message({
+            type: res.SUCCESS ? 'success' : 'error',
+            message: res.SUCCESS ? '删除成功!' : '删除失败'
+          })
+          // 重新加载数据
+          if (res.SUCCESS) this.queryBtn()
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {

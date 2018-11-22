@@ -56,10 +56,17 @@ export function getSplitClassManage(listQuery) {
   })
 }
 
-// 走班教室
-export function getZbClassroom(listQuery) {
+// 走班教室列表查询
+export function getZbClassroomListInfo(listQuery) {
   return request({
-    url: '/zbClassroom/list',
+    url: URL.qryZbClassroomList,
+    params: listQuery
+  })
+}
+// 走班教室详情查询
+export function getZbClassroomInfo(listQuery) {
+  return request({
+    url: URL.qryZbClassroom,
     params: listQuery
   })
 }
