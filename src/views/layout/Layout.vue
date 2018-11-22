@@ -5,14 +5,15 @@
       <img class="logo" src="/src/assets/logo.jpg">
       <!-- <span class="app-title">理水永昌实验中学</span> -->
       <div class="buttons">
-        <el-dropdown>
+        <el-dropdown @command="handleMenuChange">
           <span class="el-dropdown-link">
             <!-- <i class="el-icon-arrow-down"/> -->
-            走班排课
+            {{ choosedMenu.name }}
             <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>普通排课</el-dropdown-item>
+            <el-dropdown-item :command="{command:'zb',name:'走班排课'}">走班排课</el-dropdown-item>
+            <el-dropdown-item :command="{command:'pt',name:'普通排课'}">普通排课</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <span>
@@ -54,6 +55,14 @@ export default {
     TagsView
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      choosedMenu: {
+        name: '走班排课',
+        command: 'zb'
+      }
+    }
+  },
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
@@ -78,6 +87,10 @@ export default {
         this.$router.push({ path: '/login' })
         // location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    handleMenuChange(choosed) {
+      if (this.choosedMenu.command === choosed.command) return
+      this.choosedMenu = choosed
     },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })

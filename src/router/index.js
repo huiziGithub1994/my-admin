@@ -21,14 +21,14 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
-export const constantRouterMap = [
+// 基础路由
+export const baseRouterMap = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-
   {
     path: '/',
     component: Layout,
@@ -44,6 +44,10 @@ export const constantRouterMap = [
       }
     ]
   },
+  { path: '*', redirect: '/404', hidden: true }
+]
+// 走班排课路由
+export const zbRouterMap = [
   {
     path: '/zbpk',
     component: Layout,
@@ -67,7 +71,7 @@ export const constantRouterMap = [
         path: 'pkgz',
         name: 'Pkgz',
         component: () => import('@/views/tree/index'),
-        meta: { title: '教学规则', icon: 'tree' }
+        meta: { title: '排课规则', icon: 'tree' }
       },
       {
         path: 'pkgc',
@@ -103,12 +107,36 @@ export const constantRouterMap = [
         meta: { title: '校历维护', icon: 'table' }
       }
     ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
+]
+
+// 普通排课路由
+export const ptRouterMap = [
+  {
+    path: '/zbpk',
+    component: Layout,
+    redirect: '/zbpk/pkcx',
+    name: 'Zbpk',
+    meta: { title: '走班排课', icon: 'example' },
+    children: [
+      {
+        path: 'pkcx',
+        name: 'Pkcx',
+        component: () => import('@/views/pkcx/index'),
+        meta: { title: '排课查询', icon: 'table' }
+      },
+      {
+        path: 'jxjh',
+        name: 'Jxjh',
+        component: () => import('@/views/jxjh/index'),
+        meta: { title: '教学计划', icon: 'tree' }
+      }
+    ]
+  }
 ]
 
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
+  routes: [...baseRouterMap, ...zbRouterMap, ...ptRouterMap]
 })
