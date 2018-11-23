@@ -10,6 +10,9 @@ const app = {
     menutype: 'zb'
   },
   mutations: {
+    SET_MENUTYPE: (state, type) => {
+      state.menutype = type
+    },
     TOGGLE_SIDEBAR: state => {
       if (state.sidebar.opened) {
         Cookies.set('sidebarStatus', 1)

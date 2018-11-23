@@ -91,6 +91,9 @@ export default {
     handleMenuChange(choosed) {
       if (this.choosedMenu.command === choosed.command) return
       this.choosedMenu = choosed
+      this.$store.commit('SET_MENUTYPE', choosed.command)
+      this.$store.dispatch('delAllViews')
+      this.$router.push({ name: 'Home' })
     },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })

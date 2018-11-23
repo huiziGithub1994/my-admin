@@ -20,9 +20,15 @@ import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
   computed: {
-    ...mapGetters(['sidebar']),
+    ...mapGetters(['sidebar', 'menutype']),
     routes() {
-      return this.$router.options.routes
+      const allRoutes = this.$router.options.routes
+      const len = allRoutes.length
+      if (this.menutype === 'zb') {
+        return allRoutes.slice(0, len - 1)
+      } else {
+        return [...allRoutes.slice(0, 4), ...allRoutes.slice(len - 1, len)]
+      }
     },
     isCollapse() {
       return !this.sidebar.opened

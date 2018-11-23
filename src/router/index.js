@@ -113,21 +113,21 @@ export const zbRouterMap = [
 // 普通排课路由
 export const ptRouterMap = [
   {
-    path: '/zbpk',
+    path: '/ptpk',
     component: Layout,
-    redirect: '/zbpk/pkcx',
-    name: 'Zbpk',
-    meta: { title: '走班排课', icon: 'example' },
+    redirect: '/ptpk/pkcxPt',
+    name: 'Ptpk',
+    meta: { title: '普通排课', icon: 'example' },
     children: [
       {
-        path: 'pkcx',
-        name: 'Pkcx',
+        path: 'pkcxPt',
+        name: 'PkcxPt',
         component: () => import('@/views/pkcx/index'),
         meta: { title: '排课查询', icon: 'table' }
       },
       {
-        path: 'jxjh',
-        name: 'Jxjh',
+        path: 'jxjhPt',
+        name: 'JxjhPt',
         component: () => import('@/views/jxjh/index'),
         meta: { title: '教学计划', icon: 'tree' }
       }
