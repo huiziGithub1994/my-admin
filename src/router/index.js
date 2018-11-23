@@ -122,13 +122,13 @@ export const ptRouterMap = [
       {
         path: 'pkcxPt',
         name: 'PkcxPt',
-        component: () => import('@/views/pkcx/index'),
+        component: () => import('@/views/pkcxPt/index'),
         meta: { title: '排课查询', icon: 'table' }
       },
       {
         path: 'jxjhPt',
         name: 'JxjhPt',
-        component: () => import('@/views/jxjh/index'),
+        component: () => import('@/views/jxjhPt/index'),
         meta: { title: '教学计划', icon: 'tree' }
       }
     ]

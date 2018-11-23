@@ -94,6 +94,7 @@ export default {
       this.$store.commit('SET_MENUTYPE', choosed.command)
       this.$store.dispatch('delAllViews')
       this.$router.push({ name: 'Home' })
+      this.$store.dispatch('addView', this.$route)
     },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
