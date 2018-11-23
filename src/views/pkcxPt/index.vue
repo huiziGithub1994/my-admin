@@ -146,7 +146,8 @@ export default {
     saveBtn() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          this.$router.push({ name: 'JxjhPt' })
+          const queryParams = { arrangeId: '100' }
+          this.$router.push({ name: 'JxjhPt', query: queryParams })
         } else {
           return false
         }

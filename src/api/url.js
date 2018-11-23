@@ -1,4 +1,5 @@
 export default {
+  // 走班排课
   qryArrangeList: `/base/qryArrangeList`, // 排课查询列表
   qryArrangeDetail: `/base/qryArrangeDetail`, // 排课查询详情
 
@@ -8,5 +9,9 @@ export default {
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
+  // 普通排课
+  qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
+
+  // 系统配置
   qryKeyList: `/base/qryKeyList` // 数据字典表格数据
 }
