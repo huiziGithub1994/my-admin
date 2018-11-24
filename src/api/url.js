@@ -13,5 +13,8 @@ export default {
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
 
   // 系统配置
-  qryKeyList: `/base/qryKeyList` // 数据字典表格数据
+  qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
+
+  // 模板下载
+  teachTaskExcelTemplate: `/static/template/teachTask.xlsx` // 普通排课任课表_排课班级.xlsx
 }

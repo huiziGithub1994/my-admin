@@ -12,8 +12,7 @@
             <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="{command:'zb',name:'走班排课'}">走班排课</el-dropdown-item>
-            <el-dropdown-item :command="{command:'pt',name:'普通排课'}">普通排课</el-dropdown-item>
+            <el-dropdown-item :command="item" v-for="(item) in menus" :key="item.command">{{ item.name }}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <span>
@@ -45,7 +44,6 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-
 export default {
   name: 'Layout',
   components: {
@@ -58,12 +56,19 @@ export default {
   data() {
     return {
       choosedMenu: {
-        name: '走班排课',
-        command: 'zb'
-      }
+        name: '',
+        command: ''
+      },
+      menus: [
+        { command: 'zb', name: '走班排课' },
+        { command: 'pt', name: '普通排课' }
+      ]
     }
   },
   computed: {
+    menutype() {
+      return this.$store.state.app.menutype
+    },
     sidebar() {
       return this.$store.state.app.sidebar
     },
@@ -78,6 +83,9 @@ export default {
         mobile: this.device === 'mobile'
       }
     }
+  },
+  mounted() {
+    Object.assign(this.choosedMenu, this.menus[this.menutype === 'zb' ? 0 : 1])
   },
   methods: {
     // 退出登录
