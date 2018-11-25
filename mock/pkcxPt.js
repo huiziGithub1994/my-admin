@@ -50,13 +50,13 @@ module.exports = {
           c1: '高一',
           c2: '高一1班',
           c3: '@cstr(3)',
-          c4: Math.random() * 10,
+          c4: Math.floor(Math.random() * 10),
           c5: '@cstr(3)',
-          c6: Math.random() * 10,
+          c6: Math.floor(Math.random() * 10),
           c7: '@cstr(3)',
-          c8: Math.random() * 10,
+          c8: Math.floor(Math.random() * 10),
           c9: '@cstr(3)',
-          c10: Math.random() * 10
+          c10: Math.floor(Math.random() * 10)
         }
       ]
     }

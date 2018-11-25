@@ -57,11 +57,12 @@
         <el-row :gutter="10">
           <el-form-item label="节次时间">
             <el-col :span="24">
-              <el-table ref="singleTable" border stripe highlight-current-row :data="tabData" v-loading="loading" element-loading-text="拼命加载中" style="width: 100%" :height="300">
+              <!-- <el-table ref="singleTable" border stripe highlight-current-row :data="tabData" v-loading="loading" element-loading-text="拼命加载中" style="width: 100%" :height="300">
                 <el-table-column prop="time" label="上课时间" width="150"></el-table-column>
                 <el-table-column prop="lessionSeq" label="节次/星期" width="90"></el-table-column>
                 <el-table-column v-for="(item,index) in tabHeader" :key="index" :label="item" :prop="`contnet${index}`"></el-table-column>
-              </el-table>
+              </el-table> -->
+              <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
             </el-col>
           </el-form-item>
         </el-row>
@@ -71,12 +72,23 @@
 </template>
 
 <script>
-import { qryArrangeDetail } from '@/api/pkcx'
+import { qryCalendar } from '@/api/base'
 import moment from 'moment'
+import { HotTable } from '@handsontable/vue'
+
 export default {
   name: 'BaseInfo',
+  components: {
+    HotTable
+  },
   data() {
     return {
+      tableShow: false,
+      // 表格数据
+      settings: {
+        data: [],
+        colHeaders: []
+      },
       // 表单数据
       data: {
         arrangeId: undefined,
@@ -120,9 +132,7 @@ export default {
         { value: '8', label: '8' }
       ],
       // 节次时间表格
-      tabData: [],
-      loading: false, // 表格加载
-      tabHeader: []
+      loading: false // 表格加载
     }
   },
   created() {
@@ -140,13 +150,15 @@ export default {
     },
     // 作习安排改变时
     studyArrangeChange() {
+      const fromData = this.data
       const {
         workDays,
         countInMorning,
         countMorning,
         countAfternoon,
-        countNight
-      } = this.data
+        countNight,
+        timeArrage
+      } = fromData
       const weeks = [
         '星期一',
         '星期二',
@@ -156,19 +168,24 @@ export default {
         '星期六',
         '星期日'
       ]
+      const baseHeader = ['上课开始时间', '上课结束时间', '节次/星期']
+      const defaultData = { beginTime: '', endTime: '', lessionSeq: undefined }
       if (workDays <= 7) {
-        this.tabHeader = weeks.slice(0, workDays)
+        this.settings.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)] // 表头
+        for (let i = 0; i < workDays; i++) {
+          defaultData[`c${i + 3}`] = ''
+        }
+        this.settings.data = timeArrage // 表格默认数据格式
         const count =
           countInMorning + countMorning + countAfternoon + countNight
-        console.log(count)
+        console.log(timeArrage, count)
+        this.$refs.hotTableComponent.hotInstance.loadData(timeArrage)
       }
     },
     // 获取表单数据
     async fetchFormData() {
-      const res = await qryArrangeDetail({
-        arrangeId: this.$route.query.arrangeId
-      })
-      this.assembleLession(res.DATA.timeArrage)
+      const res = await qryCalendar({ schoolId: '111' })
+      // this.assembleLession(res.DATA.timeArrage)
       this.data = res.DATA
       this.studyArrangeChange()
       this.$nextTick(function() {

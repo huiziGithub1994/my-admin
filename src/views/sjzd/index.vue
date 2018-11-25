@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getKeyList } from '@/api/sjzd'
+import { getKeyList } from '@/api/base'
 import { getTableBestRows, validEditBtn, resetForm } from '@/utils/businessUtil'
 
 export default {

@@ -14,6 +14,7 @@ export default {
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
+  qryCalendar: `/base/qryCalendar`, // 校历维护
 
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xlsx` // 普通排课任课表_排课班级.xlsx

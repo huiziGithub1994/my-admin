@@ -15,8 +15,10 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
+    "@handsontable/vue": "^3.0.0",
     "axios": "0.18.0",
     "element-ui": "2.4.6",
+    "handsontable": "^6.2.0",
     "js-cookie": "2.2.0",
     "moment": "^2.22.2",
     "normalize.css": "7.0.0",

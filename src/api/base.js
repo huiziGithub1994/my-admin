@@ -9,3 +9,10 @@ export function getKeyList(listQuery) {
   })
 }
 
+// 校历维护
+export function qryCalendar(listQuery) {
+  return request({
+    url: URL.qryCalendar,
+    params: listQuery
+  })
+}
