@@ -57,11 +57,6 @@
         <el-row :gutter="10">
           <el-form-item label="节次时间">
             <el-col :span="24">
-              <!-- <el-table ref="singleTable" border stripe highlight-current-row :data="tabData" v-loading="loading" element-loading-text="拼命加载中" style="width: 100%" :height="300">
-                <el-table-column prop="time" label="上课时间" width="150"></el-table-column>
-                <el-table-column prop="lessionSeq" label="节次/星期" width="90"></el-table-column>
-                <el-table-column v-for="(item,index) in tabHeader" :key="index" :label="item" :prop="`contnet${index}`"></el-table-column>
-              </el-table> -->
               <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
             </el-col>
           </el-form-item>
@@ -83,12 +78,6 @@ export default {
   },
   data() {
     return {
-      tableShow: false,
-      // 表格数据
-      settings: {
-        data: [],
-        colHeaders: []
-      },
       // 表单数据
       data: {
         arrangeId: undefined,
@@ -125,14 +114,15 @@ export default {
         { value: '1', label: '1' },
         { value: '2', label: '2' },
         { value: '3', label: '3' },
-        { value: '4', label: '4' },
-        { value: '5', label: '5' },
-        { value: '6', label: '6' },
-        { value: '7', label: '7' },
-        { value: '8', label: '8' }
+        { value: '4', label: '4' }
       ],
       // 节次时间表格
-      loading: false // 表格加载
+      loading: false, // 表格加载
+      // 表格数据
+      settings: {
+        data: [],
+        colHeaders: []
+      }
     }
   },
   created() {
@@ -150,14 +140,28 @@ export default {
     },
     // 作习安排改变时
     studyArrangeChange() {
+      this.initTableData()
+    },
+    // 获取表单数据
+    async fetchFormData() {
+      const res = await qryCalendar({ schoolId: '111' })
+      // this.assembleLession(res.DATA.timeArrage)
+      this.data = res.DATA
+      // this.studyArrangeChange()
+      // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
+      this.initTableData()
+      this.$nextTick(function() {
+        this.$refs['baseInfoRef'].clearValidate()
+      })
+    },
+    initTableData() {
       const fromData = this.data
       const {
         workDays,
         countInMorning,
         countMorning,
         countAfternoon,
-        countNight,
-        timeArrage
+        countNight
       } = fromData
       const weeks = [
         '星期一',
@@ -169,28 +173,30 @@ export default {
         '星期日'
       ]
       const baseHeader = ['上课开始时间', '上课结束时间', '节次/星期']
-      const defaultData = { beginTime: '', endTime: '', lessionSeq: undefined }
       if (workDays <= 7) {
-        this.settings.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)] // 表头
-        for (let i = 0; i < workDays; i++) {
-          defaultData[`c${i + 3}`] = ''
-        }
-        this.settings.data = timeArrage // 表格默认数据格式
+        // 表头
+        this.settings.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)]
+        // 表格默认空内容
+        const defaultData = []
+        const defaultRow = { beginTime: '', endTime: '' }
         const count =
-          countInMorning + countMorning + countAfternoon + countNight
-        console.log(timeArrage, count)
-        this.$refs.hotTableComponent.hotInstance.loadData(timeArrage)
+          Number(countInMorning) +
+          Number(countMorning) +
+          Number(countAfternoon) +
+          Number(countNight)
+        for (let i = 0; i < count; i++) {
+          for (let j = -1; j < workDays; j++) {
+            if (j === -1) {
+              defaultRow.lessionSeq = `第${i + 1}节`
+            } else {
+              defaultRow[`c${j + 3}`] = ''
+            }
+          }
+          defaultData.push(Object.assign({}, defaultRow))
+        }
+        this.settings.data = defaultData
+        this.$refs.hotTableComponent.hotInstance.loadData(defaultData)
       }
-    },
-    // 获取表单数据
-    async fetchFormData() {
-      const res = await qryCalendar({ schoolId: '111' })
-      // this.assembleLession(res.DATA.timeArrage)
-      this.data = res.DATA
-      this.studyArrangeChange()
-      this.$nextTick(function() {
-        this.$refs['baseInfoRef'].clearValidate()
-      })
     },
     // 下一步按钮
     baseInfoNext() {

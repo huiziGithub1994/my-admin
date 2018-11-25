@@ -104,6 +104,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log(view)
       if (view.name === 'Home') {
         this.$message({
           message: '首页不可以关闭！',
