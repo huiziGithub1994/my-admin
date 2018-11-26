@@ -8,4 +8,10 @@ export function getTeachTaskInfo(listQuery) {
     params: listQuery
   })
 }
-
+// 班级列表
+export function getClassList(listQuery) {
+  return request({
+    url: URL.qryClassList,
+    params: listQuery
+  })
+}

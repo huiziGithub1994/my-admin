@@ -11,6 +11,7 @@ export default {
 
   // 普通排课
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
+  qryClassList: `/base/qryClassList`, // 班级列表
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

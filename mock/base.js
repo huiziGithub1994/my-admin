@@ -39,7 +39,40 @@ module.exports = {
       countAfternoon: 4,
       countNight: 0,
       curStatus: 1,
-      timeArrage: [{ beginTime: '8:20', endTime: '9:00', lessionSeq: '第1节', c3: '升旗', c4: '', c5: '', c6: '', c7: '' }]
+      timeArrage: [
+        [
+          {
+            lessonsId: '29291jiei', // 唯一标识
+            arrangeId: '002', // 校历唯一标识
+            segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
+            lessionSeq: 1,
+            beginTime: '08:20',
+            endTime: '09:00',
+            cellKey: '0,0', // 第一行，第一列，从0行，0列开始算
+            cellValue: '08:20-09:00'
+          },
+          {
+            lessonsId: 'wi29349',
+            arrangeId: '002',
+            segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
+            lessionSeq: 2,
+            beginTime: '09:20',
+            endTime: '10:00',
+            cellKey: '1,2',
+            cellValue: '第2节'
+          },
+          {
+            lessonsId: '39kke93',
+            arrangeId: '002',
+            segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
+            lessionSeq: 3,
+            beginTime: '13:20',
+            endTime: '14:00',
+            cellKey: '5,6',
+            cellValue: '班会'
+          }
+        ]
+      ]
     }
   }
 }

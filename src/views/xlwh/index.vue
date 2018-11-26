@@ -121,7 +121,8 @@ export default {
       // 表格数据
       settings: {
         data: [],
-        colHeaders: []
+        colHeaders: [],
+        columns: []
       }
     }
   },
@@ -147,13 +148,17 @@ export default {
       const res = await qryCalendar({ schoolId: '111' })
       // this.assembleLession(res.DATA.timeArrage)
       this.data = res.DATA
-      // this.studyArrangeChange()
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
       this.initTableData()
+      // 数据填充表格
+      this.fillTableData()
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
+    // 数据填充表格
+    fillTableData() {},
+    // 作息安排初始化表格的头部、行列、数据为空
     initTableData() {
       const fromData = this.data
       const {
@@ -176,6 +181,23 @@ export default {
       if (workDays <= 7) {
         // 表头
         this.settings.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)]
+        // 表格的列
+        const columns = []
+        const defaultColumn = {
+          type: 'time',
+          timeFormat: 'H:mm',
+          correctFormat: true
+        }
+        for (let j = 0; j < workDays + 3; j++) {
+          if (j <= 1) {
+            columns.push(defaultColumn)
+          } else if (j === 2) {
+            columns.push({ data: 'lessionSeq', readOnly: true })
+          } else {
+            columns.push({})
+          }
+        }
+        this.settings.columns = columns
         // 表格默认空内容
         const defaultData = []
         const defaultRow = { beginTime: '', endTime: '' }

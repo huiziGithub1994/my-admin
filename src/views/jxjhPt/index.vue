@@ -14,6 +14,7 @@
           <teach-task></teach-task>
         </el-tab-pane>
         <el-tab-pane label="班级列表" name="two" :disabled="tabDisabled.two">
+          <class-list></class-list>
         </el-tab-pane>
         <el-tab-pane label="教师列表" name="three" :disabled="tabDisabled.three">
         </el-tab-pane>
@@ -35,9 +36,10 @@
 </template>
 <script>
 import TeachTask from './TeachTask' // 教学任务tab页组件
+import ClassList from './ClassList' // 班级列表tab页组件
 
 export default {
-  components: { TeachTask },
+  components: { TeachTask, ClassList },
   data() {
     return {
       activeTabName: 'one', // tab页高亮
@@ -84,8 +86,9 @@ export default {
 .next-wapper {
   overflow: hidden;
   > div {
-    display: inline-block;
     float: right;
+    display: inline-block;
+
     margin-right: 17px;
   }
 }
