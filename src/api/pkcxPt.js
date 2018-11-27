@@ -15,3 +15,10 @@ export function getClassList(listQuery) {
     params: listQuery
   })
 }
+// 教师列表
+export function getTeacherList(listQuery) {
+  return request({
+    url: URL.qryTeacherList,
+    params: listQuery
+  })
+}

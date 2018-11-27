@@ -1,8 +1,11 @@
-<template><!-- 校历维护-->
+<template>
+  <!-- 校历维护-->
   <div>
     <div class="operation">
-      <span><label>温馨提示：</label>时间中除灰色的可编辑，双击可进入编辑状态</span>
-      <el-button type="primary" plain>保存</el-button>
+      <span>
+        <label>温馨提示：</label>时间中除灰色的可编辑，双击可进入编辑状态
+      </span>
+      <el-button type="primary" plain @click="saveBtn">保存</el-button>
     </div>
     <div class="area-data">
       <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="100px">
@@ -36,20 +39,20 @@
         <el-row :gutter="10" class="studyArrange">
           <el-col :span="24">
             <el-form-item label="作习安排" prop="workDays">
-              <el-select v-model="data.workDays" :clearable="false" placeholder="" @change="studyArrangeChange">
-                <el-option v-for="item in workDaysOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-select v-model="data.workDays" :clearable="false" placeholder @change="studyArrangeChange">
+                <el-option v-for="item in workDaysOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>天/周，早晨
-              <el-select v-model="data.countInMorning" :clearable="false" placeholder="" @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-select v-model="data.countInMorning" :clearable="false" placeholder @change="studyArrangeChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，上午
-              <el-select v-model="data.countMorning" :clearable="false" placeholder="" @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-select v-model="data.countMorning" :clearable="false" placeholder @change="studyArrangeChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，下午
-              <el-select v-model="data.countAfternoon" :clearable="false" placeholder="" @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-select v-model="data.countAfternoon" :clearable="false" placeholder @change="studyArrangeChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，晚上
-              <el-select v-model="data.countNight" :clearable="false" placeholder="" @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-select v-model="data.countNight" :clearable="false" placeholder @change="studyArrangeChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节
             </el-form-item>
           </el-col>
@@ -68,9 +71,17 @@
 
 <script>
 import { qryCalendar } from '@/api/base'
-import moment from 'moment'
 import { HotTable } from '@handsontable/vue'
 
+const weeks = [
+  '星期一',
+  '星期二',
+  '星期三',
+  '星期四',
+  '星期五',
+  '星期六',
+  '星期日'
+]
 export default {
   name: 'BaseInfo',
   components: {
@@ -78,6 +89,8 @@ export default {
   },
   data() {
     return {
+      // table实例
+      hotInstance: null,
       // 表单数据
       data: {
         arrangeId: undefined,
@@ -120,15 +133,20 @@ export default {
       loading: false, // 表格加载
       // 表格数据
       settings: {
-        data: [],
+        data: null,
         colHeaders: [],
         columns: []
-      }
+      },
+      // 标记原始数据
+      markTableData: {}
     }
   },
   created() {
     this.assembleWorkDaysOptions()
     this.fetchFormData()
+  },
+  mounted() {
+    this.hotInstance = this.$refs.hotTableComponent.hotInstance
   },
   methods: {
     // 作习安排 天/周 下拉选项数据
@@ -146,7 +164,6 @@ export default {
     // 获取表单数据
     async fetchFormData() {
       const res = await qryCalendar({ schoolId: '111' })
-      // this.assembleLession(res.DATA.timeArrage)
       this.data = res.DATA
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
       this.initTableData()
@@ -156,8 +173,16 @@ export default {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
-    // 数据填充表格
-    fillTableData() {},
+    // 数据填充表格 并对原始数据进行标记
+    fillTableData() {
+      const { timeArrage } = this.data
+      timeArrage.forEach(item => {
+        const [row, col] = item.cellKey.split(',').map(x => Number(x))
+        this.hotInstance.setDataAtRowProp(row, col + 3, item.cellValue)
+        this.hotInstance.setDataAtRowProp(row, 'beginTime', item.beginTime)
+        this.hotInstance.setDataAtRowProp(row, 'endTime', item.endTime)
+      })
+    },
     // 作息安排初始化表格的头部、行列、数据为空
     initTableData() {
       const fromData = this.data
@@ -168,15 +193,6 @@ export default {
         countAfternoon,
         countNight
       } = fromData
-      const weeks = [
-        '星期一',
-        '星期二',
-        '星期三',
-        '星期四',
-        '星期五',
-        '星期六',
-        '星期日'
-      ]
       const baseHeader = ['上课开始时间', '上课结束时间', '节次/星期']
       if (workDays <= 7) {
         // 表头
@@ -190,11 +206,16 @@ export default {
         }
         for (let j = 0; j < workDays + 3; j++) {
           if (j <= 1) {
-            columns.push(defaultColumn)
+            columns.push(
+              Object.assign(
+                { data: j === 0 ? 'beginTime' : 'endTime' },
+                defaultColumn
+              )
+            )
           } else if (j === 2) {
             columns.push({ data: 'lessionSeq', readOnly: true })
           } else {
-            columns.push({})
+            columns.push({ data: j })
           }
         }
         this.settings.columns = columns
@@ -211,38 +232,43 @@ export default {
             if (j === -1) {
               defaultRow.lessionSeq = `第${i + 1}节`
             } else {
-              defaultRow[`c${j + 3}`] = ''
+              defaultRow[j + 3] = ''
             }
           }
           defaultData.push(Object.assign({}, defaultRow))
         }
         this.settings.data = defaultData
-        this.$refs.hotTableComponent.hotInstance.loadData(defaultData)
+        this.hotInstance.loadData(defaultData)
       }
     },
-    // 下一步按钮
-    baseInfoNext() {
-      this.$refs['baseInfoRef'].validate(valid => {
-        if (valid) {
-          console.log('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+    // 保存按钮
+    saveBtn() {
+      const data = this.hotInstance.getSourceData()
+      const newData = []
+      const flag = ['beginTime', 'endTime', 'lessionSeq']
+      let isContinue = true
+      data.forEach((item, index) => {
+        if (!isContinue) return
+        for (const [key, val] of Object.entries(item)) {
+          if (val !== '' && !flag.includes(key)) {
+            if (item.beginTime === '' || item.endTime === '') {
+              this.$message.error(
+                `${weeks[key - 3]}第${index + 1}节开始时间或结束时间不能为空`
+              )
+              isContinue = false
+              return
+            }
+            newData.push({
+              beginTime: item.beginTime,
+              endTime: item.endTime,
+              lessionSeq: index + 1,
+              cellKey: `${index},${key - 3}`,
+              cellValue: val
+            })
+          }
         }
       })
-    },
-    // 节次时间数据的重组
-    assembleLession(data) {
-      data.forEach(item => {
-        item.lessionsTime.forEach(lession => {
-          Object.assign(lession, {
-            time: [
-              moment(lession.beginTime, 'HH:mm'),
-              moment(lession.endTime, 'HH:mm')
-            ]
-          })
-        })
-      })
+      console.log(newData)
     }
   }
 }

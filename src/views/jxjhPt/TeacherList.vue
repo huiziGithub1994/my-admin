@@ -1,5 +1,5 @@
 <template>
-  <!--班级列表 tab页-->
+  <!--教师列表 tab页-->
   <div class="container">
     <div class="top">
       <div class="desc">
@@ -18,16 +18,16 @@
     </div>
     <div class="area-data">
       <el-table ref="multipleTable" border :data="data.tableData" tooltip-effect="dark" highlight-current-row>
-        <el-table-column label="学段/专业" property="c0"></el-table-column>
-        <el-table-column label="年级" property="c1"></el-table-column>
-        <el-table-column label="班级" property="c2"></el-table-column>
-        <el-table-column label="班主任" property="c2"></el-table-column>
+        <el-table-column type="index" width="55" label="序号"></el-table-column>
+        <el-table-column label="姓名" property="teacherName"></el-table-column>
+        <el-table-column label="所属教研组" property="ssjyz"></el-table-column>
+        <el-table-column label="行政职务" property="xzzw"></el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
-import { getClassList } from '@/api/pkcxPt'
+import { getTeacherList } from '@/api/pkcxPt'
 export default {
   data() {
     return {
@@ -44,7 +44,7 @@ export default {
   methods: {
     // 获取表格数据
     async fetchData() {
-      const res = await getClassList({ arrangeId: this.arrangeId })
+      const res = await getTeacherList({ arrangeId: this.arrangeId })
       this.data = res.DATA
     }
   }

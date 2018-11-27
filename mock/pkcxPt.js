@@ -107,5 +107,21 @@ module.exports = {
         }
       ]
     }
+  },
+  // 班级列表
+  '/base/qryTeacherList': {
+    DATA: {
+      arrangeId: '001',
+      schoolYear: 2018,
+      termCode: '1',
+      arrangeName: '高中部常规排课',
+      'tableData|10': [
+        {
+          teacherName: '@cstr(3)',
+          ssjyz: '@cstr(6)',
+          xzzw: '@cstr(4)'
+        }
+      ]
+    }
   }
 }

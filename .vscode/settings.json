@@ -3,5 +3,21 @@
   "editor.formatOnSave": true,
   "prettier.singleQuote": true,
   "editor.tabSize": 2,
-  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false
+  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+  "vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+      "wrap_attributes": "auto",
+      "wrap_line_length": 200
+    },
+    "prettyhtml": {
+      "printWidth": 200,
+      "singleQuote": false,
+      "wrapAttributes": false,
+      "sortAttributes": false
+    },
+    "prettier": {
+      "semi": false,
+      "singleQuote": true
+    }
+  }
 }

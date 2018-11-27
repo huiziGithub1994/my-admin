@@ -40,38 +40,46 @@ module.exports = {
       countNight: 0,
       curStatus: 1,
       timeArrage: [
-        [
-          {
-            lessonsId: '29291jiei', // 唯一标识
-            arrangeId: '002', // 校历唯一标识
-            segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
-            lessionSeq: 1,
-            beginTime: '08:20',
-            endTime: '09:00',
-            cellKey: '0,0', // 第一行，第一列，从0行，0列开始算
-            cellValue: '08:20-09:00'
-          },
-          {
-            lessonsId: 'wi29349',
-            arrangeId: '002',
-            segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
-            lessionSeq: 2,
-            beginTime: '09:20',
-            endTime: '10:00',
-            cellKey: '1,2',
-            cellValue: '第2节'
-          },
-          {
-            lessonsId: '39kke93',
-            arrangeId: '002',
-            segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
-            lessionSeq: 3,
-            beginTime: '13:20',
-            endTime: '14:00',
-            cellKey: '5,6',
-            cellValue: '班会'
-          }
-        ]
+        {
+          lessonsId: 'wi29349',
+          arrangeId: '002',
+          segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
+          lessionSeq: 1,
+          beginTime: '08:20',
+          endTime: '09:00',
+          cellKey: '0,0', // 第一节为第0行，星期一为第0列，依次类推
+          cellValue: '升旗'
+        },
+        {
+          lessonsId: '39kke93',
+          arrangeId: '002',
+          segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
+          lessionSeq: 7,
+          beginTime: '16:20',
+          endTime: '17:00',
+          cellKey: '6,2',
+          cellValue: '校本课'
+        },
+        {
+          lessonsId: '39kke93',
+          arrangeId: '002',
+          segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
+          lessionSeq: 7,
+          beginTime: '16:20',
+          endTime: '17:00',
+          cellKey: '6,3',
+          cellValue: '自习'
+        },
+        {
+          lessonsId: '39kke93',
+          arrangeId: '002',
+          segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
+          lessionSeq: 7,
+          beginTime: '16:20',
+          endTime: '17:00',
+          cellKey: '6,4',
+          cellValue: '班会'
+        }
       ]
     }
   }
