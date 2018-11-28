@@ -3,7 +3,7 @@
   <div>
     <div class="operation">
       <span>
-        <label>温馨提示：</label>时间中除灰色的可编辑，双击可进入编辑状态
+        <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态
       </span>
       <el-button type="primary" plain @click="saveBtn">保存</el-button>
     </div>
@@ -173,7 +173,7 @@ export default {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
-    // 数据填充表格 并对原始数据进行标记
+    // 数据填充表格
     fillTableData() {
       const { timeArrage } = this.data
       timeArrage.forEach(item => {
@@ -242,7 +242,7 @@ export default {
       }
     },
     // 保存按钮
-    saveBtn() {
+    async saveBtn() {
       const data = this.hotInstance.getSourceData()
       const newData = []
       const flag = ['beginTime', 'endTime', 'lessionSeq']
@@ -263,12 +263,43 @@ export default {
               endTime: item.endTime,
               lessionSeq: index + 1,
               cellKey: `${index},${key - 3}`,
-              cellValue: val
+              cellValue: val,
+              segId: this.getSegId(index + 1) // 通过节次获取 segId
             })
           }
         }
       })
-      console.log(newData)
+      if (!isContinue) return
+      const res = await qryCalendar({ data: newData, a: '1' })
+      if (res.SUCCESS) {
+        this.$message({
+          type: 'success',
+          message: '保存成功'
+        })
+      }
+    },
+    getSegId(lessionSeq) {
+      const {
+        countInMorning,
+        countMorning,
+        countAfternoon,
+        countNight
+      } = this.data
+      if (lessionSeq <= +countInMorning) {
+        return '01' // 早晨
+      }
+      if (lessionSeq <= +countMorning + +countInMorning) {
+        return '02' // 上午
+      }
+      if (lessionSeq <= +countMorning + +countInMorning + +countAfternoon) {
+        return '03' // 下午
+      }
+      if (
+        lessionSeq <=
+        +countMorning + +countInMorning + +countAfternoon + +countNight
+      ) {
+        return '04' // 晚上
+      }
     }
   }
 }

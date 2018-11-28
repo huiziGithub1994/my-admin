@@ -87,7 +87,6 @@ export default {
     ...mapMutations(['SET_LOGINID']),
     // 登录
     submitForm(fromRes) {
-      console.log('nm')
       this.$router.push({ name: 'Home' })
     },
     requestVali() {},

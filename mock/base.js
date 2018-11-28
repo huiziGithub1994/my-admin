@@ -21,6 +21,7 @@ module.exports = {
       }
     ]
   },
+  // 校历维护 查询接口
   '/base/qryCalendar': {
     SUCCESS: true,
     MSG: '成功获取数据',
@@ -82,5 +83,10 @@ module.exports = {
         }
       ]
     }
+  },
+  // 校历维护 保存接口
+  'post /base/qryCalendar': {
+    SUCCESS: true,
+    MSG: '成功获取数据'
   }
 }
