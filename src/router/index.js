@@ -130,6 +130,12 @@ export const ptRouterMap = [
         name: 'JxjhPt',
         component: () => import('@/views/jxjhPt/index'),
         meta: { title: '教学计划', icon: 'tree' }
+      },
+      {
+        path: 'pkgzPt',
+        name: 'PkgzPt',
+        component: () => import('@/views/pkgzPt/index'),
+        meta: { title: '排课规则', icon: 'tree' }
       }
     ]
   }
