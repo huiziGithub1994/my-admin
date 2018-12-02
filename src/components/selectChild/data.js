@@ -40,3 +40,37 @@ export function gradeSelect() {
   ]
   return [...primaryArr, ...middleArr, ...hightArr]
 }
+
+// 年级级联数据
+export const classCascaderSelect = [
+  {
+    value: '01',
+    label: '小学',
+    children: [
+      { value: '01', label: '一年级' },
+      { value: '02', label: '二年级' },
+      { value: '03', label: '三年级' },
+      { value: '04', label: '四年级' },
+      { value: '05', label: '五年级' },
+      { value: '06', label: '六年级' }
+    ]
+  },
+  {
+    value: '02',
+    label: '初中',
+    children: [
+      { value: '01', label: '一年级' },
+      { value: '02', label: '二年级' },
+      { value: '03', label: '三年级' }
+    ]
+  },
+  {
+    value: '03',
+    label: '高中',
+    children: [
+      { value: '01', label: '一年级' },
+      { value: '02', label: '二年级' },
+      { value: '03', label: '三年级' }
+    ]
+  }
+]

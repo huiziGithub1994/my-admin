@@ -99,3 +99,23 @@ a:hover {
 .el-button--text.text-red:hover {
   color: #f56c6c;
 }
+
+// 操作提示
+.tip {
+  color: #909399;
+  margin: 0;
+  font-size: 1rem;
+  > label {
+    color: #67c23a;
+  }
+}
+
+// handsoneTable 表格
+.handsontable .htDimmed {
+  background: #f7f7f7;
+}
+
+// 普通排课-》排课规则
+.pkgzPt .el-tabs__header {
+  margin-bottom: 0;
+}

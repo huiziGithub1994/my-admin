@@ -77,7 +77,6 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .nav-block {
-  margin-bottom: 10px;
   > .el-steps--simple {
     padding: 8px 8%;
   }

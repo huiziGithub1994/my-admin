@@ -33,12 +33,6 @@
   font-size: 1rem;
 }
 
-//教学计划 tabs
-.jxjh-tabs div.el-tabs__item {
-  height: 26px !important;
-  line-height: 16px !important;
-}
-
 //表单
 .el-form-item .el-select {
   display: unset;
@@ -64,9 +58,4 @@
 // 时间组件
 .el-date-editor .el-range-separator {
   width: auto;
-}
-
-// tab页
-.el-tabs > div.el-tabs__header.is-top {
-  margin-bottom: 10px;
 }

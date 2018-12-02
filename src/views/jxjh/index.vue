@@ -2,19 +2,19 @@
   <div class="conent">
     <div class="nav-block">
       <el-steps :active="1" finish-status="success" simple>
-        <el-step title="教学计划" ></el-step>
-        <el-step title="排课规则" ></el-step>
-        <el-step title="排课过程" ></el-step>
-        <el-step title="课表查询" ></el-step>
+        <el-step title="教学计划"></el-step>
+        <el-step title="排课规则"></el-step>
+        <el-step title="排课过程"></el-step>
+        <el-step title="课表查询"></el-step>
       </el-steps>
     </div>
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
-        <el-tab-pane label="基础信息" name="one" >
-          <base-info />
+        <el-tab-pane label="基础信息" name="one">
+          <base-info/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
-          <subject-layer v-if="activeTabName === 'two'" />
+          <subject-layer v-if="activeTabName === 'two'"/>
         </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
           <choose-course ref="chooseCourseRef"/>
@@ -99,7 +99,6 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .nav-block {
-  margin-bottom: 10px;
   > .el-steps--simple {
     padding: 8px 8%;
   }

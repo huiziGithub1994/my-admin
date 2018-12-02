@@ -7,7 +7,7 @@ const app = {
       withoutAnimation: false
     },
     device: 'desktop',
-    menutype: 'pt'
+    menutype: 'zb'
   },
   mutations: {
     SET_MENUTYPE: (state, type) => {

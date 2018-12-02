@@ -2,9 +2,9 @@
   <!-- 校历维护-->
   <div>
     <div class="operation">
-      <span>
+      <p class="tip">
         <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态
-      </span>
+      </p>
       <el-button type="primary" plain @click="saveBtn">保存</el-button>
     </div>
     <div class="area-data">
@@ -72,6 +72,7 @@
 <script>
 import { qryCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
+import { initTableData } from '@/utils/inlineEditTable'
 
 const weeks = [
   '星期一',
@@ -135,7 +136,8 @@ export default {
       settings: {
         data: null,
         colHeaders: [],
-        columns: []
+        columns: [],
+        height: 330
       },
       // 标记原始数据
       markTableData: {}
@@ -159,14 +161,14 @@ export default {
     },
     // 作习安排改变时
     studyArrangeChange() {
-      this.initTableData()
+      this.initEditTableData()
     },
     // 获取表单数据
     async fetchFormData() {
       const res = await qryCalendar({ schoolId: '111' })
       this.data = res.DATA
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
-      this.initTableData()
+      this.initEditTableData()
       // 数据填充表格
       this.fillTableData()
       this.$nextTick(function() {
@@ -178,82 +180,46 @@ export default {
       const { timeArrage } = this.data
       timeArrage.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        this.hotInstance.setDataAtRowProp(row, col + 3, item.cellValue)
+        this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
         this.hotInstance.setDataAtRowProp(row, 'beginTime', item.beginTime)
         this.hotInstance.setDataAtRowProp(row, 'endTime', item.endTime)
       })
     },
     // 作息安排初始化表格的头部、行列、数据为空
-    initTableData() {
-      const fromData = this.data
-      const {
-        workDays,
-        countInMorning,
-        countMorning,
-        countAfternoon,
-        countNight
-      } = fromData
+    initEditTableData() {
       const baseHeader = ['上课开始时间', '上课结束时间', '节次/星期']
-      if (workDays <= 7) {
-        // 表头
-        this.settings.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)]
-        // 表格的列
-        const columns = []
-        const defaultColumn = {
-          type: 'time',
-          timeFormat: 'H:mm',
-          correctFormat: true
-        }
-        for (let j = 0; j < workDays + 3; j++) {
-          if (j <= 1) {
-            columns.push(
-              Object.assign(
-                { data: j === 0 ? 'beginTime' : 'endTime' },
-                defaultColumn
-              )
-            )
-          } else if (j === 2) {
-            columns.push({ data: 'lessionSeq', readOnly: true })
-          } else {
-            columns.push({ data: j })
-          }
-        }
-        this.settings.columns = columns
-        // 表格默认空内容
-        const defaultData = []
-        const defaultRow = { beginTime: '', endTime: '' }
-        const count =
-          Number(countInMorning) +
-          Number(countMorning) +
-          Number(countAfternoon) +
-          Number(countNight)
-        for (let i = 0; i < count; i++) {
-          for (let j = -1; j < workDays; j++) {
-            if (j === -1) {
-              defaultRow.lessionSeq = `第${i + 1}节`
-            } else {
-              defaultRow[j + 3] = ''
-            }
-          }
-          defaultData.push(Object.assign({}, defaultRow))
-        }
-        this.settings.data = defaultData
-        this.hotInstance.loadData(defaultData)
-      }
+      const { colHeaders, columns, defaultData } = initTableData(
+        this.data,
+        baseHeader
+      )
+      this.settings.colHeaders = colHeaders
+      this.settings.columns = columns
+      this.settings.data = defaultData
+      this.hotInstance.loadData(defaultData)
     },
     // 保存按钮
     async saveBtn() {
+      let isContinue = true
+      this.hotInstance.validateColumns([0, 1], valid => {
+        if (!valid) {
+          isContinue = false
+          this.$message({
+            type: 'warning',
+            message: '请输入正确的时间，例如(16:20)。'
+          })
+        }
+      })
+      if (!isContinue) return
       const data = this.hotInstance.getSourceData()
       const newData = []
       const flag = ['beginTime', 'endTime', 'lessionSeq']
-      let isContinue = true
       data.forEach((item, index) => {
         if (!isContinue) return
         for (const [key, val] of Object.entries(item)) {
           if (val !== '' && !flag.includes(key)) {
             if (item.beginTime === '' || item.endTime === '') {
               this.$message.error(
-                `${weeks[key - 3]}第${index + 1}节开始时间或结束时间不能为空`
+                `${weeks[key]}第${index + 1}节开始时间或结束时间不能为空`
               )
               isContinue = false
               return
@@ -262,7 +228,7 @@ export default {
               beginTime: item.beginTime,
               endTime: item.endTime,
               lessionSeq: index + 1,
-              cellKey: `${index},${key - 3}`,
+              cellKey: `${index},${key}`,
               cellValue: val,
               segId: this.getSegId(index + 1) // 通过节次获取 segId
             })
@@ -270,6 +236,7 @@ export default {
         }
       })
       if (!isContinue) return
+      console.log(newData)
       const res = await qryCalendar({ data: newData, a: '1' })
       if (res.SUCCESS) {
         this.$message({
@@ -316,13 +283,10 @@ export default {
 .operation {
   overflow: hidden;
   height: 33px;
-  > span {
+  > p {
     position: relative;
     top: 17px;
-    color: #909399;
-    > label {
-      color: #67c23a;
-    }
+    display: inline-block;
   }
   > button {
     float: right;

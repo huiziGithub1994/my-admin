@@ -9,10 +9,24 @@
         <el-step title="课表查询"></el-step>
       </el-steps>
     </div>
-    <div class="jxjh-tabs">
+    <div>
       <el-tabs v-model="activeTabName">
-        <el-tab-pane label="固排禁排" name="one" :disabled="tabDisabled.one"></el-tab-pane>
-        <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two"></el-tab-pane>
+        <el-tab-pane label="固排禁排" name="one" :disabled="tabDisabled.one">
+          <el-tabs type="card" class="pkgzPt" v-model="gpjpTabActive">
+            <el-tab-pane label="年级/班级禁排固排" name="1"></el-tab-pane>
+            <el-tab-pane label="教师禁排固排" name="2"></el-tab-pane>
+            <el-tab-pane label="教研组禁排" name="3"></el-tab-pane>
+            <el-tab-pane label="课程禁排固排" name="4"></el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <div class="my-tabs" v-show="activeTabName==='one'">
+          <grade-class v-if="gpjpTabActive === '1'"></grade-class>
+          <teacher v-else-if="gpjpTabActive === '2'"></teacher>
+          <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
+        </div>
+        <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two">
+          <merge-class></merge-class>
+        </el-tab-pane>
         <el-tab-pane label="其他规则" name="three" :disabled="tabDisabled.three"></el-tab-pane>
       </el-tabs>
       <div class="next-wapper">
@@ -25,10 +39,17 @@
   </div>
 </template>
 <script>
+import GradeClass from './GradeClass' // 固排禁排tab页：年级/班级禁排固排tab页组件
+import Teacher from './Teacher' // 固排禁排tab页：教师禁排固排tab页组件
+import TeachGroup from './TeachGroup' // 固排禁排tab页：教研组禁排tab页组件
+import MergeClass from './MergeClass' // 合班设置
+
 export default {
+  components: { GradeClass, Teacher, TeachGroup, MergeClass },
   data() {
     return {
-      activeTabName: 'one' // tab页高亮
+      activeTabName: 'two', // tab页高亮
+      gpjpTabActive: '1' // 固排禁排
     }
   },
   computed: {
@@ -60,7 +81,6 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .nav-block {
-  margin-bottom: 10px;
   > .el-steps--simple {
     padding: 8px 8%;
   }
@@ -73,6 +93,13 @@ export default {
 
     margin-right: 17px;
   }
+}
+.my-tabs {
+  border-top: none;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  padding: 10px;
 }
 </style>
 

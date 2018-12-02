@@ -1,19 +1,30 @@
-<template><!--教学任务 tab页-->
+<template>
+  <!--教学任务 tab页-->
   <div>
     <div class="top">
       <div class="desc">
-        <p ><label>学年/学期</label><span class="text-red">{{ data.schoolYear }}-{{ Number(data.schoolYear)+1 }}学年第{{ data.termCode==='1' ? '一' : '二' }}学期</span></p>
-        <p><label>排课任务名称</label>{{ data.arrangeName }}</p>
+        <p>
+          <label>学年/学期</label>
+          <span class="text-red">{{ data.schoolYear }}-{{ Number(data.schoolYear)+1 }}学年第{{ data.termCode==='1' ? '一' : '二' }}学期</span>
+        </p>
+        <p>
+          <label>排课任务名称</label>
+          {{ data.arrangeName }}
+        </p>
       </div>
       <div class="operation">
-        <a :href="downloadUrl" download="普通排课任课表_排课班级"><el-button type="primary" plain>模板下载</el-button></a>
+        <a :href="downloadUrl" download="普通排课任课表_排课班级">
+          <el-button type="primary" plain>模板下载</el-button>
+        </a>
         <el-upload action="http://localhost:9999/base/uploadTeachingTask" :show-file-list="false" :before-upload="beforeUpload" :on-success="uploadSuccess">
           <el-button type="primary" plain>点击上传</el-button>
         </el-upload>
       </div>
     </div>
     <div class="area-data">
-      <p><label>操作说明：</label>请下载模板后按格式填写，然后点击“上传任务”上传即可,上传文件的类型为xls或xlsx</p>
+      <p class="tip">
+        <label>操作说明：</label>请下载模板后按格式填写，然后点击“上传任务”上传即可,上传文件的类型为xls或xlsx
+      </p>
       <div>
         <el-table ref="multipleTable" :data="data.tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
           <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
@@ -128,14 +139,6 @@ export default {
     border: 1px solid #dddddd;
     margin: 5px 0;
     min-height: 400px;
-  }
-  > p {
-    color: #909399;
-    margin: 0;
-    font-size: 0.9rem;
-    > label {
-      color: #67c23a;
-    }
   }
 }
 </style>

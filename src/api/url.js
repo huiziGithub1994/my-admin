@@ -9,10 +9,21 @@ export default {
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
-  // 普通排课
+  // 普通排课-》 教学计划
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
   qryClassList: `/base/qryClassList`, // 班级列表
   qryTeacherList: `/base/qryTeacherList`, // 班级列表
+
+  // 普通排课-》 排课规则 -》固排禁排
+  qryGradeClassTree: `/base/qryGradeClassTree`, // 年级/班级禁排固排 treeData
+  getTeacherTree: `/base/getTeacherTree`, // 教师禁排固排 treeData
+  getTeacherTeachTask: `/base/getTeacherTeachTask`, // 教师禁排固排 教学任务
+  getTeacherTimetable: `/base/getTeacherTimetable`, // 教师禁排固排 教学任课表
+  getTeachGroupTree: `/base/getTeachGroupTree`, // 教研组禁排
+
+  // 普通排课-》 排课规则 -》合班设置
+  getClasses: `/base/getClasses`, // 根据年级获取班级信息
+  getCourse: `/base/getCourse`, // 获取课程信息
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
