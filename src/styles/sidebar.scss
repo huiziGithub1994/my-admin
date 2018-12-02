@@ -61,6 +61,15 @@
       color: #333333 !important; // 一级标题 active 字体颜色
     }
   }
+  .submenu-title-noDropdown {
+    color: #303133 !important;
+    background: #e8f2f0 !important;
+    border-bottom: 1px solid #dddddd;
+  }
+  .router-link-active .submenu-title-noDropdown {
+    background-color: $menuHover !important; // hover 字体颜色
+    color: white !important;
+  }
   .hideSidebar {
     .sidebar-container {
       width: 0 !important;

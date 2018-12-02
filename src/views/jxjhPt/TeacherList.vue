@@ -13,7 +13,7 @@
         </p>
       </div>
       <div class="operation">
-        <el-button type="primary" plain>重新上传任务</el-button>
+        <el-button type="primary">重新上传任务</el-button>
       </div>
     </div>
     <div class="area-data">

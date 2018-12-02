@@ -25,6 +25,9 @@ export default {
   getClasses: `/base/getClasses`, // 根据年级获取班级信息
   getCourse: `/base/getCourse`, // 获取课程信息
 
+  // 选课平台
+  qryXKDYList: `/base/qryXKDYList`, // 获取选课列表
+
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
   qryCalendar: `/base/qryCalendar`, // 校历维护

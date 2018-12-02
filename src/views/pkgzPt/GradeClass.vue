@@ -11,7 +11,7 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>保存</el-button>
+        <el-button type="primary">保存</el-button>
       </operation>
     </div>
     <div class="content">

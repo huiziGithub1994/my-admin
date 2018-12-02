@@ -1,4 +1,5 @@
-<template><!--  教学分班管理 tab页-->
+<template>
+  <!--  教学分班管理 tab页-->
   <div>
     <div>
       <condition>
@@ -8,8 +9,8 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>试分班</el-button>
-        <el-button type="primary" plain>任课统计</el-button>
+        <el-button type="primary">试分班</el-button>
+        <el-button type="primary">任课统计</el-button>
       </operation>
     </div>
     <div class="table-wapper">

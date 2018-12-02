@@ -34,13 +34,12 @@ export const baseRouterMap = [
     component: Layout,
     redirect: '/login',
     name: 'Dshboard',
-    hidden: true,
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        path: 'xlwh',
         name: 'Home',
-        meta: { title: '首页', icon: 'example' }
+        component: () => import('@/views/xlwh/index'),
+        meta: { title: '校历维护', icon: 'tree' }
       }
     ]
   },
@@ -86,28 +85,28 @@ export const zbRouterMap = [
         meta: { title: '课表查询', icon: 'tree' }
       }
     ]
-  },
-  {
-    path: '/xtgl',
-    component: Layout,
-    redirect: '/xtgl/sjzd',
-    name: 'Xtgl',
-    meta: { title: '系统管理', icon: 'example' },
-    children: [
-      {
-        path: 'sjzd',
-        name: 'Sjzd',
-        component: () => import('@/views/sjzd/index'),
-        meta: { title: '数据字典', icon: 'table' }
-      },
-      {
-        path: 'xlwh',
-        name: 'Xlwh',
-        component: () => import('@/views/Xlwh/index'),
-        meta: { title: '校历维护', icon: 'table' }
-      }
-    ]
   }
+  // {
+  //   path: '/xtgl',
+  //   component: Layout,
+  //   redirect: '/xtgl/sjzd',
+  //   name: 'Xtgl',
+  //   meta: { title: '系统管理', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'sjzd',
+  //       name: 'Sjzd',
+  //       component: () => import('@/views/sjzd/index'),
+  //       meta: { title: '数据字典', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'xlwh',
+  //       name: 'Xlwh',
+  //       component: () => import('@/views/Xlwh/index'),
+  //       meta: { title: '校历维护', icon: 'table' }
+  //     }
+  //   ]
+  // }
 ]
 
 // 普通排课路由
@@ -141,8 +140,32 @@ export const ptRouterMap = [
   }
 ]
 
+// 选课平台路由
+export const xkRouterMap = [
+  {
+    path: '/xkpt',
+    component: Layout,
+    redirect: '/xkpt/xxdy',
+    name: 'Xkpt',
+    meta: { title: '选课平台', icon: 'example' },
+    children: [
+      {
+        path: 'xxdy',
+        name: 'Xxdy',
+        component: () => import('@/views/xkdy/index'),
+        meta: { title: '选学调研', icon: 'tree' }
+      },
+      {
+        path: 'xxdy1',
+        name: 'Xxdy1',
+        component: () => import('@/views/xkdy/index'),
+        meta: { title: '选学调研', icon: 'tree' }
+      }
+    ]
+  }
+]
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...baseRouterMap, ...zbRouterMap, ...ptRouterMap]
+  routes: [...baseRouterMap, ...zbRouterMap, ...ptRouterMap, ...xkRouterMap]
 })

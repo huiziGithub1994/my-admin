@@ -1,4 +1,5 @@
-<template><!-- 排课查询页面-->
+<template>
+  <!-- 排课查询页面-->
   <div>
     <div v-area>
       <condition>
@@ -18,9 +19,9 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="queryBtn">查询</el-button>
-        <el-button type="primary" plain @click="addBtn">新增</el-button>
-        <el-button type="primary" plain>合并课表</el-button>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
+        <el-button type="primary" @click="addBtn">新增</el-button>
+        <el-button type="primary">合并课表</el-button>
       </operation>
     </div>
     <div>
@@ -29,7 +30,7 @@
         <el-table-column property="arrangName" show-overflow-tooltip min-width="160px" label="排课名称"/>
         <el-table-column property="name" label="状态" width="80px">
           <template slot-scope="scope">
-            <el-tag size="mini" :type="scope.row.name === '完成' ? 'success': scope.row.name === '进行中' ? 'primary' : 'danger'">{{ scope.row.name }}</el-tag>
+            <span :class="{'success': scope.row.name === '完成','primary':scope.row.name === '进行中','danger':scope.row.name === '冲突'}">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column property="schoolYear" width="120px" label="学年">
@@ -40,11 +41,13 @@
         <el-table-column property="termCode" label="学期" width="80px"></el-table-column>
         <el-table-column :formatter="gradeCodFormatter" property="gradeCode" label="年级"/>
         <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
-        <el-table-column fixed="right" width="130px" label="操作">
+        <el-table-column fixed="right" width="210px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="arrangeClass(scope.row.arrangeId)">排课</el-button>
-            <el-button type="text" size="mini" class="text-red" @click="deleteClass(scope.row.arrangeId)">删除</el-button>
-            <el-button type="text" size="mini">复制</el-button>
+            <div class="table-btns">
+              <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>排课</el-button>
+              <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
+              <el-button type="primary" size="mini" plain>复制</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -55,7 +58,8 @@
         :total="pageTot.pageTotal"
         layout="total,sizes,slot ,->, prev, pager, next"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
+        @current-change="handleCurrentChange"
+      >
         <slot/>
       </el-pagination>
     </div>

@@ -11,9 +11,10 @@
         tag="span"
         class="tags-view-item"
         @click.middle.native="closeSelectedTag(tag)"
-        @contextmenu.prevent.native="openMenu(tag,$event)">
+        @contextmenu.prevent.native="openMenu(tag,$event)"
+      >
         {{ tag.title }}
-        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -181,9 +182,9 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
+        background-color: #409eff;
         color: #fff;
-        border-color: #42b983;
+        border-color: #409eff;
         &::before {
           content: '';
           background: #fff;

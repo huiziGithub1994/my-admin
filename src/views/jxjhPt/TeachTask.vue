@@ -14,10 +14,10 @@
       </div>
       <div class="operation">
         <a :href="downloadUrl" download="普通排课任课表_排课班级">
-          <el-button type="primary" plain>模板下载</el-button>
+          <el-button type="primary">模板下载</el-button>
         </a>
         <el-upload action="http://localhost:9999/base/uploadTeachingTask" :show-file-list="false" :before-upload="beforeUpload" :on-success="uploadSuccess">
-          <el-button type="primary" plain>点击上传</el-button>
+          <el-button type="primary">点击上传</el-button>
         </el-upload>
       </div>
     </div>

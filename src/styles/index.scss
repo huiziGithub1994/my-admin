@@ -119,3 +119,17 @@ a:hover {
 .pkgzPt .el-tabs__header {
   margin-bottom: 0;
 }
+
+span.success {
+  color: #67c23a;
+}
+span.primary {
+  color: #409eff;
+}
+span.danger {
+  color: #f56c6c;
+}
+
+.table-btns .el-button + .el-button {
+  margin-left: 0;
+}

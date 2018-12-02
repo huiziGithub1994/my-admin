@@ -61,7 +61,8 @@ export default {
       },
       menus: [
         { command: 'zb', name: '走班排课' },
-        { command: 'pt', name: '普通排课' }
+        { command: 'pt', name: '普通排课' },
+        { command: 'xk', name: '选课平台' }
       ]
     }
   },

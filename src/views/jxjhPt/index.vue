@@ -25,8 +25,8 @@
       </el-tabs>
       <div class="next-wapper">
         <div>
-          <!-- <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
-          <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>-->
+          <!-- <el-button type="success" @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
+          <el-button type="success" @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>-->
         </div>
       </div>
     </div>

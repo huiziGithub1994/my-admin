@@ -1,11 +1,12 @@
-<template><!-- 走班教室 tab页-->
+<template>
+  <!-- 走班教室 tab页-->
   <div>
     <div v-area v-if="initArea">
       <condition>
         <div class="condition">
           <label>课程分类</label>
           <el-select v-model="search['layerId']" clearable @change="fetchData">
-            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseLayerName" :value="item.layerId"> </el-option>
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseLayerName" :value="item.layerId"></el-option>
           </el-select>
         </div>
         <div class="condition">
@@ -14,8 +15,8 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="queryBtn">查询</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -55,9 +56,9 @@
           <el-col :span="24">
             <el-form-item label="选课">
               <div v-for="(course,index) in sbjestClass" :key="index">
-                <div> {{ course.courseName }} </div>
+                <div>{{ course.courseName }}</div>
                 <el-radio-group v-model="editForm[course.layerId]">
-                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo"> {{ courseLayer.courseLayerName }} </el-radio>
+                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo">{{ courseLayer.courseLayerName }}</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>

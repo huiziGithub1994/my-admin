@@ -1,18 +1,19 @@
-<template><!-- 学科分层及课时 tab页-->
+<template>
+  <!-- 学科分层及课时 tab页-->
   <div>
     <div>
       <condition>
         <div class="condition">
           <label>课程名称</label>
           <el-select v-model="search['courseId']" clearable @change="fetchData">
-            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"> </el-option>
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
+        <el-button type="primary" @click="editBtn">修改</el-button>
+        <el-button type="primary" @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">

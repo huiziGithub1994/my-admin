@@ -20,8 +20,8 @@
     </div>
     <div class="btns" :style="{height:groupHeiht}">
       <div>
-        <el-button type="success" plain @click="mergeClick">合班＞＞</el-button>
-        <el-button type="primary" plain class="marginLeft" @click="cancelBtn">＜＜解散</el-button>
+        <el-button type="success" @click="mergeClick">合班＞＞</el-button>
+        <el-button type="primary" class="marginLeft" @click="cancelBtn">＜＜解散</el-button>
       </div>
     </div>
     <div class="block block-last">

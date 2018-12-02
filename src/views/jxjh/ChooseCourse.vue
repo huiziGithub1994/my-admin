@@ -12,13 +12,13 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>查询</el-button>
-        <el-button type="primary" plain>导入</el-button>
-        <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" plain>模板下载</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain>引入</el-button>
-        <el-button type="primary" plain>分析</el-button>
+        <el-button type="primary">查询</el-button>
+        <el-button type="primary">导入</el-button>
+        <el-button type="primary">导出</el-button>
+        <el-button type="primary">模板下载</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
+        <el-button type="primary">引入</el-button>
+        <el-button type="primary">分析</el-button>
       </operation>
     </div>
     <div class="table-wapper">

@@ -1,10 +1,11 @@
-<template><!-- 学科分层及课时 tab页-->
+<template>
+  <!-- 学科分层及课时 tab页-->
   <div>
     <div class="operation-btns">
       <div>
-        <el-button type="primary" plain>增加</el-button>
-        <el-button type="primary" plain>修改</el-button>
-        <el-button type="primary" plain>删除</el-button>
+        <el-button type="primary">增加</el-button>
+        <el-button type="primary">修改</el-button>
+        <el-button type="primary">删除</el-button>
       </div>
     </div>
     <div class="table-wapper">
