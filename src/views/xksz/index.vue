@@ -11,7 +11,9 @@
       <el-tab-pane label="参选学生" name="three">
         <joined-student></joined-student>
       </el-tab-pane>
-      <el-tab-pane label="选课说明" name="four"></el-tab-pane>
+      <el-tab-pane label="选课说明" name="four">
+        <choose-explain></choose-explain>
+      </el-tab-pane>
     </el-tabs>
     <div class="next-wapper">
       <div>
@@ -25,11 +27,12 @@
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import OptionalSubject from './OptionalSubject' // 可选学科tab页组件
 import JoinedStudent from './JoinedStudent' // 本次参选学生tab页组件
+import ChooseExplain from './ChooseExplain' // 选课说明tab页组件
 export default {
-  components: { BaseInfo, OptionalSubject, JoinedStudent },
+  components: { BaseInfo, OptionalSubject, JoinedStudent, ChooseExplain },
   data() {
     return {
-      activeTabName: 'three' // tab页高亮
+      activeTabName: 'one' // tab页高亮
     }
   },
   computed: {},

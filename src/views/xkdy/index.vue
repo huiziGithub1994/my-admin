@@ -42,9 +42,9 @@
         <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
-              <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>分析</el-button>
-              <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
-              <el-button type="primary" size="mini" plain>修改</el-button>
+              <el-button type="primary" size="mini" @click="analysisXK(scope.row.arrangeId)" plain>分析</el-button>
+              <el-button type="danger" size="mini" @click="deleteXK(scope.row.arrangeId)" plain>删除</el-button>
+              <el-button type="primary" size="mini" plain @click="editXk(scope.row.arrangeId)">修改</el-button>
             </div>
           </template>
         </el-table-column>
@@ -119,13 +119,9 @@ export default {
         this.listLoading = false
       })
     },
-    // 年级格式化
-    gradeCodFormatter(row, column, cellValue, index) {
-      return cellValue
-    },
     // 新增按钮
     addBtn() {
-      this.$router.push({ name: 'Jxjh' })
+      this.$router.push({ name: 'Xksz' })
     },
     // 查询按钮
     queryBtn() {
@@ -133,7 +129,7 @@ export default {
       this.fetchData()
     },
     // 删除按钮
-    deleteClass(arrangeId) {
+    deleteXK(arrangeId) {
       this.$confirm('确定删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -141,12 +137,13 @@ export default {
       })
         .then(async () => {
           // const res = await qryArrangeDetail({ arrangeId: arrangeId, a: '2' })
-          // this.$message({
-          //   type: res.SUCCESS ? 'success' : 'error',
-          //   message: res.SUCCESS ? '删除成功!' : '删除失败'
-          // })
-          // // 重新加载数据
-          // if (res.SUCCESS) this.queryBtn()
+          const res = { SUCCESS: true }
+          this.$message({
+            type: res.SUCCESS ? 'success' : 'error',
+            message: res.SUCCESS ? '删除成功!' : '删除失败'
+          })
+          // 重新加载数据
+          if (res.SUCCESS) this.queryBtn()
         })
         .catch(() => {
           this.$message({
@@ -155,11 +152,13 @@ export default {
           })
         })
     },
-    // 排课按钮
-    arrangeClass(arrangeId) {
+    // 修改按钮
+    editXk(arrangeId) {
       const queryParams = { arrangeId }
-      this.$router.push({ name: 'Jxjh', query: queryParams })
+      this.$router.push({ name: 'Xksz', query: queryParams })
     },
+    // 分许按钮
+    analysisXK() {},
     handleSizeChange(val) {
       this.pageTot.curPage = 1
       this.pageTot.pageSize = val
