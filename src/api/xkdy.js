@@ -9,3 +9,26 @@ export function getXKDYListInfo(listQuery) {
     params: listQuery
   })
 }
+
+// 选课设置-》可选学科tab  表单信息
+export function getOptionalSubject(listQuery) {
+  return request({
+    url: URL.qryOptionalCourse,
+    params: listQuery
+  })
+}
+
+// 选课设置-》班次参选学生tab  班级下拉列表
+export function getClassesOptions(listQuery) {
+  return request({
+    url: URL.qryClassesOptions,
+    params: listQuery
+  })
+}
+// 选课设置-》班次参选学生tab 参与学生列表
+export function getJoinedStudents(listQuery) {
+  return request({
+    url: URL.qryJoinedStudents,
+    params: listQuery
+  })
+}

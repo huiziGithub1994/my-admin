@@ -41,7 +41,7 @@
         <el-table-column property="termCode" label="学期" width="80px"></el-table-column>
         <el-table-column :formatter="gradeCodFormatter" property="gradeCode" label="年级"/>
         <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
-        <el-table-column fixed="right" width="210px" label="操作">
+        <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
               <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>排课</el-button>

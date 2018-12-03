@@ -130,6 +130,11 @@ span.danger {
   color: #f56c6c;
 }
 
-.table-btns .el-button + .el-button {
-  margin-left: 0;
+.table-btns {
+  .el-button + .el-button {
+    margin-left: 0;
+  }
+  .el-button--mini {
+    padding: 4px 8px;
+  }
 }

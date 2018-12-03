@@ -25,8 +25,13 @@ export default {
   getClasses: `/base/getClasses`, // 根据年级获取班级信息
   getCourse: `/base/getCourse`, // 获取课程信息
 
-  // 选课平台
+  // 选课平台 -》 选课列表（选学调研）
   qryXKDYList: `/base/qryXKDYList`, // 获取选课列表
+  // 选课平台 -》 选课设置
+  qryOptionalCourse: `/base/qryOptionalCourse`,
+  // 选课平台 -》班次参选学生tab
+  qryClassesOptions: `/base/qryClassesOptions`, // 班级下拉列表
+  qryJoinedStudents: `/base/qryJoinedStudents`, // 参与学生信息
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

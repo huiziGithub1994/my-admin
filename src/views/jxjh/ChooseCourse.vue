@@ -1,4 +1,5 @@
-<template><!--  导入学生选课 tab页-->
+<template>
+  <!--  导入学生选课 tab页-->
   <div>
     <div v-area v-if="initArea">
       <condition>
@@ -30,10 +31,12 @@
         <el-table-column label="姓名" property="stuname" fixed></el-table-column>
         <el-table-column label="性别" property="sex" width="55" fixed></el-table-column>
         <el-table-column label="课程组合" property="courses" min-width="900"></el-table-column>
-        <el-table-column fixed="right" width="90px" label="操作">
+        <el-table-column fixed="right" width="110px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="editBtn(scope.row.id)">修改</el-button>
-            <el-button type="text" size="mini" class="deleteBtn" @click="deleteBtn(scope.row.id)">删除</el-button>
+            <div class="table-btns">
+              <el-button type="primary" size="mini" plain @click="editBtn(scope.row.id)">修改</el-button>
+              <el-button type="danger" size="mini" plain class="deleteBtn" @click="deleteBtn(scope.row.id)">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -60,8 +63,7 @@
           <el-col :span="12">
             <el-form-item label="行政班" prop="xzb">
               <el-select v-model="editForm.xzb" clearable placeholder="请选择">
-                <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
+                <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -76,9 +78,9 @@
           <el-col :span="24">
             <el-form-item label="选课">
               <div v-for="(course,index) in sbjestClass" :key="index">
-                <div> {{ course.courseName }} </div>
+                <div>{{ course.courseName }}</div>
                 <el-radio-group v-model="editForm[course.layerId]">
-                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo"> {{ courseLayer.courseLayerName }} </el-radio>
+                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo">{{ courseLayer.courseLayerName }}</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>

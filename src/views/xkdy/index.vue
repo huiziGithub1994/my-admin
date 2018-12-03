@@ -29,7 +29,7 @@
         <el-table-column property="name" show-overflow-tooltip min-width="160px" label="选课任务名称"/>
         <el-table-column property="status" label="状态" width="80px">
           <template slot-scope="scope">
-            <el-tag size="mini" :type="scope.row.status === '完成' ? 'success': 'danger'">{{ scope.row.status }}</el-tag>
+            <span :class="{'success': scope.row.status === '完成','danger':scope.row.status === '未完成'}">{{ scope.row.status }}</span>
           </template>
         </el-table-column>
         <el-table-column property="schoolYear" width="120px" label="学年">
@@ -39,11 +39,13 @@
         </el-table-column>
         <el-table-column property="termCode" label="学期" width="80px"></el-table-column>
         <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
-        <el-table-column fixed="right" width="130px" label="操作">
+        <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="arrangeClass(scope.row.arrangeId)">分析</el-button>
-            <el-button type="text" size="mini" class="text-red" @click="deleteClass(scope.row.arrangeId)">删除</el-button>
-            <el-button type="text" size="mini">修改</el-button>
+            <div class="table-btns">
+              <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>分析</el-button>
+              <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
+              <el-button type="primary" size="mini" plain>修改</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
