@@ -1,51 +1,48 @@
 <template>
-  <div class="personLogin">
-    <div class="login-header">
-      <div class="header-content">
-        <span>理水永昌实验中学</span>
-        <div class="time-font">{{ time }}</div>
+  <div class="content">
+    <div class="header">
+      <div>蓝墨水 云平台</div>
+      <div class="currentTime">
+        {{ time.day }}
+        <span>{{ time.week }}</span>
       </div>
     </div>
-    <div class="login-middle">
-      <div class="middle-content">
-        <div class="form-box">
-        </div>
-        <div class="form-area">
-          <div class="form-conter">
-            <p class="login-title">用户登录</p>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
-              <el-form-item prop="loginid">
-                <el-input class="input-margin" placeholder="用户名" v-model.trim="ruleForm.loginid">
-                </el-input>
-              </el-form-item>
-              <el-form-item prop="loginpwd">
-                <el-input class="input-margin" placeholder="密码" type="password" v-model.trim="ruleForm.loginpwd" auto-complete="off">
-                </el-input>
-              </el-form-item>
-              <el-form-item prop="validateCode">
-                <el-row class="input-margin" :gutter="20">
-                  <el-col :span="13">
-                    <el-input placeholder="验证码" readonly @keyup.enter.native ="submitForm('ruleForm')" v-model.trim="ruleForm.validateCode" auto-complete="off"> </el-input>
-                  </el-col>
-                  <el-col :span="11">
-                    <div class="log-img" v-loading="imgLoading" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0,0,0, 0.5)">
-                      这是验证码
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-form-item>
-              <el-form-item>
-                <div>
-                  <el-button class="btn-sub" type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
-                </div>
-              </el-form-item>
-            </el-form>
-          </div>
+    <div class="article">
+      <div class="login">
+        <div class="title">登 录</div>
+        <div class="form-wapper">
+          <el-form :model="ruleForm" :rules="rules" ref="rule" label-width="0px" class="demo-ruleForm">
+            <el-form-item label prop="loginid">
+              <el-input v-model="ruleForm.loginid" size="large" placeholder="已验证手机/邮箱/用户名">
+                <i slot="prefix">
+                  <svg-icon icon-class="tree"/>
+                </i>
+              </el-input>
+            </el-form-item>
+            <el-form-item label prop="loginpwd">
+              <el-input v-model="ruleForm.loginpwd" size="large" placeholder="密码">
+                <i slot="prefix">
+                  <svg-icon icon-class="tree"/>
+                </i>
+              </el-input>
+            </el-form-item>
+            <div class="autoLogin">
+              <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
+              <span class="pwdReg">
+                <span>找回密码</span>
+                <span>注册新用户</span>
+              </span>
+            </div>
+            <div class="loginBtn" @click="submitForm">登 录</div>
+            <div class="other">
+              <p>你也可以使用以下账号登录</p>
+            </div>
+          </el-form>
         </div>
       </div>
     </div>
-    <div class="login-bottom">
-      <p>COPYRIGHT © {{ currentTime }} BY 湖南<span class="t-color"><a target="_Blank" href="http://www.kingosoft.com/"> 青果软件 </a> </span>有限公司  版权所有  湘ICP备11014513号-1</p>
+    <div class="footer">
+      <div>Copyright c {{ currentYear }} 湖南蓝墨水软件科技有限公司</div>
     </div>
   </div>
 </template>
@@ -56,30 +53,28 @@ import moment from 'moment'
 export default {
   data() {
     return {
-      showFloat: false,
-      currentTime: new Date().getFullYear(),
-      Showanimat: true,
-      ShowImg: '', // 上方显示图片
-      styleObject: {
-        borderColor: '#f56c6c'
-      },
       ruleForm: {
         loginid: '', // 用户名
-        loginpwd: '', // 密码
-        validateCode: '' // 验证码
+        loginpwd: '' // 密码
       },
-      rules: {},
-      queryString: [],
-      queryStringtk: [],
-      time: null,
-      checkCode: null,
-      picSrc: '',
-      imgLoading: false
+      rules: {
+        loginid: {
+          required: true,
+          message: '请输入已验证手机/邮箱/用户名',
+          trigger: 'blur'
+        },
+        loginpwd: {
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }
+      },
+      time: {},
+      currentYear: new Date().getFullYear(),
+      autoLogin: false // 自动登录
     }
   },
-  mounted() {
-    this.showFloat = true
-  },
+  mounted() {},
   created() {
     this.getTime()
   },
@@ -91,142 +86,101 @@ export default {
     },
     requestVali() {},
     getTime: function() {
-      this.time = moment().format('YYYY 年 MM 月 DD 日 HH:mm')
+      moment.locale('zh-cn')
+      this.time = {
+        day: moment().format('YYYY - MM - DD'),
+        week: moment().format('dddd')
+      }
     }
   }
 }
 </script>
 
-<style>
-.form-conter .el-input--small .el-input__inner {
-  height: 38px;
-  line-height: 38px;
-}
-.form-conter .el-input--small .el-input__inner:focus {
-  box-shadow: #409eff 0px 0px 8px;
-}
-.log-img .el-loading-spinner {
-  margin-top: -15px;
-}
-</style>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
-.login-title {
-  width: 95px;
-  margin: 30px auto;
-  font-size: 20px;
-  letter-spacing: 3px;
-}
-.fa {
-  margin: 13px 8px 0 5px;
-  color: #ccc;
-}
-.personLogin {
-  width: 100%;
+.content {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-.time-font {
-  font-size: 15px;
-  float: right;
-}
-.header-content {
-  width: 72%;
-  margin: 0 auto;
-  > span {
-    font-size: 1.5rem;
+.header {
+  height: 80px;
+  line-height: 80px;
+  padding: 0 10%;
+  display: flex;
+  justify-content: space-between;
+  span {
+    letter-spacing: 3px;
+    margin-left: 6px;
   }
 }
-.login-header {
-  height: 100px;
-  line-height: 100px;
+.article {
+  flex: 1;
+  background: #b3d4db;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  > div.login {
+    margin-right: 15%;
+  }
 }
-.login-middle {
-  height: 60%;
-  background: url('../../assets/login/Newlogin.png') no-repeat left center;
-  background-size: 100%;
+.footer {
+  height: 40px;
+  color: white;
+  line-height: 40px;
+  text-align: center;
+  background: #27576d;
+  letter-spacing: 2px;
+  font-size: 0.95rem;
 }
-.middle-content {
-  width: 72%;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-  /* border:1px solid red; */
+.login {
+  width: 380px;
+  height: 400px;
+  background: white;
+  padding: 40px 30px;
+  > div.title {
+    font-size: 1.4rem;
+  }
 }
-.form-box {
-  width: 472px;
-  height: 152px;
-  position: absolute;
-  right: -79px;
-  bottom: -61px;
-  background: url('../../assets/login/bg.png') no-repeat left center;
-}
-.form-area {
-  width: 350px;
-  height: 384px;
-  position: absolute;
-  right: 0;
-  bottom: -61px;
-  z-index: 99;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.6);
-  /* box-shadow: 2px 3px 1px #e4e4e4; */
-  box-shadow: 0px 1px 1px #e4e4e4;
-}
-.form-conter {
-  width: 80%;
-  margin: 30px auto;
-  /* border:1px solid red; */
-}
-.input-margin {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-
-.btn-sub {
-  width: 100%;
-  height: 38px;
-  border-radius: 3px;
-  font-size: 16px;
-  letter-spacing: 3px;
+.form-wapper {
   margin-top: 20px;
 }
-.log-img {
-  width: 100%;
-  height: 100%;
-  height: 38px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+// 自动登录找回密码，注册新用户
+.autoLogin {
+  font-size: 1rem;
+  > div.el-form-item__content {
+    line-height: 25px !important;
+  }
+  .pwdReg {
+    float: right;
+    > span:first-child {
+      margin-right: 3px;
+      padding-right: 5px;
+      border-right: 1px solid #333333;
+      color: #333333;
+    }
+    > span:last-child {
+      color: #d10008;
+    }
+  }
 }
-
-.login-bottom {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+.loginBtn {
   height: 35px;
   line-height: 35px;
-  background: #f0eef5;
-  z-index: 100;
-  font-size: 0.9rem;
-}
-.login-bottom > p {
+  background: #96b7be;
   text-align: center;
-  margin: 0;
+  color: white;
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 1.1rem;
 }
-.t-color a {
-  color: #f3a100;
+.other {
+  margin-top: 15px;
+  color: #333333;
 }
-.code-style {
-  width: 100%;
-  height: 100%;
-}
-.img-login {
-  position: absolute;
-  left: 31%;
-  top: -82px;
-}
-.img-login img {
-  width: 9rem;
+.currentTime {
+  font-size: 1.2rem;
 }
 </style>
+
