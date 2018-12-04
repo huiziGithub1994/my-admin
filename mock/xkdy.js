@@ -64,5 +64,54 @@ module.exports = {
         'sex|1': ['1', '2']
       }
     ]
+  },
+  // 选课结果 单科分析
+  '/base/qrySingleSubjectAnalysis': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      taskName: '2018级高中一年级学生选考调查',
+      grade: '01,01',
+      analysis: {
+        needNum: 323,
+        truthNum: 323,
+        noChoose: 0,
+        allClasses: 8,
+        completeClass: 8
+      },
+      tableData: [
+        { name: '政治', value: 0 },
+        { name: '历史', value: 56 },
+        { name: '地理', value: 0 },
+        { name: '物理', value: 163 },
+        { name: '化学', value: 319 },
+        { name: '生物', value: 147 }
+      ]
+    }
+  },
+  // 选课结果 选课组合分析
+  '/base/qryAssembleSubjectAnalysis': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      taskName: '2018级高中一年级学生选考调查',
+      grade: '01,01',
+      analysis: {
+        needNum: 323,
+        truthNum: 323,
+        noChoose: 0,
+        allClasses: 8,
+        completeClass: 8
+      },
+      tableData: [
+        { name: '历史,地理，化学', value: 1 },
+        { name: '历史,地理,生物', value: 2 },
+        { name: '历史,物理,化学', value: 53 },
+        { name: '地理,物理,化学', value: 122 },
+        { name: '地理,物理,生物', value: 2 },
+        { name: '地理,化学,生物', value: 36 },
+        { name: '物理,化学,生物', value: 107 }
+      ]
+    }
   }
 }

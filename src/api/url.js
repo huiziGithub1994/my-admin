@@ -32,6 +32,9 @@ export default {
   // 选课平台 -》班次参选学生tab
   qryClassesOptions: `/base/qryClassesOptions`, // 班级下拉列表
   qryJoinedStudents: `/base/qryJoinedStudents`, // 参与学生信息
+  // 选课平台 ->选课结果
+  qrySingleSubjectAnalysis: `/base/qrySingleSubjectAnalysis`, //  单科分析
+  qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

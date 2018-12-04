@@ -32,3 +32,19 @@ export function getJoinedStudents(listQuery) {
     params: listQuery
   })
 }
+
+// 选课结果-》单科分析tab
+export function getSingleSubjectAnalysis(listQuery) {
+  return request({
+    url: URL.qrySingleSubjectAnalysis,
+    params: listQuery
+  })
+}
+
+// 选课结果-》选课组合分析tab
+export function getAssembleSubjectAnalysis(listQuery) {
+  return request({
+    url: URL.qryAssembleSubjectAnalysis,
+    params: listQuery
+  })
+}

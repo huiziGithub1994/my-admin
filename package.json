@@ -17,6 +17,7 @@
   "dependencies": {
     "@handsontable/vue": "^3.0.0",
     "axios": "0.18.0",
+    "echarts": "^4.2.0-rc.2",
     "element-ui": "2.4.6",
     "handsontable": "^6.2.0",
     "js-cookie": "2.2.0",
