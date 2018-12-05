@@ -88,5 +88,60 @@ module.exports = {
   'post /base/qryCalendar': {
     SUCCESS: true,
     MSG: '成功获取数据'
+  },
+  // 课程计划
+  '/base/qryCoursePlain': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: [
+      {
+        periodSepciality: '高中',
+        grade: '高一',
+        'course|1': ['语文', '生物'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      },
+      {
+        periodSepciality: '',
+        grade: '',
+        'course|1': ['数学', '地理', '历史'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      },
+      {
+        periodSepciality: '',
+        grade: '',
+        'course|1': ['英语', '化学', '政治'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      }
+    ]
+  },
+  'post /base/qryCoursePlain': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: [
+      {
+        periodSepciality: '高中',
+        grade: '高一',
+        'course|1': ['语文', '生物'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      },
+      {
+        periodSepciality: '',
+        grade: '',
+        'course|1': ['数学', '地理', '历史'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      },
+      {
+        periodSepciality: '',
+        grade: '',
+        'course|1': ['英语', '化学', '政治'],
+        weekTime: Math.floor(Math.random() * 10),
+        teachStyle: '理论'
+      }
+    ]
   }
 }

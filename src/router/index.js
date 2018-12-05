@@ -44,16 +44,16 @@ export const baseRouterMap = [
     ]
   },
   {
-    path: '/xkjhLayout',
+    path: '/kcjhLayout',
     component: Layout,
-    redirect: '/xkjhLayout/xkjh',
-    name: 'xkjhLayout',
+    redirect: '/kcjhLayout/kcjh',
+    name: 'kcjhLayout',
     children: [
       {
-        path: 'xkjh',
-        name: 'Xkjh',
-        component: () => import('@/views/xkjh/index'),
-        meta: { title: '选课计划', icon: 'calendar' }
+        path: '/kcjh',
+        name: 'Kcjh',
+        component: () => import('@/views/kcjh/index'),
+        meta: { title: '课程计划', icon: 'calendar' }
       }
     ]
   },

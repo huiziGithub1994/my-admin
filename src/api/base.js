@@ -16,3 +16,11 @@ export function qryCalendar(listQuery) {
     params: listQuery
   })
 }
+
+// 课程计划
+export function getCoursePlain(listQuery) {
+  return request({
+    url: URL.qryCoursePlain,
+    params: listQuery
+  })
+}
