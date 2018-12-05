@@ -43,6 +43,20 @@ export const baseRouterMap = [
       }
     ]
   },
+  {
+    path: '/xkjhLayout',
+    component: Layout,
+    redirect: '/xkjhLayout/xkjh',
+    name: 'xkjhLayout',
+    children: [
+      {
+        path: 'xkjh',
+        name: 'Xkjh',
+        component: () => import('@/views/xkjh/index'),
+        meta: { title: '选课计划', icon: 'calendar' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 // 走班排课路由
@@ -165,7 +179,7 @@ export const xkRouterMap = [
         path: 'xkjg',
         name: 'Xkjg',
         component: () => import('@/views/xkjg/index'),
-        meta: { title: '选课结果', icon: 'xksz' }
+        meta: { title: '选课结果', icon: 'result' }
       }
     ]
   }

@@ -14,15 +14,15 @@
           <el-form :model="ruleForm" :rules="rules" ref="rule" label-width="0px" class="demo-ruleForm">
             <el-form-item label prop="loginid">
               <el-input v-model="ruleForm.loginid" size="large" placeholder="已验证手机/邮箱/用户名">
-                <i slot="prefix">
-                  <svg-icon icon-class="tree"/>
+                <i slot="prefix" class="login-ipt-img">
+                  <svg-icon icon-class="user"/>
                 </i>
               </el-input>
             </el-form-item>
             <el-form-item label prop="loginpwd">
               <el-input v-model="ruleForm.loginpwd" size="large" placeholder="密码">
-                <i slot="prefix">
-                  <svg-icon icon-class="tree"/>
+                <i slot="prefix" class="login-ipt-img">
+                  <svg-icon icon-class="password"/>
                 </i>
               </el-input>
             </el-form-item>
@@ -181,6 +181,10 @@ export default {
 }
 .currentTime {
   font-size: 1.2rem;
+}
+.login-ipt-img {
+  position: relative;
+  top: 3px;
 }
 </style>
 

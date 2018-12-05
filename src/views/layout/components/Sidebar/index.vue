@@ -25,13 +25,13 @@ export default {
     routes() {
       const allRoutes = this.$router.options.routes
       if (this.menutype === 'zb') {
-        return allRoutes.slice(0, 5)
+        return allRoutes.slice(0, 6)
       } else if (this.menutype === 'pt') {
-        return [...allRoutes.slice(0, 4), ...allRoutes.slice(5, 6)]
+        return [...allRoutes.slice(0, 5), ...allRoutes.slice(6, 7)]
       } else {
         return [
-          ...allRoutes.slice(0, 4),
-          ...allRoutes.slice(6, allRoutes.length)
+          ...allRoutes.slice(0, 5),
+          ...allRoutes.slice(7, allRoutes.length)
         ]
       }
     },
