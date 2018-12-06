@@ -3,7 +3,7 @@
   <div>
     <div class="operation">
       <p class="tip">
-        <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态
+        <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态，上课时间格式(16:20)。
       </p>
       <el-button type="primary" @click="saveBtn">保存</el-button>
     </div>
@@ -236,7 +236,6 @@ export default {
         }
       })
       if (!isContinue) return
-      console.log(newData)
       const res = await qryCalendar({ data: newData, a: '1' })
       if (res.SUCCESS) {
         this.$message({

@@ -27,8 +27,10 @@ export default {
 
   // 选课平台 -》 选课列表（选学调研）
   qryXKDYList: `/base/qryXKDYList`, // 获取选课列表
-  // 选课平台 -》 选课设置
-  qryOptionalCourse: `/base/qryOptionalCourse`,
+  // 选课平台 -》 选课设置 -》 可选学科tab
+  qryOptionalCourse: `/base/qryOptionalCourse`, //  数据
+  qryAllCourse: `/base/qryAllCourse`, // 包含学科下拉列表数据
+
   // 选课平台 -》班次参选学生tab
   qryClassesOptions: `/base/qryClassesOptions`, // 班级下拉列表
   qryJoinedStudents: `/base/qryJoinedStudents`, // 参与学生信息

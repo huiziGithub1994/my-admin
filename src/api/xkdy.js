@@ -18,6 +18,13 @@ export function getOptionalSubject(listQuery) {
   })
 }
 
+// 选课设置-》可选学科tab  包含学科下拉列表数据
+export function getAllCourse() {
+  return request({
+    url: URL.qryAllCourse
+  })
+}
+
 // 选课设置-》班次参选学生tab  班级下拉列表
 export function getClassesOptions(listQuery) {
   return request({

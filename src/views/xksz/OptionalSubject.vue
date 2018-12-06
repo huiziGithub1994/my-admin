@@ -22,32 +22,48 @@
             <el-transfer v-model="data.choosedIds" :data="data.course" :titles="['可选课程','已选列表']" :button-texts="['取消', '选择']"></el-transfer>
           </div>
           <!-- 指定选科组合 -->
-          <div v-else>dd</div>
+          <div v-else class="transfer-wapper">
+            <div class="transfer-select">
+              <span>包含学科</span>
+              <el-select v-model="value4" clearable placeholder="请选择">
+                <el-option v-for="item in courseOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </div>
+            <div>
+              <el-transfer v-model="data.choosedIds" :data="data.course" :titles="['可选组合','已选组合']" :button-texts="['取消', '选择']"></el-transfer>
+            </div>
+          </div>
         </el-col>
       </el-row>
     </el-form>
   </div>
 </template>
 <script>
-import { getOptionalSubject } from '@/api/xkdy'
+import { getOptionalSubject, getAllCourse } from '@/api/xkdy'
 export default {
   name: 'OptionalSubject',
   data() {
     return {
       data: {
-        chooseModel: undefined,
+        chooseModel: undefined, // 选课模式
         course: [], // 可选课程
-        choosedIds: [] // 已选列表
+        choosedIds: [], // 已选列表
+        courseOptions: [] // 包含学科
       }
     }
   },
   created() {
     this.fetchInfo()
+    // 包含学科下拉列表数据
+    this.fetchAllCourse()
   },
   methods: {
     async fetchInfo() {
       const res = await getOptionalSubject()
       this.data = res.DATA
+    },
+    async fetchAllCourse() {
+      await getAllCourse()
     }
   }
 }
@@ -58,5 +74,8 @@ export default {
 }
 .transfer-wapper {
   padding-left: 45px;
+  .transfer-select {
+    margin-bottom: 10px;
+  }
 }
 </style>
