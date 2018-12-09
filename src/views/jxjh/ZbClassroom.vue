@@ -1,7 +1,7 @@
 <template>
   <!-- 走班教室 tab页-->
   <div>
-    <div v-area v-if="initArea">
+    <div v-area>
       <condition>
         <div class="condition">
           <label>课程分类</label>
@@ -26,10 +26,12 @@
         <el-table-column label="教室名称" property="room" width="130" fixed></el-table-column>
         <el-table-column label="可上课门数" property="number" width="100" fixed></el-table-column>
         <el-table-column label="课程列表" property="courses"></el-table-column>
-        <el-table-column fixed="right" width="90px" label="操作">
+        <el-table-column fixed="right" width="110px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="editBtn(scope.row.zbClassroomId)">修改</el-button>
-            <el-button type="text" size="mini" class="deleteBtn" @click="deleteBtn(scope.row.zbClassroomId)">删除</el-button>
+            <div class="table-btns">
+              <el-button type="primary" size="mini" plain @click="editBtn(scope.row.zbClassroomId)">修改</el-button>
+              <el-button type="danger" size="mini" plain @click="deleteBtn(scope.row.zbClassroomId)">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>

@@ -1,0 +1,59 @@
+<template>
+  <div class="conent">
+    <div class="nav-block">
+      <el-steps :active="2" finish-status="success" simple>
+        <el-step title="教学计划"></el-step>
+        <el-step title="排课规则"></el-step>
+        <el-step title="排课过程"></el-step>
+        <el-step title="课表查询"></el-step>
+      </el-steps>
+    </div>
+    <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
+      <el-tabs v-model="activeTabName">
+        <el-tab-pane label="资源评估" name="one">
+          <resource-assessment v-if="activeTabName === 'one'"/>
+        </el-tab-pane>
+        <el-tab-pane label="教学分组" name="two"></el-tab-pane>
+        <el-tab-pane label="分班调整" name="three"></el-tab-pane>
+        <el-tab-pane label="节次计划" name="four"></el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
+</template>
+<script>
+import ResourceAssessment from './ResourceAssessment' // 基础信息tab页组件
+
+export default {
+  components: {
+    ResourceAssessment
+  },
+  data() {
+    return {
+      tabsHeight: document.body.clientHeight - 180,
+      activeTabName: 'one', // tab页高亮
+      // 基础信息表单model
+      baseInfo: {
+        schoolYear: ''
+      }
+    }
+  },
+  created() {},
+  methods: {}
+}
+</script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+.nav-block {
+  > .el-steps--simple {
+    padding: 8px 8%;
+  }
+}
+.next-wapper {
+  overflow: hidden;
+  > div {
+    display: inline-block;
+    float: right;
+    margin-right: 17px;
+  }
+}
+</style>
+

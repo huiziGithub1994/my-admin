@@ -17,7 +17,7 @@
         </el-dropdown>
         <span>
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
-            <svg-icon icon-class="password1"/>
+            <svg-icon icon-class="password" class="password1"/>
           </el-tooltip>
         </span>
         <span>

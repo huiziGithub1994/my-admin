@@ -1,7 +1,7 @@
 <template>
   <!--  导入学生选课 tab页-->
   <div>
-    <div v-area v-if="initArea">
+    <div v-area>
       <condition>
         <div class="condition">
           <label>课程分类</label>

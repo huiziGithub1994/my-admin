@@ -53,7 +53,7 @@ export const baseRouterMap = [
         path: '/kcjh',
         name: 'Kcjh',
         component: () => import('@/views/kcjh/index'),
-        meta: { title: '课程计划', icon: 'calendar' }
+        meta: { title: '课程计划', icon: 'nested' }
       }
     ]
   },
@@ -83,7 +83,7 @@ export const zbRouterMap = [
       {
         path: 'pkgz',
         name: 'Pkgz',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/pkgz/index'),
         meta: { title: '排课规则', icon: 'pkgz' }
       },
       {

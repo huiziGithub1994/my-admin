@@ -9,6 +9,9 @@ export default {
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
+  // 走班排课 -》 排课规则 -》 资源评估
+  qrySourceAssessment: `/base/qrySourceAssessment`,
+
   // 普通排课-》 教学计划
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
   qryClassList: `/base/qryClassList`, // 班级列表
