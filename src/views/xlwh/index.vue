@@ -73,7 +73,7 @@
 import { qryCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
-
+import { mapGetters } from 'vuex'
 const weeks = [
   '星期一',
   '星期二',
@@ -102,10 +102,10 @@ export default {
         gradeCode: undefined, // 0302
         beginDate: undefined,
         endDate: undefined,
-        workDays: undefined,
+        workDays: 5,
         countInMorning: 0,
-        countMorning: 0,
-        countAfternoon: 0,
+        countMorning: 4,
+        countAfternoon: 4,
         countNight: 0,
         curStatus: undefined,
         timeArrage: []
@@ -143,12 +143,22 @@ export default {
       markTableData: {}
     }
   },
+  computed: {
+    ...mapGetters(['curYear', 'curTerm'])
+  },
   created() {
-    this.assembleWorkDaysOptions()
+    Object.assign(this.data, {
+      schoolYear: this.curYear,
+      termCode: this.curTerm
+    })
+
+    this.fillTableData()
     this.fetchFormData()
   },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
+    this.assembleWorkDaysOptions()
+    this.initEditTableData()
   },
   methods: {
     // 作习安排 天/周 下拉选项数据
@@ -225,6 +235,7 @@ export default {
               return
             }
             newData.push({
+              arrangeId: this.data.arrangeId,
               beginTime: item.beginTime,
               endTime: item.endTime,
               lessionSeq: index + 1,
@@ -236,13 +247,8 @@ export default {
         }
       })
       if (!isContinue) return
-      const res = await qryCalendar({ data: newData, a: '1' })
-      if (res.SUCCESS) {
-        this.$message({
-          type: 'success',
-          message: '保存成功'
-        })
-      }
+      Object.assign(this.data, { timeArrage: newData })
+      console.table(this.data)
     },
     getSegId(lessionSeq) {
       const {

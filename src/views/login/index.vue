@@ -82,6 +82,9 @@ export default {
     ...mapMutations(['SET_LOGINID']),
     // 登录
     submitForm(fromRes) {
+      // 保存当前学年学期
+      this.$store.commit('SET_CURYEAR', new Date().getFullYear())
+      this.$store.commit('SET_CURTERM', '2')
       this.$router.push({ name: 'Home' })
     },
     requestVali() {},

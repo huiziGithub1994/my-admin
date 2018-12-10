@@ -7,10 +7,18 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    curYear: new Date().getFullYear(),
+    curTerm: '1'
   },
 
   mutations: {
+    SET_CURYEAR: (state, curYear) => {
+      state.curYear = curYear
+    },
+    SET_CURTERM: (state, curTerm) => {
+      state.curTerm = curTerm
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
