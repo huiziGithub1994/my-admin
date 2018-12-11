@@ -81,6 +81,7 @@ export default {
       this.tableData.push(...defaultData)
     },
     cellClick(row, column, cell, event) {
+      if (column.property === 'lessionSeq') return
       const val = row[column.property]
       if (val === '√') {
         row[column.property] = ''

@@ -13,7 +13,9 @@
         <el-tab-pane label="资源评估" name="one">
           <resource-assessment v-if="activeTabName === 'one'"/>
         </el-tab-pane>
-        <el-tab-pane label="教学分组" name="two"></el-tab-pane>
+        <el-tab-pane label="教学分组" name="two">
+          <teach-group v-if="activeTabName === 'two'"/>
+        </el-tab-pane>
         <el-tab-pane label="分班调整" name="three"></el-tab-pane>
         <el-tab-pane label="节次计划" name="four"></el-tab-pane>
       </el-tabs>
@@ -21,20 +23,18 @@
   </div>
 </template>
 <script>
-import ResourceAssessment from './ResourceAssessment' // 基础信息tab页组件
+import ResourceAssessment from './ResourceAssessment' // 资源评估tab页组件
+import TeachGroup from './TeachGroup' // 教学分组tab页组件
 
 export default {
   components: {
-    ResourceAssessment
+    ResourceAssessment,
+    TeachGroup
   },
   data() {
     return {
       tabsHeight: document.body.clientHeight - 180,
-      activeTabName: 'one', // tab页高亮
-      // 基础信息表单model
-      baseInfo: {
-        schoolYear: ''
-      }
+      activeTabName: 'two' // tab页高亮
     }
   },
   created() {},
