@@ -21,10 +21,8 @@
     <p class="tip">
       <label>操作提示：</label>请单击表格指定上课节次，单击已指定的节次可取消指定。
     </p>
-    <div class="hotTable my-table">
-      <el-table ref="singleTable" :data="tableData" style="width: 500px" border @cell-click="cellClick">
-        <el-table-column :property="index === 0 ? 'lessionSeq': index-1+''" :label="item" v-for="(item,index) in colHeaders" :key="index"/>
-      </el-table>
+    <div class="hotTable">
+      <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
     </div>
     <div class="saveWapper">
       <el-button type="primary">保存</el-button>
@@ -33,23 +31,50 @@
 </template>
 
 <script>
+import { HotTable } from '@handsontable/vue'
 import { qrySourceAssessment } from '@/api/pkgz'
 import { qryCalendar } from '@/api/base'
 import { initTableData } from '@/utils/inlineEditTable'
 
 export default {
+  components: {
+    HotTable
+  },
   data() {
+    const theThis = this
     return {
-      calendarData: {},
-      tableData: [],
-      colHeaders: []
+      // table实例
+      hotInstance: null,
+      // 表格数据
+      settings: {
+        data: null,
+        colHeaders: [],
+        columns: [],
+        colWidths: 100,
+        height: 220,
+        beforeOnCellMouseDown: function(e, coords) {
+          const { row, col } = coords
+          const oldData = theThis.hotInstance.getDataAtCell(row, col)
+          if (oldData === '√') {
+            theThis.hotInstance.setDataAtCell(coords.row, coords.col, '')
+          } else {
+            theThis.hotInstance.setDataAtCell(coords.row, coords.col, '√')
+          }
+        },
+        afterValidate: function() {
+          console.log(1)
+        }
+      }
     }
   },
   created() {
     this.fetchEditTableData()
     // this.fetchFormData()
   },
-  mounted() {},
+  mounted() {
+    this.hotInstance = this.$refs.hotTableComponent.hotInstance
+    console.log(this.hotInstance)
+  },
   methods: {
     // 获取表单数据
     async fetchFormData() {
@@ -73,20 +98,14 @@ export default {
     // 初始化表格的头部、行列、数据为空
     initEditTableData() {
       const baseHeader = ['节次/星期']
-      const { colHeaders, defaultData } = initTableData(
+      const { colHeaders, columns, defaultData } = initTableData(
         this.calendarData,
         baseHeader
       )
-      this.colHeaders = colHeaders
-      this.tableData.push(...defaultData)
-    },
-    cellClick(row, column, cell, event) {
-      const val = row[column.property]
-      if (val === '√') {
-        row[column.property] = ''
-      } else {
-        row[column.property] = '√'
-      }
+      this.settings.colHeaders = colHeaders
+      this.settings.columns = columns
+      this.settings.data = defaultData
+      this.hotInstance.loadData(defaultData)
     }
   }
 }

@@ -138,3 +138,12 @@ span.danger {
     padding: 4px 8px;
   }
 }
+
+.my-table {
+  .el-table__body tr:hover > td {
+    background: white !important;
+  }
+  .el-table__body tr > td:hover {
+    background: #f2f3f3 !important;
+  }
+}

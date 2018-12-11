@@ -248,7 +248,7 @@ export default {
       })
       if (!isContinue) return
       Object.assign(this.data, { timeArrage: newData })
-      console.table(this.data)
+      console.log(this.data)
     },
     getSegId(lessionSeq) {
       const {
