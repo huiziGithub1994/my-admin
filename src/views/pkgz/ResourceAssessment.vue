@@ -21,7 +21,7 @@
     <p class="tip">
       <label>操作提示：</label>请单击表格指定上课节次，单击已指定的节次可取消指定。
     </p>
-    <div class="hotTable my-table">
+    <div class="my-table">
       <el-table ref="singleTable" :data="tableData" style="width: 500px" border @cell-click="cellClick">
         <el-table-column :property="index === 0 ? 'lessionSeq': index-1+''" :label="item" v-for="(item,index) in colHeaders" :key="index"/>
       </el-table>
@@ -102,7 +102,7 @@ export default {
     height: 60px;
   }
 }
-.hotTable {
+.my-table {
   margin-top: 5px;
 }
 .saveWapper {

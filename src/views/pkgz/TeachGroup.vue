@@ -50,7 +50,7 @@ export default {
       const res = await qryTeachGroupsTree()
       this.treeData = res.DATA
     },
-    // 树节点的点击之间
+    // 树节点的点击事件
     handleNodeClick(data) {
       console.log(data)
     }

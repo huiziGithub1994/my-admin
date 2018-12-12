@@ -12,6 +12,7 @@ export default {
   // 走班排课 -》 排课规则
   qrySourceAssessment: `/base/qrySourceAssessment`, // 资源评估
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
+  qryTeachHoursTree: `/base/qryTeachHoursTree`, // 课时预排 treedata
 
   // 普通排课-》 教学计划
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情

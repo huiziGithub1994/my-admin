@@ -19,3 +19,11 @@ export function qryTeachGroupsTree(listQuery) {
     params: listQuery
   })
 }
+
+// 排课规则 课时预排 treedata
+export function qryTeachHours(listQuery) {
+  return request({
+    url: URL.qryTeachHoursTree,
+    params: listQuery
+  })
+}
