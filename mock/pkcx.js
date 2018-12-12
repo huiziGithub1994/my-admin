@@ -36,7 +36,7 @@ module.exports = {
       countAfternoon: 4,
       countNight: 0,
       curStatus: 1,
-      timeArrage: [
+      calFixList: [
         {
           lessonsId: '29291jiei',
           arrangeId: '001',

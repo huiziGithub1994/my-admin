@@ -22,7 +22,7 @@ module.exports = {
     ]
   },
   // 校历维护 查询接口
-  '/base/qryCalendar': {
+  '/zxx/calendar/qryCalendarInfoDetail': {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: {
@@ -40,7 +40,7 @@ module.exports = {
       countAfternoon: 4,
       countNight: 0,
       curStatus: 1,
-      timeArrage: [
+      calFixList: [
         {
           lessonsId: 'wi29349',
           arrangeId: '002',
@@ -85,7 +85,7 @@ module.exports = {
     }
   },
   // 校历维护 保存接口
-  'post /base/qryCalendar': {
+  'post /zxx/calendar/saveCalendarInfo': {
     SUCCESS: true,
     MSG: '成功获取数据'
   },

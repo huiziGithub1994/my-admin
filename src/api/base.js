@@ -9,10 +9,19 @@ export function getKeyList(listQuery) {
   })
 }
 
-// 校历维护
+// 校历维护 详情
 export function qryCalendar(listQuery) {
   return request({
     url: URL.qryCalendar,
+    params: listQuery
+  })
+}
+
+// 校历维护 保存
+export function saveCalendar(listQuery) {
+  return request({
+    url: URL.saveCalendar,
+    method: 'post',
     params: listQuery
   })
 }

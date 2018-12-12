@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { qryCalendar } from '@/api/base'
+import { qryCalendar, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
 import { mapGetters } from 'vuex'
@@ -94,7 +94,6 @@ export default {
       hotInstance: null,
       // 表单数据
       data: {
-        arrangeId: undefined,
         schoolId: undefined,
         arrangeName: undefined,
         schoolYear: undefined,
@@ -108,7 +107,7 @@ export default {
         countAfternoon: 4,
         countNight: 0,
         curStatus: undefined,
-        timeArrage: []
+        calFixList: []
       },
       // 基础信息表单规则
       baseInfoRules: {
@@ -144,16 +143,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['curYear', 'curTerm'])
+    ...mapGetters(['curYear', 'curTerm', 'schoolId', 'calenderId'])
   },
   created() {
-    Object.assign(this.data, {
-      schoolYear: this.curYear,
-      termCode: this.curTerm
-    })
-
     this.fillTableData()
-    this.fetchFormData()
+    if (this.calenderId !== '') {
+      this.fetchFormData()
+    }
   },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
@@ -175,7 +171,7 @@ export default {
     },
     // 获取表单数据
     async fetchFormData() {
-      const res = await qryCalendar({ schoolId: '111' })
+      const res = await qryCalendar({ calenderId: this.calenderId })
       this.data = res.DATA
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
       this.initEditTableData()
@@ -187,8 +183,8 @@ export default {
     },
     // 数据填充表格
     fillTableData() {
-      const { timeArrage } = this.data
-      timeArrage.forEach(item => {
+      const { calFixList } = this.data
+      calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
         this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
         this.hotInstance.setDataAtRowProp(row, 'beginTime', item.beginTime)
@@ -209,46 +205,60 @@ export default {
     },
     // 保存按钮
     async saveBtn() {
-      let isContinue = true
-      this.hotInstance.validateColumns([0, 1], valid => {
-        if (!valid) {
-          isContinue = false
-          this.$message({
-            type: 'warning',
-            message: '请输入正确的时间，例如(16:20)。'
-          })
-        }
-      })
-      if (!isContinue) return
-      const data = this.hotInstance.getSourceData()
-      const newData = []
-      const flag = ['beginTime', 'endTime', 'lessionSeq']
-      data.forEach((item, index) => {
-        if (!isContinue) return
-        for (const [key, val] of Object.entries(item)) {
-          if (val !== '' && !flag.includes(key)) {
-            if (item.beginTime === '' || item.endTime === '') {
-              this.$message.error(
-                `${weeks[key]}第${index + 1}节开始时间或结束时间不能为空`
-              )
+      this.$refs['baseInfoRef'].validate(valid => {
+        if (valid) {
+          let isContinue = true
+          this.hotInstance.validateColumns([0, 1], valid => {
+            if (!valid) {
               isContinue = false
-              return
+              this.$message({
+                type: 'warning',
+                message: '请输入正确的时间，例如(16:20)。'
+              })
             }
-            newData.push({
-              arrangeId: this.data.arrangeId,
-              beginTime: item.beginTime,
-              endTime: item.endTime,
-              lessionSeq: index + 1,
-              cellKey: `${index},${key}`,
-              cellValue: val,
-              segId: this.getSegId(index + 1) // 通过节次获取 segId
-            })
-          }
+          })
+          if (!isContinue) return
+          const data = this.hotInstance.getSourceData()
+          const newData = []
+          const flag = ['beginTime', 'endTime', 'lessionSeq']
+          data.forEach((item, index) => {
+            if (!isContinue) return
+            for (const [key, val] of Object.entries(item)) {
+              if (val !== '' && !flag.includes(key)) {
+                if (item.beginTime === '' || item.endTime === '') {
+                  this.$message.error(
+                    `${weeks[key]}第${index + 1}节开始时间或结束时间不能为空`
+                  )
+                  isContinue = false
+                  return
+                }
+                newData.push({
+                  arrangeId: this.data.arrangeId,
+                  beginTime: item.beginTime,
+                  endTime: item.endTime,
+                  lessionSeq: index + 1,
+                  cellKey: `${index},${key}`,
+                  cellValue: val,
+                  segId: this.getSegId(index + 1) // 通过节次获取 segId
+                })
+              }
+            }
+          })
+          if (!isContinue) return
+          Object.assign(this.data, { calFixList: newData })
+          saveCalendar({
+            modelString: JSON.stringify(this.data)
+          }).then(res => {
+            if (res.SUCCESS) {
+              this.$message({ type: 'success', message: '保存成功' })
+              this.$store.commit('SET_CALENDERID', res.DATA.calenderId)
+              this.fetchFormData()
+            }
+          })
+        } else {
+          return false
         }
       })
-      if (!isContinue) return
-      Object.assign(this.data, { timeArrage: newData })
-      console.log(this.data)
     },
     getSegId(lessionSeq) {
       const {

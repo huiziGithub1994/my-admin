@@ -9,10 +9,18 @@ const user = {
     avatar: '',
     roles: [],
     curYear: new Date().getFullYear(),
-    curTerm: '1'
+    curTerm: '1',
+    schoolId: '',
+    calenderId: ''
   },
 
   mutations: {
+    SET_SCHOOLID: (state, schoolId) => {
+      state.schoolId = schoolId
+    },
+    SET_CALENDERID: (state, calenderId) => {
+      state.calenderId = calenderId
+    },
     SET_CURYEAR: (state, curYear) => {
       state.curYear = curYear
     },
@@ -36,13 +44,16 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.username
       return new Promise((resolve, reject) => {
         login(username, userInfo.password)
           .then(response => {
             // const data = response.data
-            // setToken(data.token)
             // commit('SET_TOKEN', data.token)
+            commit('SET_SCHOOLID', '001')
+            commit('SET_CALENDERID', '00009')
+            commit('SET_CURYEAR', 2018)
+            commit('SET_CURTERM', '1')
             resolve(response.data)
           })
           .catch(error => {

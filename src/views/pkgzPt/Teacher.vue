@@ -116,7 +116,7 @@ export default {
       // 获取教师的课表
       const res = await getTeacherTimetable()
       // 填充课表
-      res.DATA.timeArrage.forEach(item => {
+      res.DATA.calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
         this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
       })
@@ -144,9 +144,9 @@ export default {
     },
     // 数据填充表格 并 修改表格配置，校历信息中的内容为不可修改
     fillCalendarData() {
-      const { timeArrage } = this.calendarData
+      const { calFixList } = this.calendarData
       const readOnlyCell = []
-      timeArrage.forEach(item => {
+      calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
         readOnlyCell.push(`${row},${col + 1}`)
         this.hotInstance.setDataAtRowProp(row, col, item.cellValue)

@@ -11,3 +11,11 @@ export function qrySourceAssessment(listQuery) {
     params: listQuery
   })
 }
+
+// 排课规则 教学分组
+export function qryTeachGroupsTree(listQuery) {
+  return request({
+    url: URL.qryTeachGroupsTree,
+    params: listQuery
+  })
+}

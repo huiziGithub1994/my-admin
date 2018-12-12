@@ -16,8 +16,10 @@
         <el-tab-pane label="教学分组" name="two">
           <teach-group v-if="activeTabName === 'two'"/>
         </el-tab-pane>
-        <el-tab-pane label="分班调整" name="three"></el-tab-pane>
-        <el-tab-pane label="节次计划" name="four"></el-tab-pane>
+        <el-tab-pane label="学生分班" name="three">
+          <split-student v-if="activeTabName === 'three'"/>
+        </el-tab-pane>
+        <el-tab-pane label="课时预排" name="four"></el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -25,16 +27,18 @@
 <script>
 import ResourceAssessment from './ResourceAssessment' // 资源评估tab页组件
 import TeachGroup from './TeachGroup' // 教学分组tab页组件
+import SplitStudent from './SplitStudent' // 教学分组tab页组件
 
 export default {
   components: {
     ResourceAssessment,
-    TeachGroup
+    TeachGroup,
+    SplitStudent
   },
   data() {
     return {
       tabsHeight: document.body.clientHeight - 180,
-      activeTabName: 'two' // tab页高亮
+      activeTabName: 'three' // tab页高亮
     }
   },
   created() {},

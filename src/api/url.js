@@ -9,8 +9,9 @@ export default {
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
-  // 走班排课 -》 排课规则 -》 资源评估
-  qrySourceAssessment: `/base/qrySourceAssessment`,
+  // 走班排课 -》 排课规则
+  qrySourceAssessment: `/base/qrySourceAssessment`, // 资源评估
+  qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
 
   // 普通排课-》 教学计划
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
@@ -43,7 +44,8 @@ export default {
 
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
-  qryCalendar: `/base/qryCalendar`, // 校历维护
+  qryCalendar: `/zxx/calendar/qryCalendarInfoDetail`, // 校历维护 详情
+  saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/base/qryCoursePlain`, // 课程计划
 
   // 模板下载

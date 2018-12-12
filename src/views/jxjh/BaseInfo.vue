@@ -101,7 +101,7 @@ export default {
         countAfternoon: undefined,
         countNight: undefined,
         curStatus: undefined,
-        timeArrage: []
+        calFixList: []
       },
       // 基础信息表单规则
       baseInfoRules: {
@@ -140,7 +140,7 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.$route.query.arrangeId
       })
-      this.assembleLession(res.DATA.timeArrage)
+      this.assembleLession(res.DATA.calFixList)
       this.data = res.DATA
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()

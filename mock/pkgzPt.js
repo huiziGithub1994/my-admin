@@ -59,7 +59,7 @@ module.exports = {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: {
-      'timeArrage|3': [
+      'calFixList|3': [
         {
           'cellKey|1': [
             '0,1',

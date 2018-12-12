@@ -9,6 +9,8 @@ const getters = {
   name: state => state.user.name,
   roles: state => state.user.roles,
   curYear: state => state.user.curYear,
-  curTerm: state => state.user.curTerm
+  curTerm: state => state.user.curTerm,
+  schoolId: state => state.user.schoolId,
+  calenderId: state => state.user.calenderId
 }
 export default getters

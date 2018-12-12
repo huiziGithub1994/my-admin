@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+// import { mapMutations } from 'vuex'
 import moment from 'moment'
 export default {
   data() {
@@ -79,13 +79,11 @@ export default {
     this.getTime()
   },
   methods: {
-    ...mapMutations(['SET_LOGINID']),
     // 登录
     submitForm(fromRes) {
-      // 保存当前学年学期
-      this.$store.commit('SET_CURYEAR', new Date().getFullYear())
-      this.$store.commit('SET_CURTERM', '2')
-      this.$router.push({ name: 'Home' })
+      this.$store.dispatch('Login', this.ruleForm).then(() => {
+        this.$router.push({ name: 'Home' })
+      })
     },
     requestVali() {},
     getTime: function() {
