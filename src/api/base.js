@@ -1,6 +1,13 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
 
+// 用户基础信息
+export function getBaseInfo() {
+  return request({
+    url: URL.qryBaseInfo
+  })
+}
+
 // 数据字典列表
 export function getKeyList(listQuery) {
   return request({

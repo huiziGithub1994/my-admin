@@ -2,14 +2,11 @@ import request from '@/utils/request'
 import URL from '@/api/url'
 
 // 登录
-export function login(username, password) {
+export function login(params) {
   return request({
     url: '/user/login',
-    method: 'post',
-    params: {
-      username,
-      password
-    }
+    // method: 'post',
+    params
   })
 }
 

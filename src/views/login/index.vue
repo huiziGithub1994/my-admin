@@ -13,14 +13,14 @@
         <div class="form-wapper">
           <el-form :model="ruleForm" :rules="rules" ref="rule" label-width="0px" class="demo-ruleForm">
             <el-form-item label prop="loginid">
-              <el-input v-model="ruleForm.loginid" size="middle" placeholder="已验证手机/邮箱/用户名" :maxlength="15">
+              <el-input v-model.trim="ruleForm.loginid" size="middle" placeholder="已验证手机/邮箱/用户名" :maxlength="15">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="user"/>
                 </i>
               </el-input>
             </el-form-item>
             <el-form-item label prop="loginPwd">
-              <el-input v-model="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15">
+              <el-input v-model.trim="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="password"/>
                 </i>
@@ -29,7 +29,7 @@
             <el-form-item label prop="validateCode">
               <div class="pwd-code">
                 <div class="pwd-wapper">
-                  <el-input v-model="ruleForm.validateCode" size="middle" placeholder="验证码" :maxlength="4">
+                  <el-input v-model.trim="ruleForm.validateCode" size="middle" placeholder="验证码" :maxlength="4">
                     <i slot="prefix" class="login-ipt-img">
                       <svg-icon icon-class="code"/>
                     </i>

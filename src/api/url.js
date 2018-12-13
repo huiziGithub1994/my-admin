@@ -52,6 +52,9 @@ export default {
   // 登录
   qryValidCode: `/login/createValidateCode`, // 验证码
 
+  // 基础ixnxi
+  qryBaseInfo: `/qry/qryBaseInfo`,
+
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls
   coursePlainExcelTemplate: `/static/template/coursePlain.xls` // 课程计划

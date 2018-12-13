@@ -1,4 +1,5 @@
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout } from '@/api/login'
+import { getBaseInfo } from '@/api/base'
 // import { getToken, setToken, removeToken } from '@/utils/auth'
 import { getToken, removeToken } from '@/utils/auth'
 
@@ -9,7 +10,7 @@ const user = {
     avatar: '',
     roles: [],
     curYear: new Date().getFullYear(),
-    curTerm: '1',
+    curTerm: '',
     schoolId: '',
     calenderId: ''
   },
@@ -44,17 +45,11 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password)
-          .then(response => {
-            // const data = response.data
-            // commit('SET_TOKEN', data.token)
-            commit('SET_SCHOOLID', '001')
-            commit('SET_CALENDERID', '00009')
-            commit('SET_CURYEAR', 2018)
-            commit('SET_CURTERM', '1')
-            resolve(response.data)
+        login(userInfo)
+          .then(res => {
+            commitBaseInfo(commit, res)
+            resolve(res)
           })
           .catch(error => {
             console.log(2, error)
@@ -62,22 +57,13 @@ const user = {
           })
       })
     },
-
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token)
-          .then(response => {
-            const data = response.data
-            if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
-            } else {
-              reject('getInfo: roles must be a non-null array !')
-            }
-            commit('SET_NAME', data.name)
-            commit('SET_AVATAR', data.avatar)
-            resolve(response)
+        getBaseInfo()
+          .then(res => {
+            commitBaseInfo(commit, res)
+            resolve(res)
           })
           .catch(error => {
             reject(error)
@@ -112,4 +98,12 @@ const user = {
   }
 }
 
+function commitBaseInfo(commit, res) {
+  const { curXq, calendarId, curXn } = res
+  const { schoolId } = res.DATA.userInfo
+  commit('SET_SCHOOLID', schoolId)
+  commit('SET_CALENDERID', calendarId)
+  commit('SET_CURYEAR', curXn)
+  commit('SET_CURTERM', curXq)
+}
 export default user

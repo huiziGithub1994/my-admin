@@ -1,4 +1,29 @@
 module.exports = {
+  // 基础ixnxi
+  '/qry/qryBaseInfo': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: {
+      curXq: '1',
+      userInfo: {
+        userId: '888888888888',
+        schoolId: '88888888',
+        dicId: null,
+        loginCode: 'rjadmin',
+        loginPwd: '{SHA}fEqNCco3Yq9h5ZUglD3CZJT4lBs=',
+        userName: '欧阳',
+        phone: '15974297422',
+        auditFlag: '1',
+        createDate: '2018-11-25T13:10:00.000+0000',
+        createId: '88888888',
+        modifyDate: null,
+        modifyId: null,
+        userType: '3'
+      },
+      calendarId: '0ecf4968a378406eb8ad33e498ec3fda',
+      curXn: '2018'
+    }
+  },
   // 数据字典表格数据
   'post /base/qryKeyList': {
     SUCCESS: true,

@@ -1,3 +1,4 @@
+import store from './index'
 const getters = {
   sidebar: state => state.app.sidebar,
   device: state => state.app.device,
@@ -9,8 +10,21 @@ const getters = {
   name: state => state.user.name,
   roles: state => state.user.roles,
   curYear: state => state.user.curYear,
-  curTerm: state => state.user.curTerm,
-  schoolId: state => state.user.schoolId,
-  calenderId: state => state.user.calenderId
+  curTerm: state => {
+    const { curTerm } = state.user
+    return curTerm
+  },
+  schoolId: state => {
+    const { schoolId } = state.user
+    return schoolId
+  },
+  calenderId: state => {
+    const { calenderId } = state.user
+    if (calenderId === '') {
+      store.dispatch('GetInfo')
+    } else {
+      return calenderId
+    }
+  }
 }
 export default getters
