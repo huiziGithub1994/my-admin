@@ -49,6 +49,9 @@ export default {
   saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/base/qryCoursePlain`, // 课程计划
 
+  // 登录
+  qryValidCode: `/login/createValidateCode`, // 验证码
+
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls
   coursePlainExcelTemplate: `/static/template/coursePlain.xls` // 课程计划

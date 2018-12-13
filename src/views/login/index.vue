@@ -13,18 +13,32 @@
         <div class="form-wapper">
           <el-form :model="ruleForm" :rules="rules" ref="rule" label-width="0px" class="demo-ruleForm">
             <el-form-item label prop="loginid">
-              <el-input v-model="ruleForm.loginid" size="large" placeholder="已验证手机/邮箱/用户名">
+              <el-input v-model="ruleForm.loginid" size="middle" placeholder="已验证手机/邮箱/用户名" :maxlength="15">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="user"/>
                 </i>
               </el-input>
             </el-form-item>
-            <el-form-item label prop="loginpwd">
-              <el-input v-model="ruleForm.loginpwd" size="large" placeholder="密码">
+            <el-form-item label prop="loginPwd">
+              <el-input v-model="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="password"/>
                 </i>
               </el-input>
+            </el-form-item>
+            <el-form-item label prop="validateCode">
+              <div class="pwd-code">
+                <div class="pwd-wapper">
+                  <el-input v-model="ruleForm.validateCode" size="middle" placeholder="验证码" :maxlength="4">
+                    <i slot="prefix" class="login-ipt-img">
+                      <svg-icon icon-class="code"/>
+                    </i>
+                  </el-input>
+                </div>
+                <div class="code-wapper">
+                  <img :src="codeSrc" @click="fetchValidCode()">
+                </div>
+              </div>
             </el-form-item>
             <div class="autoLogin">
               <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
@@ -49,13 +63,16 @@
 
 <script>
 // import { mapMutations } from 'vuex'
+import { getValidCode } from '@/api/login'
 import moment from 'moment'
 export default {
   data() {
     return {
+      codeSrc: '',
       ruleForm: {
         loginid: '', // 用户名
-        loginpwd: '' // 密码
+        loginPwd: '', // 密码
+        validateCode: ''
       },
       rules: {
         loginid: {
@@ -63,9 +80,14 @@ export default {
           message: '请输入已验证手机/邮箱/用户名',
           trigger: 'blur'
         },
-        loginpwd: {
+        loginPwd: {
           required: true,
           message: '请输入密码',
+          trigger: 'blur'
+        },
+        validateCode: {
+          required: true,
+          message: '请输入验证码',
           trigger: 'blur'
         }
       },
@@ -74,15 +96,26 @@ export default {
       autoLogin: false // 自动登录
     }
   },
-  mounted() {},
   created() {
     this.getTime()
+    this.fetchValidCode()
   },
+  mounted() {},
   methods: {
+    async fetchValidCode() {
+      const res = await getValidCode()
+      this.codeSrc = res.DATA
+    },
     // 登录
     submitForm(fromRes) {
-      this.$store.dispatch('Login', this.ruleForm).then(() => {
-        this.$router.push({ name: 'Home' })
+      this.$refs['rule'].validate(valid => {
+        if (valid) {
+          this.$store.dispatch('Login', this.ruleForm).then(res => {
+            res.SUCCESS && this.$router.push({ name: 'Home' })
+          })
+        } else {
+          return false
+        }
       })
     },
     requestVali() {},
@@ -137,15 +170,15 @@ export default {
 }
 .login {
   width: 380px;
-  height: 400px;
+  height: 420px;
   background: white;
-  padding: 40px 30px;
+  padding: 25px;
   > div.title {
     font-size: 1.4rem;
   }
 }
 .form-wapper {
-  margin-top: 20px;
+  margin-top: 14px;
 }
 // 自动登录找回密码，注册新用户
 .autoLogin {
@@ -186,6 +219,22 @@ export default {
 .login-ipt-img {
   position: relative;
   top: 3px;
+}
+.pwd-code {
+  display: flex;
+  .pwd-wapper {
+    flex: 1;
+  }
+  .code-wapper {
+    border: 1px solid #dcdfe6;
+    width: 100px;
+    margin-left: 5px;
+    border-radius: 4px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>
 
