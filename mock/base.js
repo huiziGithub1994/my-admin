@@ -1,5 +1,5 @@
 module.exports = {
-  // 基础ixnxi
+  // 基础信息
   '/qry/qryBaseInfo': {
     SUCCESS: true,
     MSG: '成功获取数据',
@@ -23,6 +23,37 @@ module.exports = {
       calendarId: '0ecf4968a378406eb8ad33e498ec3fda',
       curXn: '2018'
     }
+  },
+  // 年级信息
+  '/zxx/arrange/qrySegGradeInfo': {
+    SUCCESS: true,
+    MSG: '成功获取数据',
+    DATA: [
+      {
+        gradeId: '07850b89a949a8a9977a435040e20d',
+        segId: '0e6b42748a9a2bd95548c250975da4',
+        gradeName: '一年级',
+        schoolId: '88888888',
+        schoolYear: '2018',
+        termCode: '1',
+        createId: '001',
+        createDate: null,
+        modifyDate: null,
+        modifyId: null
+      },
+      {
+        gradeId: '30204d2d5cf74331a638ae20dcc7727e',
+        segId: '5bfbb331ad7b3825d81576a6c93772',
+        gradeName: '九年级',
+        schoolId: '88888888',
+        schoolYear: '2018',
+        termCode: '1',
+        createId: '001',
+        createDate: null,
+        modifyDate: null,
+        modifyId: null
+      }
+    ]
   },
   // 数据字典表格数据
   'post /base/qryKeyList': {
@@ -51,9 +82,9 @@ module.exports = {
     SUCCESS: true,
     MSG: '成功获取数据',
     DATA: {
-      arrangeId: '001',
       schoolId: '001',
       arrangeName: '2018-2019学年第一学期高中二年级走班排课',
+      calenderId: '0ecf4968a378406eb8ad33e498ec3fda',
       schoolYear: '2018',
       termCode: '1',
       gradeCode: '0302',
@@ -67,8 +98,8 @@ module.exports = {
       curStatus: 1,
       calFixList: [
         {
-          lessonsId: 'wi29349',
-          arrangeId: '002',
+          rsId: 'wi29349',
+          calenderId: '0ecf4968a378406eb8ad33e498ec3fda',
           segId: '02', // 早晨：01;上午：02;下午：03;晚上：04
           lessionSeq: 1,
           beginTime: '08:20',
@@ -77,8 +108,8 @@ module.exports = {
           cellValue: '升旗'
         },
         {
-          lessonsId: '39kke93',
-          arrangeId: '002',
+          rsId: '39kke93',
+          calenderId: '0ecf4968a378406eb8ad33e498ec3fda',
           segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
           lessionSeq: 7,
           beginTime: '16:20',
@@ -87,8 +118,8 @@ module.exports = {
           cellValue: '校本课'
         },
         {
-          lessonsId: '39kke93',
-          arrangeId: '002',
+          rsId: '39kke93',
+          calenderId: '0ecf4968a378406eb8ad33e498ec3fda',
           segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
           lessionSeq: 7,
           beginTime: '16:20',
@@ -97,8 +128,8 @@ module.exports = {
           cellValue: '自习'
         },
         {
-          lessonsId: '39kke93',
-          arrangeId: '002',
+          rsId: '39kke93',
+          calenderId: '0ecf4968a378406eb8ad33e498ec3fda',
           segId: '03', // 早晨：01;上午：02;下午：03;晚上：04
           lessionSeq: 7,
           beginTime: '16:20',
@@ -112,7 +143,10 @@ module.exports = {
   // 校历维护 保存接口
   'post /zxx/calendar/saveCalendarInfo': {
     SUCCESS: true,
-    MSG: '成功获取数据'
+    MSG: '成功获取数据',
+    DATA: {
+      calenderId: '00001'
+    }
   },
   // 课程计划
   '/base/qryCoursePlain': {

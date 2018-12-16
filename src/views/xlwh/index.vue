@@ -73,6 +73,7 @@
 import { qryCalendar, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
+import { setDatas } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 const weeks = [
   '星期一',
@@ -94,6 +95,7 @@ export default {
       hotInstance: null,
       // 表单数据
       data: {
+        calenderId: undefined,
         schoolId: undefined,
         arrangeName: undefined,
         schoolYear: undefined,
@@ -107,7 +109,9 @@ export default {
         countAfternoon: 4,
         countNight: 0,
         curStatus: undefined,
-        calFixList: []
+        calFixList: [],
+        rows: 0,
+        cols: 0
       },
       // 基础信息表单规则
       baseInfoRules: {
@@ -145,16 +149,20 @@ export default {
   computed: {
     ...mapGetters(['curYear', 'curTerm', 'schoolId', 'calenderId'])
   },
-  created() {
-    this.fillTableData()
-    if (this.calenderId !== '') {
-      this.fetchFormData()
+  watch: {
+    calenderId(newVal) {
+      if (this.calenderId !== undefined) {
+        this.fetchFormData()
+      }
     }
   },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
-    this.assembleWorkDaysOptions()
-    this.initEditTableData()
+    this.assembleWorkDaysOptions() // 作习安排 天/周 下拉选项数据 的初始化
+    this.initEditTableData() // 作息安排初始化表格的头部、行列、数据为空
+    if (this.calenderId !== undefined) {
+      this.fetchFormData()
+    }
   },
   methods: {
     // 作习安排 天/周 下拉选项数据
@@ -172,7 +180,7 @@ export default {
     // 获取表单数据
     async fetchFormData() {
       const res = await qryCalendar({ calenderId: this.calenderId })
-      this.data = res.DATA
+      setDatas(this.data, res.DATA)
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
       this.initEditTableData()
       // 数据填充表格
@@ -246,13 +254,18 @@ export default {
           })
           if (!isContinue) return
           Object.assign(this.data, { calFixList: newData })
+          console.log(this.data)
           saveCalendar({
             modelString: JSON.stringify(this.data)
           }).then(res => {
             if (res.SUCCESS) {
               this.$message({ type: 'success', message: '保存成功' })
-              this.$store.commit('SET_CALENDERID', res.DATA.calenderId)
-              this.fetchFormData()
+              if (this.calenderId === undefined) {
+                this.$store.commit('SET_CALENDERID', res.DATA.calenderId)
+              }
+              this.$nextTick(function() {
+                this.$refs['baseInfoRef'].clearValidate()
+              })
             }
           })
         } else {

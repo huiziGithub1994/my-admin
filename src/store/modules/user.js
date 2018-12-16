@@ -99,7 +99,7 @@ const user = {
 }
 
 function commitBaseInfo(commit, res) {
-  const { curXq, calendarId, curXn } = res
+  const { curXq, calendarId, curXn } = res.DATA
   const { schoolId } = res.DATA.userInfo
   commit('SET_SCHOOLID', schoolId)
   commit('SET_CALENDERID', calendarId)

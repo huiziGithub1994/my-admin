@@ -5,15 +5,15 @@
       <condition>
         <div class="condition">
           <label>学年</label>
-          <selectChild v-model="listQuery['schoolYear']" :clearable="false" tp="yearSelect"/>
+          <selectChild v-model="listQuery['a.school_year01']" :clearable="false" tp="yearSelect"/>
         </div>
         <div class="condition">
           <label>学期</label>
-          <selectChild v-model="listQuery['termCode']" :clearable="false" tp="termSelect"/>
+          <selectChild v-model="listQuery['a.term_code01']" :clearable="false" tp="termSelect"/>
         </div>
         <div class="condition">
           <label>排课状态</label>
-          <el-select v-model="listQuery['curStatus']" clearable placeholder="请选择">
+          <el-select v-model="listQuery['a.cur_status01']" clearable placeholder="请选择">
             <el-option v-for="item in ztOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </div>
@@ -28,18 +28,24 @@
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
         <el-table-column property="arrangName" show-overflow-tooltip min-width="160px" label="排课名称"/>
-        <el-table-column property="name" label="状态" width="80px">
+        <el-table-column property="curStatus" label="状态" width="80px">
           <template slot-scope="scope">
-            <span :class="{'success': scope.row.name === '完成','primary':scope.row.name === '进行中','danger':scope.row.name === '冲突'}">{{ scope.row.name }}</span>
+            <span v-if="scope.row.curStatus === '1'" class="success">完成</span>
+            <span v-else-if="scope.row.curStatus === '2'" class="danger">冲突</span>
+            <span v-else class="primary">进行中</span>
           </template>
         </el-table-column>
-        <el-table-column property="schoolYear" width="120px" label="学年">
+        <el-table-column property="schoolYear" label="学年">
           <template slot-scope="scope">
-            <span>{{ `${scope.row.schoolYear} 学年` }}</span>
+            <span>{{ `${scope.row.schoolYear} - ${parseInt(scope.row.schoolYear)+1} 学年` }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="termCode" label="学期" width="80px"></el-table-column>
-        <el-table-column :formatter="gradeCodFormatter" property="gradeCode" label="年级"/>
+        <el-table-column property="termCode" label="学期">
+          <template slot-scope="scope">
+            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学年` }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column property="gradeName" label="年级"/>
         <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
         <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
@@ -52,10 +58,10 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="pageTot.curPage"
+        :current-page="pageTot.currentPage"
         :page-sizes="pageSizes"
         :page-size="pageTot.pageSize"
-        :total="pageTot.pageTotal"
+        :total="pageTotal"
         layout="total,sizes,slot ,->, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -67,8 +73,9 @@
 </template>
 
 <script>
-import { getPKCXListInfo, qryArrangeDetail } from '@/api/pkcx'
-import { getTableBestRows, getCurSchoolYearTerm } from '@/utils/businessUtil'
+import { getPKCXListInfo, delArrange } from '@/api/pkcx'
+import { getTableBestRows } from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
 export default {
   filters: {
     statusFilter(status) {
@@ -84,13 +91,12 @@ export default {
     const h = 175
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
-    const yearAndTerm = getCurSchoolYearTerm()
     return {
       listLoading: true,
       listQuery: {
-        schoolYear: yearAndTerm.currentYear,
-        termCode: yearAndTerm.termCode,
-        curStatus: '1'
+        'a.school_year01': '',
+        'a.term_code01': '',
+        'a.cur_status01': ''
       },
       // 排课状态
       ztOptions: [
@@ -101,14 +107,21 @@ export default {
       pageSizes: pageSizes,
       tableH: tableH,
       pageTot: {
-        curPage: 1,
-        pageSize: pageSizes[0],
-        pageTotal: 0
+        currentPage: 1,
+        pageSize: pageSizes[0]
       },
+      pageTotal: 0,
       tableData: []
     }
   },
+  computed: {
+    ...mapGetters(['curYear', 'curTerm'])
+  },
   created() {
+    Object.assign(this.listQuery, {
+      'a.school_year01': this.curYear,
+      'a.term_code01': this.curTerm
+    })
     this.fetchData()
   },
   methods: {
@@ -116,8 +129,8 @@ export default {
     fetchData() {
       this.listLoading = true
       const params = Object.assign(this.listQuery, this.pageTot)
-      getPKCXListInfo(params).then(res => {
-        this.pageTot.pageTotal = res.SUM
+      getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
+        this.pageTotal = res.SUM
         this.tableData = res.DATA
         this.listLoading = false
       })
@@ -132,7 +145,7 @@ export default {
     },
     // 查询按钮
     queryBtn() {
-      this.pageTot.curPage = 1
+      this.pageTot.currentPage = 1
       this.fetchData()
     },
     // 删除按钮
@@ -143,7 +156,7 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await qryArrangeDetail({ arrangeId: arrangeId, a: '2' })
+          const res = await delArrange({ arrangeId: arrangeId })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
             message: res.SUCCESS ? '删除成功!' : '删除失败'

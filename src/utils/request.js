@@ -45,14 +45,6 @@ export default function service(settings) {
     method: settings.method ? settings.method : 'get'
   }
 
-  const params = settings.params
-  // a：'0' 新增     '1'：修改      '2'：删除
-  if (params && (params.a === '0' || params.a === '1')) {
-    defaultOption.method = 'post'
-  } else {
-    defaultOption.params = settings.params
-  }
-
   if (defaultOption.method === 'post') {
     defaultOption.data = settings.params
     defaultOption.headers = {
@@ -64,6 +56,8 @@ export default function service(settings) {
         return data
       }
     ]
+  } else {
+    defaultOption.params = settings.params
   }
 
   return new Promise(function(resolve, reject) {

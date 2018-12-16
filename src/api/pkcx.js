@@ -9,11 +9,28 @@ export function getPKCXListInfo(listQuery) {
   })
 }
 
+// 删除排课
+export function delArrange(params) {
+  return request({
+    url: URL.delArrange,
+    params
+  })
+}
+
 // 排课查询详情接口
 export function qryArrangeDetail(params) {
   return request({
     url: URL.qryArrangeDetail,
     params: params
+  })
+}
+
+// 保存排课基础信息
+export function saveArrange(params) {
+  return request({
+    url: URL.saveArrange,
+    method: 'post',
+    params
   })
 }
 

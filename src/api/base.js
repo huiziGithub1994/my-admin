@@ -8,6 +8,13 @@ export function getBaseInfo() {
   })
 }
 
+// 年级下拉列表数据
+export function getGrade() {
+  return request({
+    url: URL.qryGrade
+  })
+}
+
 // 数据字典列表
 export function getKeyList(listQuery) {
   return request({

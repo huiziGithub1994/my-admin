@@ -7,6 +7,9 @@
             <selectChild v-model="data.schoolYear" clearable tp="yearSelect"/>
           </el-form-item>
         </el-col>
+        <el-col :span="10">
+          <el-button type="primary" class="float-right" @click="saveBtn">保存</el-button>
+        </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
@@ -17,8 +20,10 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="年级" prop="gradeCode">
-            <selectChild v-model="data.gradeCode" clearable tp="gradeSelect"/>
+          <el-form-item label="年级" prop="gradeId">
+            <el-select v-model="data.gradeId" placeholder="请选择">
+              <el-option v-for="item in gradeOptions" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -34,75 +39,21 @@
 </template>
 
 <script>
-import { qryArrangeDetail } from '@/api/pkcx'
-import moment from 'moment'
+import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
+import { getGrade } from '@/api/base'
+import { setDatas } from '@/utils/businessUtil'
 export default {
   name: 'BaseInfo',
-  filters: {
-    segIdFilter(segId) {
-      let val = ''
-      switch (segId) {
-        case '01':
-          val = '早上'
-          break
-        case '02':
-          val = '上午'
-          break
-        case '03':
-          val = '下午'
-          break
-        default:
-          val = '晚上'
-      }
-      return val
-    },
-    lessionSeqFilter(lessionSeq) {
-      let val = ''
-      switch (lessionSeq) {
-        case 1:
-          val = '一'
-          break
-        case 2:
-          val = '二'
-          break
-        case 3:
-          val = '三'
-          break
-        default:
-          val = '四'
-      }
-      return val
-    },
-    lessionTimeFilter() {
-      return 9
-    }
-  },
   data() {
     return {
-      time: ['09:23', '13:08'],
-      timeClass: {
-        '01': 'earlyMorning',
-        '02': 'morning',
-        '03': 'afternoon',
-        '04': 'night'
-      },
       data: {
-        arrangeId: undefined,
-        schoolId: undefined,
+        gradeId: undefined,
+        gradeName: undefined,
         arrangeName: undefined,
         schoolYear: undefined,
-        termCode: undefined,
-        gradeCode: undefined, // 0302
-        beginDate: undefined,
-        endDate: undefined,
-        workDays: undefined,
-        countInMorning: undefined,
-        countMorning: undefined,
-        countAfternoon: undefined,
-        countNight: undefined,
-        curStatus: undefined,
-        calFixList: []
+        termCode: undefined
       },
+      // arrangeId: undefined,
       // 基础信息表单规则
       baseInfoRules: {
         schoolYear: [
@@ -111,63 +62,59 @@ export default {
         termCode: [
           { required: true, message: '请选择学期', trigger: 'change' }
         ],
-        gradeCode: [
-          { required: true, message: '请选择年级', trigger: 'change' }
-        ],
+        gradeId: [{ required: true, message: '请选择年级', trigger: 'change' }],
         arrangeName: [
           { required: true, message: '请输入排课任务名称', trigger: 'blur' }
         ]
       },
-      options: [
-        { value: '0', label: '0' },
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
-        { value: '4', label: '4' },
-        { value: '5', label: '5' },
-        { value: '6', label: '6' },
-        { value: '7', label: '7' },
-        { value: '8', label: '8' }
-      ]
+      gradeOptions: []
     }
   },
-  created() {
-    this.fetchFormData()
+  computed: {
+    arrangeId() {
+      return this.$route.query.arrangeId
+    }
+  },
+  async created() {
+    await this.fetchGrade()
+    // this.arrangeId = this.$route.query.arrangeId
+    if (this.arrangeId) {
+      this.fetchFormData()
+    }
   },
   methods: {
+    // 年级下拉列表
+    async fetchGrade() {
+      const res = await getGrade()
+      this.gradeOptions = res.DATA
+    },
     // 获取表单数据
     async fetchFormData() {
       const res = await qryArrangeDetail({
-        arrangeId: this.$route.query.arrangeId
+        arrangeId: this.arrangeId
       })
-      this.assembleLession(res.DATA.calFixList)
-      this.data = res.DATA
+      setDatas(this.data, res.DATA)
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
-    // 下一步按钮
-    baseInfoNext() {
-      this.$refs['baseInfoRef'].validate(valid => {
+    saveBtn() {
+      this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
-          console.log('submit!')
+          console.log(this.arrangeId)
+          if (this.arrangeId) {
+            Object.assign(this.data, { arrangeId: this.arrangeId })
+          }
+          const res = await saveArrange(this.data)
+          if (!this.arrangeId) {
+            this.$router.replace({
+              name: 'Jxjh',
+              query: { arrangeId: res.DATA.arrangeId }
+            })
+          }
         } else {
-          console.log('error submit!!')
           return false
         }
-      })
-    },
-    // 节次时间数据的重组
-    assembleLession(data) {
-      data.forEach(item => {
-        item.lessionsTime.forEach(lession => {
-          Object.assign(lession, {
-            time: [
-              moment(lession.beginTime, 'HH:mm'),
-              moment(lession.endTime, 'HH:mm')
-            ]
-          })
-        })
       })
     }
   }

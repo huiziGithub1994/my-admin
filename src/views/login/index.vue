@@ -20,7 +20,7 @@
               </el-input>
             </el-form-item>
             <el-form-item label prop="loginPwd">
-              <el-input v-model.trim="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15">
+              <el-input v-model.trim="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15" type="password">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="password"/>
                 </i>

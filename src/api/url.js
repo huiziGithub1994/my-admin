@@ -1,7 +1,9 @@
 export default {
   // 走班排课
-  qryArrangeList: `/base/qryArrangeList`, // 排课查询列表
-  qryArrangeDetail: `/base/qryArrangeDetail`, // 排课查询详情
+  qryArrangeList: `/zxx/arrange/qryArrangeBaseInfoList`, // 排课查询列表
+  delArrange: `/zxx/arrange/delArrangeById`, // 排课删除
+  qryArrangeDetail: `/zxx/arrange/qryArrangeDetail`, // 排课查询详情
+  saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
 
   qrylayerList: `/base/qrylayerList`, // 学科分层查询列表
   qrylayerCourseName: `/base/qrylayerCourseName`, // 学科分层课程名称查询接口
@@ -48,11 +50,11 @@ export default {
   qryCalendar: `/zxx/calendar/qryCalendarInfoDetail`, // 校历维护 详情
   saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/base/qryCoursePlain`, // 课程计划
-
+  qryGrade: `/zxx/arrange/qrySegGradeInfo`, // 年级
   // 登录
-  qryValidCode: `/login/createValidateCode`, // 验证码
+  qryValidCode: `/zxx/visitor/picture/createValidateCode`, // 验证码
 
-  // 基础ixnxi
+  // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,
 
   // 模板下载

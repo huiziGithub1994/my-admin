@@ -12,7 +12,11 @@ const getters = {
   curYear: state => state.user.curYear,
   curTerm: state => {
     const { curTerm } = state.user
-    return curTerm
+    if (curTerm === '') {
+      store.dispatch('GetInfo')
+    } else {
+      return curTerm
+    }
   },
   schoolId: state => {
     const { schoolId } = state.user

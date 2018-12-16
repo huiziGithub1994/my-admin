@@ -10,27 +10,27 @@
     </div>
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
-        <el-tab-pane label="基础信息" :name="1">
-          <base-info/>
+        <el-tab-pane label="基础信息" name="1">
+          <base-info v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="学科分层及课时" :name="2">
-          <subject-layer v-if="activeTabName === 2"/>
+        <el-tab-pane label="学科分层及课时" name="2">
+          <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane label="导入学生选课" :name="3">
-          <choose-course v-if="activeTabName === 3"/>
+        <el-tab-pane label="导入学生选课" name="3">
+          <choose-course v-if="activeTabName == 3"/>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" :name="4">
-          <split-class-manage v-if="activeTabName === 4"/>
+        <el-tab-pane label="教学分班管理" name="4">
+          <split-class-manage v-if="activeTabName == 4"/>
         </el-tab-pane>
-        <el-tab-pane label="走班教室" :name="5">
-          <zb-classroom v-if="activeTabName === 5"/>
+        <el-tab-pane label="走班教室" name="5">
+          <zb-classroom v-if="activeTabName == 5"/>
         </el-tab-pane>
       </el-tabs>
     </div>
     <div class="next-wapper">
       <div>
-        <el-button type="success" @click="baseInfoPre" v-show="activeTabName !== 1">上一步</el-button>
-        <el-button type="success" @click="baseInfoNext" v-show="activeTabName !== 5">下一步</el-button>
+        <el-button type="success" @click="baseInfoPre" v-show="activeTabName != 1">上一步</el-button>
+        <el-button type="success" @click="baseInfoNext" v-show="activeTabName != 5">下一步</el-button>
       </div>
     </div>
   </div>
@@ -53,22 +53,19 @@ export default {
   data() {
     return {
       tabsHeight: document.body.clientHeight - 180,
-      activeTabName: 1, // tab页高亮
-      // 基础信息表单model
-      baseInfo: {
-        schoolYear: ''
-      }
+      activeTabName: '1' // tab页高亮
     }
   },
-  created() {},
   methods: {
     // 基础信息 上一步 按钮
     baseInfoPre() {
-      this.activeTabName -= 1
+      const temp = parseInt(this.activeTabName) - 1
+      this.activeTabName = temp + ''
     },
     // 基础信息 下一步 按钮
     baseInfoNext() {
-      this.activeTabName += 1
+      const temp = parseInt(this.activeTabName) + 1
+      this.activeTabName = temp + ''
     }
   }
 }

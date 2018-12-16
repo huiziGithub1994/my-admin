@@ -159,11 +159,12 @@ export function deleteTableDatas(ins, deleteKey, deleteUrl) {
   ins.multipleSelection.forEach(item => {
     ids.push(item[deleteKey])
   })
-  ins.$confirm('确定删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
+  ins
+    .$confirm('确定删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
     .then(async () => {
       const params = {
         a: '2'
@@ -187,4 +188,10 @@ export function deleteTableDatas(ins, deleteKey, deleteUrl) {
         message: '已取消删除'
       })
     })
+}
+
+export function setDatas(originData, newData) {
+  Object.keys(originData).forEach(key => {
+    originData[key] = newData[key]
+  })
 }
