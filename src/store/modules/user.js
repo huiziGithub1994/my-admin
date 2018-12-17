@@ -48,7 +48,9 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo)
           .then(res => {
-            commitBaseInfo(commit, res)
+            if (res.SUCCESS) {
+              commitBaseInfo(commit, res)
+            }
             resolve(res)
           })
           .catch(error => {
@@ -62,7 +64,9 @@ const user = {
       return new Promise((resolve, reject) => {
         getBaseInfo()
           .then(res => {
-            commitBaseInfo(commit, res)
+            if (res.SUCCESS) {
+              commitBaseInfo(commit, res)
+            }
             resolve(res)
           })
           .catch(error => {

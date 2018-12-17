@@ -53,6 +53,7 @@ export default {
   qryGrade: `/zxx/arrange/qrySegGradeInfo`, // 年级
   // 登录
   qryValidCode: `/zxx/visitor/picture/createValidateCode`, // 验证码
+  userLogin: `/zxx/visitor/user/login`, // 登录
 
   // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,

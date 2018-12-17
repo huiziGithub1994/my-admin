@@ -4,8 +4,8 @@ import URL from '@/api/url'
 // 登录
 export function login(params) {
   return request({
-    url: '/user/login',
-    // method: 'post',
+    url: URL.userLogin,
+    method: 'post',
     params
   })
 }

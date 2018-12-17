@@ -2,20 +2,20 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
 import Qs from 'qs'
-// import { getToken } from '@/utils/auth'
+import { setToken } from '@/utils/auth'
 // 创建axios实例
 const axiosIns = axios.create()
 
 // request拦截器
 axiosIns.interceptors.request.use(
   config => {
-    if (store.getters.token) {
-      // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    const isGetCode = config.url.indexOf('createValidateCode') !== -1
+    if (store.getters.token && !isGetCode) {
+      config.headers['x_auth_token'] = store.getters.token
     }
     return config
   },
   error => {
-    // Do something with request error
     console.log(error) // for debug
     Promise.reject(error)
   }
@@ -24,6 +24,12 @@ axiosIns.interceptors.request.use(
 // response 拦截器
 axiosIns.interceptors.response.use(
   response => {
+    const token = response.headers['x_auth_token']
+    const isGetCode = response.config.url.indexOf('createValidateCode') !== -1
+    if (response.data.SUCCESS && token && isGetCode) {
+      setToken(token)
+      store.commit('SET_TOKEN', token)
+    }
     return response.data
   },
   error => {

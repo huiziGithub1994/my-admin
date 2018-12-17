@@ -20,7 +20,7 @@
               </el-input>
             </el-form-item>
             <el-form-item label prop="loginPwd">
-              <el-input v-model.trim="ruleForm.loginPwd" size="middle" placeholder="密码" :maxlength="15" type="password">
+              <el-input v-model.trim="ruleForm.loginpwd" size="middle" placeholder="密码" :maxlength="15" type="password">
                 <i slot="prefix" class="login-ipt-img">
                   <svg-icon icon-class="password"/>
                 </i>
@@ -70,8 +70,8 @@ export default {
     return {
       codeSrc: '',
       ruleForm: {
-        loginid: '', // 用户名
-        loginPwd: '', // 密码
+        loginid: 'rjadmin', // 用户名
+        loginpwd: '123456', // 密码
         validateCode: ''
       },
       rules: {
@@ -80,7 +80,7 @@ export default {
           message: '请输入已验证手机/邮箱/用户名',
           trigger: 'blur'
         },
-        loginPwd: {
+        loginpwd: {
           required: true,
           message: '请输入密码',
           trigger: 'blur'
@@ -111,7 +111,12 @@ export default {
       this.$refs['rule'].validate(valid => {
         if (valid) {
           this.$store.dispatch('Login', this.ruleForm).then(res => {
-            res.SUCCESS && this.$router.push({ name: 'Home' })
+            if (res.SUCCESS) {
+              this.$router.push({ name: 'Home' })
+            } else {
+              this.fetchValidCode()
+              this.$message.error(res.MSG)
+            }
           })
         } else {
           return false
