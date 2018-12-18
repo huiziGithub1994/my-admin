@@ -11,7 +11,7 @@ axiosIns.interceptors.request.use(
   config => {
     const isGetCode = config.url.indexOf('createValidateCode') !== -1
     if (store.getters.token && !isGetCode) {
-      // config.headers['x_auth_token'] = store.getters.token
+      config.headers['x_auth_token'] = store.getters.token
     }
     return config
   },
