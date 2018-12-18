@@ -13,7 +13,7 @@
         <el-tab-pane label="基础信息" name="1">
           <base-info v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="学科分层及课时" name="2">
+        <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
           <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
         <el-tab-pane label="导入学生选课" name="3">
@@ -43,6 +43,19 @@ import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (Object.keys(vm.$route.query).length === 0) {
+        vm.$message({
+          showClose: true,
+          duration: 5000,
+          message: '请在排课查询页面，点击新增或者修改进入该页面',
+          type: 'error'
+        })
+        vm.$router.push({ name: 'Pkcx' })
+      }
+    })
+  },
   components: {
     BaseInfo,
     SubjectLayer,
@@ -54,6 +67,11 @@ export default {
     return {
       tabsHeight: document.body.clientHeight - 180,
       activeTabName: '1' // tab页高亮
+    }
+  },
+  computed: {
+    tabDisabled() {
+      return this.$route.query.arrangId === undefined
     }
   },
   methods: {

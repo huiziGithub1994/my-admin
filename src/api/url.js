@@ -5,8 +5,8 @@ export default {
   qryArrangeDetail: `/zxx/arrange/qryArrangeDetail`, // 排课查询详情
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
 
-  qrylayerList: `/base/qrylayerList`, // 学科分层查询列表
-  qrylayerCourseName: `/base/qrylayerCourseName`, // 学科分层课程名称查询接口
+  qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
+  qrylayerCourseName: `/base/qrylayerCourseName`, // 学科分层课程名称下拉列表查询接口
   qrylayerInfo: `/base/qrylayerInfo`, // 学科分层详情查询接口
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口

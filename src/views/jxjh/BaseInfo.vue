@@ -109,7 +109,7 @@ export default {
           if (!this.arrangeId) {
             this.$router.replace({
               name: 'Jxjh',
-              query: { arrangeId: res.DATA.arrangeId }
+              query: { arrangeId: res.DATA.arrangeId, ...this.$route.query }
             })
           }
         } else {

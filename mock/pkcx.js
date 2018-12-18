@@ -58,7 +58,7 @@ module.exports = {
     }
   },
   // 学科分层及课时
-  '/base/qrylayerList': {
+  '/zxx/layer/qryCourseLayerInfoList': {
     SUCCESS: true,
     MSG: '成功获取数据',
     SUM: 6,
@@ -70,7 +70,7 @@ module.exports = {
         courseName: '物理',
         courseLayerName: '物理选考A',
         dispSeq: '1',
-        sumWeekClass: 2
+        weekHours: 2
       },
       {
         layerId: '10001',
@@ -79,7 +79,7 @@ module.exports = {
         courseName: '物理',
         courseLayerName: '物理选考B',
         dispSeq: '2',
-        sumWeekClass: 2
+        weekHours: 2
       },
       {
         layerId: '10003',
@@ -88,7 +88,7 @@ module.exports = {
         courseName: '化学',
         courseLayerName: '化学选考A',
         dispSeq: '1',
-        sumWeekClass: 2
+        weekHours: 2
       },
       {
         layerId: '10004',
@@ -97,7 +97,7 @@ module.exports = {
         courseName: '化学',
         courseLayerName: '化学选考B',
         dispSeq: '2',
-        sumWeekClass: 2
+        weekHours: 2
       }
     ]
   },

@@ -141,7 +141,13 @@ export default {
     },
     // 新增按钮
     addBtn() {
-      this.$router.push({ name: 'Jxjh' })
+      this.$router.push({
+        name: 'Jxjh',
+        query: {
+          curYear: this.listQuery['a.school_year01'],
+          curTerm: this.listQuery['a.term_code01']
+        }
+      })
     },
     // 查询按钮
     queryBtn() {
@@ -173,7 +179,11 @@ export default {
     },
     // 排课按钮
     arrangeClass(arrangeId) {
-      const queryParams = { arrangeId }
+      const queryParams = {
+        arrangeId,
+        curYear: this.listQuery['a.school_year01'],
+        curTerm: this.listQuery['a.term_code01']
+      }
       this.$router.push({ name: 'Jxjh', query: queryParams })
     },
     handleSizeChange(val) {

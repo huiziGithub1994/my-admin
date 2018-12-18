@@ -5,7 +5,7 @@
       <condition>
         <div class="condition">
           <label>课程名称</label>
-          <el-select v-model="search['courseId']" clearable @change="fetchData">
+          <el-select v-model="search['a.course_id01']" clearable @change="fetchData">
             <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </div>
@@ -23,7 +23,7 @@
         <el-table-column type="index" width="55" label="序号"></el-table-column>
         <el-table-column label="课程名称" property="courseName"></el-table-column>
         <el-table-column label="分层类型" property="courseLayerName"></el-table-column>
-        <el-table-column label="周课时(节)" property="sumWeekClass"></el-table-column>
+        <el-table-column label="周课时(节)" property="weekHours"></el-table-column>
       </el-table>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="500px">
@@ -34,8 +34,8 @@
         <el-form-item label="分层名称" prop="courseLayerName">
           <el-input v-model="formData.courseLayerName"></el-input>
         </el-form-item>
-        <el-form-item label="课时(节/周)" prop="sumWeekClass">
-          <el-input-number v-model="formData.sumWeekClass" :min="1" :max="10"></el-input-number>
+        <el-form-item label="课时(节/周)" prop="weekHours">
+          <el-input-number v-model="formData.weekHours" :min="1" :max="10"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -59,7 +59,11 @@ export default {
       // 表格数据
       tableData: [],
       search: {
-        courseId: ''
+        'a.course_id01': ''
+      },
+      pageTot: {
+        currentPage: 1,
+        pageSize: 1000
       },
       // 课程名称下拉菜单数据
       courseOptions: [],
@@ -93,6 +97,11 @@ export default {
     }
   },
   created() {
+    const { curYear, curTerm } = this.$route.query
+    Object.assign(this.search, {
+      'a.school_year01': curYear,
+      'a.term_code01': curTerm
+    })
     this.fetchData()
     this.getCourseName()
   },
@@ -100,8 +109,8 @@ export default {
     // 获取表格数据
     async fetchData() {
       const res = await getSbjestClassListInfo({
-        arrangeId: this.$route.query.arrangeId,
-        courseId: this.search.courseId
+        ...this.pageTot,
+        ...this.search
       })
       this.tableData = res.DATA
     },
@@ -118,7 +127,6 @@ export default {
       this.dialogTitle = '新增'
       resetForm(this.formData)
       this.formData.arrangeId = this.$route.query.arrangeId
-      console.log(this.formData.arrangeId)
     },
     // 修改按钮
     async editBtn() {
