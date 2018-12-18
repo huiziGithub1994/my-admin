@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     tabDisabled() {
-      return this.$route.query.arrangId === undefined
+      return this.$route.query.arrangeId === undefined
     }
   },
   methods: {
@@ -82,6 +82,10 @@ export default {
     },
     // 基础信息 下一步 按钮
     baseInfoNext() {
+      if (this.tabDisabled) {
+        this.$message.warning('请先保存基础信息，再进行下一步操作')
+        return
+      }
       const temp = parseInt(this.activeTabName) + 1
       this.activeTabName = temp + ''
     }

@@ -64,40 +64,84 @@ module.exports = {
     SUM: 6,
     DATA: [
       {
-        layerId: '10000',
-        arrangeId: 'a001',
-        courseId: 'w001',
-        courseName: '物理',
-        courseLayerName: '物理选考A',
-        dispSeq: '1',
-        weekHours: 2
+        surveyId: null,
+        gradeId: null,
+        modifyDate: null,
+        modifyId: null,
+        weekHours: 5,
+        courseLayerName: '选学D', //分层名称
+        allName: '语文选学D', //课程名称加分层名称
+        courseName: '语文', //课程名称
+        layerId: '409e78e9ef6b4a5dbd81bd5d2d1fee12', //分层Id
+        segCode: null,
+        createId: '888888888888',
+        schoolId: '88888888',
+        dispSeq: 1,
+        schoolYear: '2018', //学年
+        arrangeId: '1bf28899499949b18e4ea236aad7b867', //走班Id
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b05', //课程Id
+        termCode: '1', //学期
+        createDate: '2018-12-15T14:56:00.000+0000' //创建时间
       },
       {
-        layerId: '10001',
-        arrangeId: 'a001',
-        courseId: 'w001',
-        courseName: '物理',
-        courseLayerName: '物理选考B',
-        dispSeq: '2',
-        weekHours: 2
+        surveyId: null,
+        gradeId: null,
+        modifyDate: null,
+        modifyId: null,
+        weekHours: 5,
+        courseLayerName: '选学B', //分层名称
+        allName: '语文选学B', //课程名称加分层名称
+        courseName: '语文', //课程名称
+        layerId: '409e78e9ef6b4a5dbd81bd5d2d1fee12', //分层Id
+        segCode: null,
+        createId: '888888888888',
+        schoolId: '88888888',
+        dispSeq: 1,
+        schoolYear: '2018', //学年
+        arrangeId: '1bf28899499949b18e4ea236aad7b867', //走班Id
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b05', //课程Id
+        termCode: '1', //学期
+        createDate: '2018-12-15T14:56:00.000+0000' //创建时间
       },
       {
-        layerId: '10003',
-        arrangeId: 'a001',
-        courseId: 'w002',
-        courseName: '化学',
-        courseLayerName: '化学选考A',
-        dispSeq: '1',
-        weekHours: 2
+        surveyId: null,
+        gradeId: null,
+        modifyDate: null,
+        modifyId: null,
+        weekHours: 5,
+        courseLayerName: '选学A', //分层名称
+        allName: '物理选学A', //课程名称加分层名称
+        courseName: '物理', //课程名称
+        layerId: '409e78e9ef6b4a5dbd81bd5d2d1fee12', //分层Id
+        segCode: null,
+        createId: '888888888888',
+        schoolId: '88888888',
+        dispSeq: 1,
+        schoolYear: '2018', //学年
+        arrangeId: '1bf28899499949b18e4ea236aad7b867', //走班Id
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b06', //课程Id
+        termCode: '1', //学期
+        createDate: '2018-12-15T14:56:00.000+0000' //创建时间
       },
       {
-        layerId: '10004',
-        arrangeId: 'a001',
-        courseId: 'w002',
-        courseName: '化学',
-        courseLayerName: '化学选考B',
-        dispSeq: '2',
-        weekHours: 2
+        surveyId: null,
+        gradeId: null,
+        modifyDate: null,
+        modifyId: null,
+        weekHours: 5,
+        courseLayerName: '选学D', //分层名称
+        allName: '物理选学D', //课程名称加分层名称
+        courseName: '物理', //课程名称
+        layerId: '409e78e9ef6b4a5dbd81bd5d2d1fee12', //分层Id
+        segCode: null,
+        createId: '888888888888',
+        schoolId: '88888888',
+        dispSeq: 1,
+        schoolYear: '2018', //学年
+        arrangeId: '1bf28899499949b18e4ea236aad7b867', //走班Id
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b06', //课程Id
+        termCode: '1', //学期
+        createDate: '2018-12-15T14:56:00.000+0000' //创建时间
       }
     ]
   },
@@ -109,34 +153,27 @@ module.exports = {
       {
         layerId: '10000',
         arrangeId: 'a001',
-        courseId: 'w001',
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b06',
         courseName: '物理'
       },
       {
         layerId: '10001',
         arrangeId: 'a001',
-        courseId: 'w002',
-        courseName: '化学'
+        courseId: 'aff04b5ce83148e9aa745f5a8efb5b05',
+        courseName: '语文'
       }
     ]
   },
-  // 学科分层详情查询接口
-  'post /base/qrylayerInfo': {
+  // 学科分层保存接口
+  'post /zxx/layer/saveCourseLayerInfo': {
     SUCCESS: true,
     MSG: '成功获取数据'
   },
-  '/base/qrylayerInfo': {
+  // 学科分层删除接口
+  '/zxx/layer/delCourseLayerById': {
     SUCCESS: true,
     MSG: '成功获取数据',
-    DATA: {
-      layerId: '3993494',
-      arrangeId: '001',
-      courseId: '100',
-      courseName: '物理',
-      courseLayerName: '物理选考B',
-      dispSeq: 2,
-      sumWeekClass: 4
-    }
+    DATA: 1
   },
   // 倒入学生选课
   '/chooseclass/list': {

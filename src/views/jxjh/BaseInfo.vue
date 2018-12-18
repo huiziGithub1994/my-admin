@@ -101,7 +101,6 @@ export default {
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
-          console.log(this.arrangeId)
           if (this.arrangeId) {
             Object.assign(this.data, { arrangeId: this.arrangeId })
           }

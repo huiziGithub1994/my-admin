@@ -136,9 +136,6 @@ export function validEditBtn(ins) {
   ins.dialogFormVisible = true
   ins.dialogTitle = '修改'
   return true
-  // for (const key of Object.keys(ins.formData)) {
-  //   ins.formData[key] = ins.multipleSelection[0][key]
-  // }
 }
 
 /**

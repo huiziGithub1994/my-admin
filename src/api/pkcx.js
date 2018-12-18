@@ -50,11 +50,20 @@ export function getlayerCourseName(params) {
   })
 }
 
-// 学科分层详情查询接口
-export function qrylayerInfo(params) {
+// 学科分层保存接口
+export function saveLayerInfo(params) {
   return request({
-    url: URL.qrylayerInfo,
+    url: URL.savelayerInfo,
+    method: 'post',
     params: params
+  })
+}
+
+// 学科分层保存接口
+export function delLayerInfo(params) {
+  return request({
+    url: URL.dellayerInfo,
+    params
   })
 }
 

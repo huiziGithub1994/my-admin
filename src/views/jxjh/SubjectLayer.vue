@@ -28,8 +28,10 @@
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="500px">
       <el-form :model="formData" :rules="rules" ref="ruleForm" label-width="100px">
-        <el-form-item label="课程" prop="courseName">
-          <el-input v-model="formData.courseName"></el-input>
+        <el-form-item label="课程" prop="courseId">
+          <el-select v-model="formData.courseId" clearable>
+            <el-option v-for="(item,index) in courseOptionsFrom" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="分层名称" prop="courseLayerName">
           <el-input v-model="formData.courseLayerName"></el-input>
@@ -49,9 +51,10 @@
 import {
   getSbjestClassListInfo,
   getlayerCourseName,
-  qrylayerInfo
+  delLayerInfo,
+  saveLayerInfo
 } from '@/api/pkcx'
-import { validEditBtn, resetForm } from '@/utils/businessUtil'
+import { validEditBtn, resetForm, setDatas } from '@/utils/businessUtil'
 
 export default {
   data() {
@@ -67,12 +70,13 @@ export default {
       },
       // 课程名称下拉菜单数据
       courseOptions: [],
+      courseOptionsFrom: [],
       multipleSelection: [], // 表格选中项
       height: document.body.clientHeight - 365,
       dialogFormVisible: false,
       dialogTitle: '新增',
       rules: {
-        courseName: { required: true, message: '请输入课程', trigger: 'blur' },
+        courseId: { required: true, message: '请选择课程', trigger: 'change' },
         courseLayerName: {
           required: true,
           message: '请输入分层名称',
@@ -86,13 +90,14 @@ export default {
       },
       // 表单数据
       formData: {
-        layerId: '',
-        arrangeId: '',
+        schoolYear: '',
+        termCode: '',
         courseId: '',
-        courseName: '',
         courseLayerName: '',
-        dispSeq: 0,
-        sumWeekClass: 0
+        allName: '',
+        weekHours: 0,
+        arrangeId: ''
+        // layerId
       }
     }
   },
@@ -120,32 +125,43 @@ export default {
         arrangeId: this.$route.query.arrangeId
       })
       this.courseOptions = res.DATA
+      this.courseOptionsFrom = [...res.DATA]
     },
     // 新增按钮
     addBtn() {
       this.dialogFormVisible = true
       this.dialogTitle = '新增'
       resetForm(this.formData)
-      this.formData.arrangeId = this.$route.query.arrangeId
+      const { curYear, curTerm, arrangeId } = this.$route.query
+      Object.assign(this.formData, {
+        schoolYear: curYear,
+        termCode: curTerm,
+        arrangeId: arrangeId
+      })
     },
     // 修改按钮
     async editBtn() {
       if (!validEditBtn(this)) return
-      const res = await qrylayerInfo({
-        layerId: this.multipleSelection[0].layerId
-      })
-      this.formData = res.DATA
+      setDatas(this.formData, this.multipleSelection[0])
     },
     // 弹窗中的保存按钮
     saveBtn() {
       this.$refs['ruleForm'].validate(async valid => {
         if (valid) {
-          const res = await qrylayerInfo(
-            Object.assign(this.formData, { a: '1' })
+          const params = {}
+          if (this.dialogTitle === '修改') {
+            Object.assign(params, {
+              layerId: this.multipleSelection[0].layerId
+            })
+          }
+          const { courseId, courseLayerName } = this.formData
+          const res = await saveLayerInfo(
+            Object.assign(params, this.formData, {
+              allName: this.matchCourseName(courseId) + courseLayerName
+            })
           )
           if (res.SUCCESS) {
             this.fetchData()
-            this.getCourseName()
           }
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
@@ -162,6 +178,10 @@ export default {
           return false
         }
       })
+    },
+    matchCourseName(id) {
+      return this.courseOptionsFrom.find(item => id === item.courseId)
+        .courseName
     },
     // 删除按钮
     deleteBtn() {
@@ -182,7 +202,7 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await qrylayerInfo({
+          const res = await delLayerInfo({
             layerId: ids.join(','),
             arrangeId: this.$route.query.arrangeId,
             a: '2'
