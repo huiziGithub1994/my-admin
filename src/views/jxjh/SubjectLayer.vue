@@ -203,9 +203,7 @@ export default {
       })
         .then(async () => {
           const res = await delLayerInfo({
-            layerId: ids.join(','),
-            arrangeId: this.$route.query.arrangeId,
-            a: '2'
+            layerId: ids.join(',')
           })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
