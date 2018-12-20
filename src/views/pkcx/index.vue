@@ -74,7 +74,7 @@
 
 <script>
 import { getPKCXListInfo, delArrange } from '@/api/pkcx'
-import { getTableBestRows } from '@/utils/businessUtil'
+import { getTableBestRows, handlePageTot } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 export default {
   filters: {
@@ -128,7 +128,7 @@ export default {
     // 获取表格数据
     fetchData() {
       this.listLoading = true
-      const params = Object.assign(this.listQuery, this.pageTot)
+      const params = Object.assign(this.listQuery, handlePageTot(this.pageTot))
       getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTotal = res.SUM
         this.tableData = res.DATA

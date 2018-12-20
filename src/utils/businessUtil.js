@@ -187,8 +187,19 @@ export function deleteTableDatas(ins, deleteKey, deleteUrl) {
     })
 }
 
+// 赋值
 export function setDatas(originData, newData) {
   Object.keys(originData).forEach(key => {
     originData[key] = newData[key]
   })
+}
+
+// 页码参数转字符串
+export function handlePageTot(data) {
+  const params = {}
+  Object.keys(data).forEach(key => {
+    params[key] = data[key] + ''
+  })
+  console.log(params)
+  return params
 }
