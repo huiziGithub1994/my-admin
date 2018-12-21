@@ -1,18 +1,15 @@
 <template>
   <div class="content">
     <div class="header">
-      <!-- <div>蓝墨水 云平台</div>
+      <div>蓝墨水 云平台</div>
       <div class="currentTime">
         {{ time.day }}
         <span>{{ time.week }}</span>
-      </div>-->
+      </div>
     </div>
     <div class="article">
-      <div class="desk"></div>
       <div class="login">
-        <div class="logo">
-          <img src="../../assets/ui/logo.png">
-        </div>
+        <div class="title">登 录</div>
         <div class="form-wapper">
           <el-form :model="ruleForm" :rules="rules" ref="rule" label-width="0px" class="demo-ruleForm">
             <el-form-item label prop="loginid">
@@ -52,19 +49,14 @@
             </div>
             <div class="loginBtn" @click="submitForm">登 录</div>
             <div class="other">
-              <p>使用第三方账号登录</p>
-              <div>
-                <img src="../../assets/ui/qq.png">
-                <img src="../../assets/ui/zfb.png">
-                <img src="../../assets/ui/weibo.png">
-                <img src="../../assets/ui/360.png">
-                <img src="../../assets/ui/baidu.png">
-              </div>
+              <p>你也可以使用以下账号登录</p>
             </div>
           </el-form>
         </div>
-        <div class="copyright">Copyright c {{ currentYear }} 湖南蓝墨水软件科技有限公司</div>
       </div>
+    </div>
+    <div class="footer">
+      <div>Copyright c {{ currentYear }} 湖南蓝墨水软件科技有限公司</div>
     </div>
   </div>
 </template>
@@ -149,7 +141,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background: #5e80fe;
 }
 .header {
   height: 80px;
@@ -157,43 +148,42 @@ export default {
   padding: 0 10%;
   display: flex;
   justify-content: space-between;
-  color: white;
   span {
     letter-spacing: 3px;
     margin-left: 6px;
   }
 }
 .article {
-  padding: 0 15%;
   flex: 1;
-  background: url(../../assets/ui/bg_dlym.png) no-repeat bottom;
-  background-size: 100% 20%;
+  background: #b3d4db;
   display: flex;
-  > div.desk {
-    flex: 1;
-    background: url(../../assets/ui/chahua.png) no-repeat;
-    background-size: 100% 100%;
-    height: 520px;
-  }
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
   > div.login {
-    width: 358px;
-    height: 520px;
-    background: white;
-    padding: 20px;
-    position: relative;
-    .logo {
-      height: 130px;
-      padding: 0 25px;
-      > img {
-        width: 100%;
-        height: 100%;
-      }
-    }
+    margin-right: 15%;
   }
 }
-
+.footer {
+  height: 40px;
+  color: white;
+  line-height: 40px;
+  text-align: center;
+  background: #27576d;
+  letter-spacing: 2px;
+  font-size: 0.95rem;
+}
+.login {
+  width: 380px;
+  height: 420px;
+  background: white;
+  padding: 25px;
+  > div.title {
+    font-size: 1.4rem;
+  }
+}
 .form-wapper {
-  margin-top: 28px;
+  margin-top: 14px;
 }
 // 自动登录找回密码，注册新用户
 .autoLogin {
@@ -210,14 +200,14 @@ export default {
       color: #333333;
     }
     > span:last-child {
-      color: #3887ff;
+      color: #d10008;
     }
   }
 }
 .loginBtn {
   height: 35px;
   line-height: 35px;
-  background: #3887fe;
+  background: #96b7be;
   text-align: center;
   color: white;
   margin-top: 15px;
@@ -250,13 +240,6 @@ export default {
       height: 100%;
     }
   }
-}
-.copyright {
-  color: #e7e9fc;
-  font-size: 13px;
-  position: absolute;
-  bottom: -22px;
-  right: 0;
 }
 </style>
 

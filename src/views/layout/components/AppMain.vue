@@ -25,10 +25,12 @@ export default {
 .app-main {
   /*50 = navbar  */
   height: calc(100vh - 96px);
-  background: #efefef;
+  background: #f2f2f2;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-top: 8px;
+  padding-left: 10px;
 }
 .content-wapper {
   background: white;

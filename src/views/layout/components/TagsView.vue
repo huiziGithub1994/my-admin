@@ -182,12 +182,12 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #409eff;
-        color: #fff;
+        // background-color: #409eff;
+        color: #409eff;
         border-color: #409eff;
         &::before {
           content: '';
-          background: #fff;
+          background: #409eff;
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -234,13 +234,14 @@ export default {
       text-align: center;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
+      border: 1px solid;
       &:before {
-        transform: scale(0.6);
+        transform: scale(0.7);
         display: inline-block;
-        vertical-align: -3px;
+        vertical-align: -2px;
       }
       &:hover {
-        background-color: #b4bccc;
+        background-color: #409eff;
         color: #fff;
       }
     }

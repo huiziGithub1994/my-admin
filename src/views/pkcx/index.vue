@@ -88,7 +88,7 @@ export default {
     }
   },
   data() {
-    const h = 175
+    const h = 185
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {

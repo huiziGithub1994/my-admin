@@ -3,7 +3,7 @@
   .main-container {
     // height: calc(100% - 60px);
     transition: margin-left 0.28s;
-    margin-left: 17%;
+    margin-left: 220px;
     position: relative;
   }
   // 侧边栏
@@ -11,7 +11,7 @@
   }
   .sidebar-container {
     transition: width 0.28s;
-    width: 17% !important;
+    width: 220px !important;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -31,10 +31,8 @@
       display: none;
     }
     .scrollbar-wrapper {
-      margin: 7% !important;
       overflow: unset;
       height: auto;
-      box-shadow: 0px 0px 14px 2px #e4e4e4;
       .el-scrollbar__view {
         // height: 100%;
       }
@@ -54,22 +52,25 @@
       border: none;
       height: 100%;
       width: 100% !important;
-      background: #e8f2f0 !important; // 一级标题背景色
     }
     .el-submenu__title {
-      background: #e8f2f0 !important; // 一级标题背景色
-      color: #333333 !important; // 一级标题 active 字体颜色
+      background: white !important; // 一级标题背景色
+      color: #303133 !important;
+    }
+    .is-active .el-submenu__title {
+      background: #e8e9fd !important; // 一级标题背景色
+      color: #409eff !important; // 一级标题 active 字体颜色
     }
   }
   .submenu-title-noDropdown {
     color: #303133 !important;
-    background: #e8f2f0 !important;
-    border-bottom: 1px solid #dddddd;
+    background: white !important;
+    // border-bottom: 1px solid #dddddd;
   }
   .router-link-active .submenu-title-noDropdown,
   .el-menu-item.submenu-title-noDropdown:hover {
-    background-color: $menuHover !important; // hover 字体颜色
-    color: white !important;
+    background-color: #e8e9fd !important; // hover 字体颜色
+    color: #409eff !important;
   }
   .hideSidebar {
     .sidebar-container {
@@ -115,7 +116,7 @@
     color: #333333 !important;
     &:hover {
       background-color: $menuHover !important; // hover 字体 、 背景颜色
-      color: white !important;
+      color: #409eff !important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu {
@@ -123,7 +124,7 @@
   }
   .sidebar-container .el-submenu .el-menu-item.is-active {
     background-color: $menuHover !important; // hover 字体颜色
-    color: white !important;
+    color: #409eff !important;
   }
   //适配移动端
   .mobile {

@@ -200,6 +200,5 @@ export function handlePageTot(data) {
   Object.keys(data).forEach(key => {
     params[key] = data[key] + ''
   })
-  console.log(params)
   return params
 }
