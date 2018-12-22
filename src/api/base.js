@@ -47,3 +47,13 @@ export function getCoursePlain(listQuery) {
     params: listQuery
   })
 }
+
+// 上传课程计划模板
+export function uploadCoursePlain(data) {
+  return request({
+    url: URL.uploadCoursePlain,
+    method: 'post',
+    params: data,
+    formData: true
+  })
+}

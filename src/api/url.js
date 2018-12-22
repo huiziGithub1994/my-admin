@@ -47,6 +47,9 @@ export default {
   qrySingleSubjectAnalysis: `/base/qrySingleSubjectAnalysis`, //  单科分析
   qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
 
+  // 课程计划
+  uploadCoursePlain: `/zxx/uploadSeg`, // 上传模板
+
   // 系统配置
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
   qryCalendar: `/zxx/calendar/qryCalendarInfoDetail`, // 校历维护 详情

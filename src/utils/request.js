@@ -56,12 +56,13 @@ export default function service(settings) {
     defaultOption.headers = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     }
-    defaultOption.transformRequest = [
-      function(data) {
-        data = Qs.stringify(data)
-        return data
-      }
-    ]
+    !settings.formData &&
+      (defaultOption.transformRequest = [
+        function(data) {
+          data = Qs.stringify(data)
+          return data
+        }
+      ])
   } else {
     defaultOption.params = settings.params
   }
