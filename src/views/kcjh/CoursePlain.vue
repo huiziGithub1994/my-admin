@@ -12,7 +12,7 @@
         <a :href="downloadUrl" download="学段专业-年级-课程">
           <el-button type="primary">模板下载</el-button>
         </a>
-        <el-upload action="http://localhost:9999/base/qryCoursePlain" :show-file-list="false" :before-upload="beforeUpload" :on-success="uploadSuccess">
+        <el-upload action="http://47.107.255.128:8089/zxx/uploadSeg" :show-file-list="false" :headers="httpHeaders" :before-upload="beforeUpload" :on-success="uploadSuccess">
           <el-button type="primary">导入</el-button>
         </el-upload>
       </operation>
@@ -31,6 +31,7 @@
 <script>
 import { classCascaderSelect } from '@/components/selectChild/data'
 import { getCoursePlain } from '@/api/base'
+import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
   data() {
@@ -38,13 +39,17 @@ export default {
       selectedClass: [], // 选中值
       classOptions: [], // 学段/专业/年级
       tableData: [], // 表格数据
-      downloadUrl: URL.coursePlainExcelTemplate
+      downloadUrl: URL.coursePlainExcelTemplate,
+      httpHeaders: {}
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['token'])
+  },
   created() {
     this.classOptions = [...classCascaderSelect]
     this.fetchData()
+    Object.assign(this.httpHeaders, { x_auth_token: this.token })
   },
   methods: {
     async fetchData() {
