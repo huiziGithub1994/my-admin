@@ -29,7 +29,7 @@
         >
           <el-button type="primary">导入</el-button>
         </el-upload>
-        <el-button type="primary">导出</el-button>
+        <el-button type="primary" @click="exportBtn">导出</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary">引入</el-button>
         <el-button type="primary">分析</el-button>
@@ -102,7 +102,11 @@
   </div>
 </template>
 <script>
-import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
+import {
+  getChooseClassListInfo,
+  getSbjestClassListInfo,
+  exportChooseCourse
+} from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
@@ -216,6 +220,15 @@ export default {
           return false
         }
       })
+    },
+    // 导出按钮
+    async exportBtn() {
+      const params = {
+        'a.arrange_id01': this.$route.query.arrangeId,
+        currentPage: '1',
+        pageSize: '10000'
+      }
+      await exportChooseCourse({ dataStr: JSON.stringify(params) })
     },
     // 文件上传的回调函数
     uploadSuccess(res) {

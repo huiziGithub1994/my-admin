@@ -70,9 +70,16 @@ export default function service(settings) {
   return new Promise(function(resolve, reject) {
     axiosIns
       .request(defaultOption)
-      .then(response => {
-        // console.log(response)
-        resolve(response)
+      .then(res => {
+        if (res.SUCCESS) {
+          resolve(res)
+        } else {
+          Message({
+            message: res.MSG || '请求处理异常,请稍后再是',
+            type: 'error'
+          })
+          reject(res)
+        }
       })
       .catch(error => {
         //  1.判断请求超时

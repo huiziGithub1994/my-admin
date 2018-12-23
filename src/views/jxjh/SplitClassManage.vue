@@ -9,7 +9,7 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary">试分班</el-button>
+        <el-button type="primary" @click="splitClassesBtn">试分班</el-button>
         <el-button type="primary">任课统计</el-button>
       </operation>
     </div>
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { getSplitClassManage } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
+import { getSplitClassManage, splitClasses } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 export default {
   data() {
     return {
@@ -59,6 +59,10 @@ export default {
       const params = { id: 1 }
       const res = await getSplitClassManage(params)
       this.tableData = res.DATA
+    },
+    // 试分班按钮
+    async splitClassesBtn() {
+      await splitClasses()
     }
   }
 }

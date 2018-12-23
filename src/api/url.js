@@ -4,12 +4,15 @@ export default {
   qryArrangeList: `/zxx/arrange/qryArrangeBaseInfoList`, // 排课查询列表
   delArrange: `/zxx/arrange/delArrangeById`, // 排课删除
   qryArrangeDetail: `/zxx/arrange/qryArrangeDetail`, // 排课查询详情
+
   // 教学计划
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
   qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
   qrylayerCourseName: `/zxx/layer/qryCourseNameListForArrange`, // 学科分层课程名称下拉列表查询接口
   savelayerInfo: `/zxx/layer/saveCourseLayerInfo`, // 学科分层详情保存接口
   dellayerInfo: `/zxx/layer/delCourseLayerById`, // 学科分层详情删除接口
+  splitClasses: `/zxx/transLayer2Class`, // 导入学生选课 试分班
+  exportChooseCourse: `/zxx/layer/getStuChoiceCourseExcel`, // 导入学生选课 导出功能
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 

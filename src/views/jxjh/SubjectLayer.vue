@@ -52,7 +52,7 @@
           <el-input v-model="formData.courseLayerName"></el-input>
         </el-form-item>
         <el-form-item label="课时(节/周)" prop="weekHours">
-          <el-input-number v-model="formData.weekHours" :min="1" :max="10"></el-input-number>
+          <el-input-number v-model="formData.weekHours" :min="1" :max="20"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -105,7 +105,7 @@ export default {
           message: '请输入分层名称',
           trigger: 'blur'
         },
-        sumWeekClass: {
+        weekHours: {
           required: true,
           message: '请输入课时(节/周)',
           trigger: 'blur'
@@ -118,7 +118,7 @@ export default {
         courseId: '',
         courseLayerName: '',
         allName: '',
-        weekHours: 0,
+        weekHours: 1,
         arrangeId: ''
         // layerId
       }

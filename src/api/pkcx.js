@@ -67,6 +67,7 @@ export function delLayerInfo(params) {
   })
 }
 
+// 导入学生选课 表格数据查询
 export function getChooseClassListInfo(listQuery) {
   return request({
     url: '/chooseclass/list',
@@ -74,11 +75,26 @@ export function getChooseClassListInfo(listQuery) {
   })
 }
 
-// 教学分班管理
+// 教学分班管理 表格查询
 export function getSplitClassManage(listQuery) {
   return request({
     url: '/splitClassManage/list',
     params: listQuery
+  })
+}
+
+// 教学分班管理 导出接口
+export function exportChooseCourse(params) {
+  return request({
+    url: URL.exportChooseCourse,
+    params
+  })
+}
+
+// 教学分班管理 试分班
+export function splitClasses() {
+  return request({
+    url: URL.splitClasses
   })
 }
 
