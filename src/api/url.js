@@ -4,7 +4,6 @@ export default {
   qryArrangeList: `/zxx/arrange/qryArrangeBaseInfoList`, // 排课查询列表
   delArrange: `/zxx/arrange/delArrangeById`, // 排课删除
   qryArrangeDetail: `/zxx/arrange/qryArrangeDetail`, // 排课查询详情
-
   // 教学计划
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
   qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
