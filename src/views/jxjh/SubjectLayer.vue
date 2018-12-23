@@ -135,7 +135,7 @@ export default {
       'a.term_code01': curTerm
     })
     this.fetchData()
-    // this.getCourseName()
+    this.getCourseName()
   },
   methods: {
     // 获取表格数据

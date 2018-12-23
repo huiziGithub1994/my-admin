@@ -7,7 +7,7 @@ export default {
   // 走班排课 -》教学计划
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
   qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
-  qrylayerCourseName: `/base/qrylayerCourseName`, // 学科分层课程名称下拉列表查询接口
+  qrylayerCourseName: `/zxx/layer/qryCourseNameListForArrange`, // 学科分层课程名称下拉列表查询接口
   savelayerInfo: `/zxx/layer/saveCourseLayerInfo`, // 学科分层详情保存接口
   dellayerInfo: `/zxx/layer/delCourseLayerById`, // 学科分层详情删除接口
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
@@ -60,9 +60,11 @@ export default {
   saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/base/qryCoursePlain`, // 课程计划
   qryGrade: `/zxx/arrange/qrySegGradeInfo`, // 年级
+
   // 登录
   qryValidCode: `/zxx/visitor/picture/createValidateCode`, // 验证码
   userLogin: `/zxx/visitor/user/login`, // 登录
+  logout: `/zxx/user/logout`, // 退出
 
   // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,

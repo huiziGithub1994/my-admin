@@ -110,6 +110,10 @@ export default {
           if (this.arrangeId) {
             Object.assign(this.data, { arrangeId: this.arrangeId })
           }
+          const temp = this.gradeOptions.filter(item => {
+            return item.gradeId === this.data.gradeId
+          })
+          Object.assign(this.data, { gradeName: temp[0].gradeName })
           const res = await saveArrange(this.data)
           this.$message.success('保存成功')
           this.$nextTick(function() {
@@ -118,7 +122,7 @@ export default {
           if (!this.arrangeId) {
             this.$router.replace({
               name: 'Jxjh',
-              query: { arrangeId: res.DATA.arrangeId, ...this.$route.query }
+              query: { arrangeId: res.DATA, ...this.$route.query }
             })
           }
         } else {

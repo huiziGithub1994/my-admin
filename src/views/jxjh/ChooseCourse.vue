@@ -45,7 +45,7 @@
         <el-table-column label="学号" property="stuno" width="100" fixed></el-table-column>
         <el-table-column label="姓名" property="stuname" fixed></el-table-column>
         <el-table-column label="性别" property="sex" width="55" fixed></el-table-column>
-        <el-table-column label="课程组合" property="courses" min-width="900"></el-table-column>
+        <el-table-column label="课程组合" property="courses" min-width="300"></el-table-column>
       </el-table>
     </div>
     <!-- 新增修改弹窗-->

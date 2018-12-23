@@ -33,7 +33,7 @@ axiosIns.interceptors.response.use(
     return response.data
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('interceptors.response-err' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
@@ -71,6 +71,7 @@ export default function service(settings) {
     axiosIns
       .request(defaultOption)
       .then(response => {
+        // console.log(response)
         resolve(response)
       })
       .catch(error => {
@@ -85,7 +86,6 @@ export default function service(settings) {
             duration: 5 * 1000
           })
         }
-        resolve(error)
       })
   })
 }

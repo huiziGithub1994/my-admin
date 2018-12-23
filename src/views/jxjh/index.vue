@@ -16,13 +16,13 @@
         <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
           <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane label="导入学生选课" name="3">
+        <el-tab-pane label="导入学生选课" name="3" :disabled="tabDisabled">
           <choose-course v-if="activeTabName == 3"/>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" name="4">
+        <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
           <split-class-manage v-if="activeTabName == 4"/>
         </el-tab-pane>
-        <el-tab-pane label="走班教室" name="5">
+        <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
           <zb-classroom v-if="activeTabName == 5"/>
         </el-tab-pane>
       </el-tabs>

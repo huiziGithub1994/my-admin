@@ -25,10 +25,8 @@ export function getInfo(token) {
   })
 }
 
-export function logout(params) {
+export function logout() {
   return request({
-    url: '/user/logout',
-    method: 'post',
-    params
+    url: URL.logout
   })
 }

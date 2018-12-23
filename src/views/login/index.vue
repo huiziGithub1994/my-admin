@@ -32,7 +32,7 @@
             <el-form-item label prop="validateCode">
               <div class="pwd-code">
                 <div class="pwd-wapper">
-                  <el-input v-model.trim="ruleForm.validateCode" size="middle" placeholder="验证码" :maxlength="4">
+                  <el-input v-model.trim="ruleForm.validateCode" size="middle" placeholder="验证码" :maxlength="4" @keyup.enter.native="submitForm">
                     <i slot="prefix" class="login-ipt-img">
                       <svg-icon icon-class="code"/>
                     </i>
@@ -115,7 +115,7 @@ export default {
       this.codeSrc = res.DATA
     },
     // 登录
-    submitForm(fromRes) {
+    submitForm() {
       this.$refs['rule'].validate(valid => {
         if (valid) {
           this.$store.dispatch('Login', this.ruleForm).then(res => {

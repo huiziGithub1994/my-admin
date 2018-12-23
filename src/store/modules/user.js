@@ -80,8 +80,15 @@ const user = {
         logout()
           .then(() => {
             commit('SET_TOKEN', '')
-            commit('SET_ROLES', [])
+            commit('SET_SCHOOLID', '')
+            commit('SET_CALENDERID', '')
+            commit('SET_CURYEAR', '')
+            commit('SET_CURTERM', '')
             removeCookie('Admin-Token')
+            removeCookie('schoolId')
+            removeCookie('calenderId')
+            removeCookie('curYear')
+            removeCookie('curTerm')
             resolve()
           })
           .catch(error => {

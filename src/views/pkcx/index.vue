@@ -42,11 +42,15 @@
         </el-table-column>
         <el-table-column property="termCode" label="学期">
           <template slot-scope="scope">
-            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学年` }}</span>
+            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
           </template>
         </el-table-column>
         <el-table-column property="gradeName" label="年级"/>
-        <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
+        <el-table-column property="createDate" show-overflow-tooltip label="创建时间">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createDate | filterTime }}</span>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
@@ -75,16 +79,12 @@
 <script>
 import { getPKCXListInfo, delArrange } from '@/api/pkcx'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 export default {
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
+    filterTime(val) {
+      return moment(val).format('YYYY-MM-DD  hh:mm')
     }
   },
   data() {
@@ -139,7 +139,7 @@ export default {
       this.listLoading = true
       const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
       getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
-        this.pageTotal = res.SUM
+        this.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false
       })
