@@ -14,10 +14,10 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="queryBtn">查询</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="addBtn">新增</el-button>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
+        <el-button type="primary" @click="deleteBtn">删除</el-button>
+        <el-button type="primary" @click="editBtn">修改</el-button>
+        <el-button type="primary" @click="addBtn">新增</el-button>
       </operation>
     </div>
     <div class="sjzd-middle">
@@ -69,12 +69,12 @@
 </template>
 
 <script>
-import { getKeyList } from '@/api/sjzd'
+import { getKeyList } from '@/api/base'
 import { getTableBestRows, validEditBtn, resetForm } from '@/utils/businessUtil'
 
 export default {
   data() {
-    const h = 190
+    const h = 175
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {

@@ -136,9 +136,6 @@ export function validEditBtn(ins) {
   ins.dialogFormVisible = true
   ins.dialogTitle = '修改'
   return true
-  // for (const key of Object.keys(ins.formData)) {
-  //   ins.formData[key] = ins.multipleSelection[0][key]
-  // }
 }
 
 /**
@@ -159,11 +156,12 @@ export function deleteTableDatas(ins, deleteKey, deleteUrl) {
   ins.multipleSelection.forEach(item => {
     ids.push(item[deleteKey])
   })
-  ins.$confirm('确定删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
+  ins
+    .$confirm('确定删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
     .then(async () => {
       const params = {
         a: '2'
@@ -187,4 +185,20 @@ export function deleteTableDatas(ins, deleteKey, deleteUrl) {
         message: '已取消删除'
       })
     })
+}
+
+// 赋值
+export function setDatas(originData, newData) {
+  Object.keys(originData).forEach(key => {
+    originData[key] = newData[key]
+  })
+}
+
+// 页码参数转字符串
+export function paramsToString(data) {
+  const params = {}
+  Object.keys(data).forEach(key => {
+    params[key] = data[key] + ''
+  })
+  return params
 }

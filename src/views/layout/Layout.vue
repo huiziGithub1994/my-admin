@@ -2,32 +2,26 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <div class="app-header">
-      <img class="logo" src="/src/assets/logo.jpg">
-      <span class="app-title">理水永昌实验中学</span>
+      <img class="logo" src="../../assets/ui/logo_baise.png">
+      <div class="app-title">
+        <p class="big">蓝墨水</p>
+        <p class="small">教育云平台</p>
+      </div>
       <div class="buttons">
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            <!-- <i class="el-icon-arrow-down"/> -->
-            走班排课
-            <i class="el-icon-arrow-down el-icon--right"/>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>普通排课</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
         <span>
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
-            <svg-icon icon-class="password1"/>
+            <img src="../../assets/ui/icon_suo.png">
           </el-tooltip>
         </span>
         <span>
           <el-tooltip class="item" effect="dark" content="更换皮肤" placement="bottom">
-            <svg-icon icon-class="skin1"/>
+            <img src="../../assets/ui/icon_pifu.png">
           </el-tooltip>
         </span>
         <span @click="logoutBtn">
           <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
-            <svg-icon icon-class="logout1" class="logout"/>
+            <img src="../../assets/ui/icon_tuichu.png">
           </el-tooltip>
         </span>
       </div>
@@ -44,7 +38,6 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-
 export default {
   name: 'Layout',
   components: {
@@ -54,7 +47,23 @@ export default {
     TagsView
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      choosedMenu: {
+        name: '',
+        command: ''
+      },
+      menus: [
+        { command: 'zb', name: '走班排课' },
+        { command: 'pt', name: '普通排课' },
+        { command: 'xk', name: '选课平台' }
+      ]
+    }
+  },
   computed: {
+    menutype() {
+      return this.$store.state.app.menutype
+    },
     sidebar() {
       return this.$store.state.app.sidebar
     },
@@ -70,14 +79,24 @@ export default {
       }
     }
   },
+  mounted() {
+    Object.assign(this.choosedMenu, this.menus[this.menutype === 'zb' ? 0 : 1])
+  },
   methods: {
     // 退出登录
     logoutBtn() {
-      console.log('退出')
       this.$store.dispatch('LogOut').then(() => {
         this.$router.push({ path: '/login' })
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+        // location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    handleMenuChange(choosed) {
+      if (this.choosedMenu.command === choosed.command) return
+      this.choosedMenu = choosed
+      this.$store.commit('SET_MENUTYPE', choosed.command)
+      this.$store.dispatch('delAllViews')
+      this.$router.push({ name: 'Home' })
+      this.$store.dispatch('addView', this.$route)
     },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
@@ -109,51 +128,63 @@ export default {
 .app-header {
   height: 60px;
   line-height: 60px;
-  border-bottom: 1px solid #42b983;
+  background: #3887fe;
   .logo {
+    width: 35px;
     height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    margin: 5px 30px 5px 60px;
+    margin-top: 5px;
+    margin-left: 24px;
     float: left;
   }
   .app-title {
-    font-size: 25px;
-    letter-spacing: 4px;
+    display: inline-block;
+    height: 100%;
+    float: left;
+    margin-left: 10px;
+    padding-top: 10px;
+    p {
+      margin: 0;
+      line-height: 20px;
+      color: white;
+      &.big {
+        font-size: 17px;
+      }
+    }
   }
   .buttons {
     float: right;
-    margin-right: 20px;
-    height: 100%;
-    > div.el-dropdown {
-      height: 25px;
-      line-height: 25px;
-      bottom: 5px;
-      margin-right: 10px;
-      font-size: 1.1rem;
-      > .el-dropdown-link {
-        color: #008ad4;
+    margin-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    > label {
+      margin-left: 10px;
+      color: white;
+      background: #5a9cfc;
+      padding: 7px 12px;
+      border-radius: 15px;
+      &.choosedMenu {
+        background: white !important;
+        color: #3788fe !important;
+      }
+      &:hover {
         cursor: pointer;
+        background: #0066ff;
       }
     }
     > span {
+      margin-left: 10px;
       display: inline-block;
-      height: 40px;
-      width: 40px;
-      line-height: 40px;
-      padding-left: 7px;
-      padding-top: 7px;
-      margin-top: 10px;
-      border-radius: 50%;
-      background-color: rgb(48, 65, 86);
-      > svg {
-        width: 25px;
-        height: 25px;
+      height: 60px;
+      img {
+        width: 38px;
+        height: 38px;
+        position: relative;
+        top: 12px;
       }
     }
     > span:hover {
-      background: rgba(88, 104, 123, 0.7);
       cursor: pointer;
+      opacity: 0.8;
     }
   }
 }

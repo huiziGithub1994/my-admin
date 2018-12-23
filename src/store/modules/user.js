@@ -1,16 +1,32 @@
-import { login, logout, getInfo } from '@/api/login'
-// import { getToken, setToken, removeToken } from '@/utils/auth'
-import { getToken, removeToken } from '@/utils/auth'
+import { login, logout } from '@/api/login'
+import { getBaseInfo } from '@/api/base'
+import { getCookie, removeCookie, setCookie } from '@/utils/auth'
 
 const user = {
   state: {
-    token: getToken(),
+    token: getCookie('Admin-Token'),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    curYear: getCookie('curYear'),
+    curTerm: getCookie('curTerm'),
+    schoolId: getCookie('schoolId'),
+    calenderId: getCookie('calenderId')
   },
 
   mutations: {
+    SET_SCHOOLID: (state, schoolId) => {
+      state.schoolId = schoolId
+    },
+    SET_CALENDERID: (state, calenderId) => {
+      state.calenderId = calenderId
+    },
+    SET_CURYEAR: (state, curYear) => {
+      state.curYear = curYear
+    },
+    SET_CURTERM: (state, curTerm) => {
+      state.curTerm = curTerm
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -28,14 +44,13 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password)
-          .then(response => {
-            // const data = response.data
-            // setToken(data.token)
-            // commit('SET_TOKEN', data.token)
-            resolve(response.data)
+        login(userInfo)
+          .then(res => {
+            if (res.SUCCESS) {
+              commitBaseInfo(commit, res)
+            }
+            resolve(res)
           })
           .catch(error => {
             console.log(2, error)
@@ -43,22 +58,15 @@ const user = {
           })
       })
     },
-
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token)
-          .then(response => {
-            const data = response.data
-            if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
-            } else {
-              reject('getInfo: roles must be a non-null array !')
+        getBaseInfo()
+          .then(res => {
+            if (res.SUCCESS) {
+              commitBaseInfo(commit, res)
             }
-            commit('SET_NAME', data.name)
-            commit('SET_AVATAR', data.avatar)
-            resolve(response)
+            resolve(res)
           })
           .catch(error => {
             reject(error)
@@ -69,12 +77,18 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        console.log(state.token)
-        logout(state.token)
+        logout()
           .then(() => {
             commit('SET_TOKEN', '')
-            commit('SET_ROLES', [])
-            removeToken()
+            commit('SET_SCHOOLID', '')
+            commit('SET_CALENDERID', '')
+            commit('SET_CURYEAR', '')
+            commit('SET_CURTERM', '')
+            removeCookie('Admin-Token')
+            removeCookie('schoolId')
+            removeCookie('calenderId')
+            removeCookie('curYear')
+            removeCookie('curTerm')
             resolve()
           })
           .catch(error => {
@@ -87,11 +101,27 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
-        removeToken()
+        removeCookie('Admin-Token')
+        removeCookie('schoolId')
+        removeCookie('calenderId')
+        removeCookie('curYear')
+        removeCookie('curTerm')
         resolve()
       })
     }
   }
 }
 
+function commitBaseInfo(commit, res) {
+  const { curXq, calendarId, curXn } = res.DATA
+  const { schoolId } = res.DATA.userInfo
+  commit('SET_SCHOOLID', schoolId)
+  commit('SET_CALENDERID', calendarId)
+  commit('SET_CURYEAR', curXn)
+  commit('SET_CURTERM', curXq)
+  setCookie('schoolId', schoolId)
+  setCookie('calenderId', calendarId)
+  setCookie('curYear', curXn)
+  setCookie('curTerm', curXq)
+}
 export default user

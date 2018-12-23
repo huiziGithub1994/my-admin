@@ -1,18 +1,35 @@
-<template><!-- 学科分层及课时 tab页-->
+<template>
+  <!-- 学科分层及课时 tab页-->
   <div>
     <div>
       <condition>
         <div class="condition">
           <label>课程名称</label>
-          <el-select v-model="search['courseId']" clearable @change="fetchData">
-            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"> </el-option>
+          <el-select v-model="search['a.course_id01']" clearable @change="fetchData">
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
+        <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
+          <el-button type="primary">模板下载</el-button>
+        </a>
+        <el-upload
+          class="uploadBtn"
+          action="http://47.107.255.128:8089/zxx/upCourseLayer"
+          name="filename"
+          :show-file-list="false"
+          :headers="httpHeaders"
+          :before-upload="beforeUpload"
+          :on-success="uploadSuccess"
+          ref="upload"
+        >
+          <el-button type="primary">导入</el-button>
+        </el-upload>
+        <el-button type="primary">设置课程计划</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
+        <el-button type="primary" @click="editBtn">修改</el-button>
+        <el-button type="primary" @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -21,19 +38,21 @@
         <el-table-column type="index" width="55" label="序号"></el-table-column>
         <el-table-column label="课程名称" property="courseName"></el-table-column>
         <el-table-column label="分层类型" property="courseLayerName"></el-table-column>
-        <el-table-column label="周课时(节)" property="sumWeekClass"></el-table-column>
+        <el-table-column label="周课时(节)" property="weekHours"></el-table-column>
       </el-table>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="500px">
       <el-form :model="formData" :rules="rules" ref="ruleForm" label-width="100px">
-        <el-form-item label="课程" prop="courseName">
-          <el-input v-model="formData.courseName"></el-input>
+        <el-form-item label="课程" prop="courseId">
+          <el-select v-model="formData.courseId" clearable>
+            <el-option v-for="(item,index) in courseOptionsFrom" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="分层名称" prop="courseLayerName">
           <el-input v-model="formData.courseLayerName"></el-input>
         </el-form-item>
-        <el-form-item label="课时(节/周)" prop="sumWeekClass">
-          <el-input-number v-model="formData.sumWeekClass" :min="1" :max="10"></el-input-number>
+        <el-form-item label="课时(节/周)" prop="weekHours">
+          <el-input-number v-model="formData.weekHours" :min="1" :max="20"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -47,32 +66,46 @@
 import {
   getSbjestClassListInfo,
   getlayerCourseName,
-  qrylayerInfo
+  delLayerInfo,
+  saveLayerInfo
 } from '@/api/pkcx'
-import { validEditBtn, resetForm } from '@/utils/businessUtil'
-
+import {
+  validEditBtn,
+  resetForm,
+  setDatas,
+  paramsToString
+} from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
+import URL from '@/api/url'
 export default {
   data() {
     return {
+      downloadUrl: URL.subjectLayerExcelTemplate,
+      httpHeaders: {},
       // 表格数据
       tableData: [],
       search: {
-        courseId: ''
+        'a.course_id01': ''
+      },
+      pageTot: {
+        currentPage: 1,
+        pageSize: 1000
       },
       // 课程名称下拉菜单数据
       courseOptions: [],
+      courseOptionsFrom: [],
       multipleSelection: [], // 表格选中项
       height: document.body.clientHeight - 365,
       dialogFormVisible: false,
       dialogTitle: '新增',
       rules: {
-        courseName: { required: true, message: '请输入课程', trigger: 'blur' },
+        courseId: { required: true, message: '请选择课程', trigger: 'change' },
         courseLayerName: {
           required: true,
           message: '请输入分层名称',
           trigger: 'blur'
         },
-        sumWeekClass: {
+        weekHours: {
           required: true,
           message: '请输入课时(节/周)',
           trigger: 'blur'
@@ -80,26 +113,39 @@ export default {
       },
       // 表单数据
       formData: {
-        layerId: '',
-        arrangeId: '',
+        schoolYear: '',
+        termCode: '',
         courseId: '',
-        courseName: '',
         courseLayerName: '',
-        dispSeq: 0,
-        sumWeekClass: 0
+        allName: '',
+        weekHours: 1,
+        arrangeId: ''
+        // layerId
       }
     }
   },
+  computed: {
+    ...mapGetters(['token'])
+  },
   created() {
+    Object.assign(this.httpHeaders, { x_auth_token: this.token })
+    const { curYear, curTerm } = this.$route.query
+    Object.assign(this.search, {
+      'a.school_year01': curYear,
+      'a.term_code01': curTerm
+    })
     this.fetchData()
     this.getCourseName()
   },
   methods: {
     // 获取表格数据
     async fetchData() {
+      const getStrParams = paramsToString({
+        ...this.pageTot,
+        ...this.search
+      })
       const res = await getSbjestClassListInfo({
-        arrangeId: this.$route.query.arrangeId,
-        courseId: this.search.courseId
+        dataStr: JSON.stringify(getStrParams)
       })
       this.tableData = res.DATA
     },
@@ -109,33 +155,43 @@ export default {
         arrangeId: this.$route.query.arrangeId
       })
       this.courseOptions = res.DATA
+      this.courseOptionsFrom = [...res.DATA]
     },
     // 新增按钮
     addBtn() {
       this.dialogFormVisible = true
       this.dialogTitle = '新增'
       resetForm(this.formData)
-      this.formData.arrangeId = this.$route.query.arrangeId
-      console.log(this.formData.arrangeId)
+      const { curYear, curTerm, arrangeId } = this.$route.query
+      Object.assign(this.formData, {
+        schoolYear: curYear,
+        termCode: curTerm,
+        arrangeId: arrangeId
+      })
     },
     // 修改按钮
     async editBtn() {
       if (!validEditBtn(this)) return
-      const res = await qrylayerInfo({
-        layerId: this.multipleSelection[0].layerId
-      })
-      this.formData = res.DATA
+      setDatas(this.formData, this.multipleSelection[0])
     },
     // 弹窗中的保存按钮
     saveBtn() {
       this.$refs['ruleForm'].validate(async valid => {
         if (valid) {
-          const res = await qrylayerInfo(
-            Object.assign(this.formData, { a: '1' })
+          const params = {}
+          if (this.dialogTitle === '修改') {
+            Object.assign(params, {
+              layerId: this.multipleSelection[0].layerId
+            })
+          }
+          const { courseId, courseLayerName } = this.formData
+          const res = await saveLayerInfo(
+            Object.assign(params, this.formData, {
+              allName: this.matchCourseName(courseId) + courseLayerName
+            })
           )
           if (res.SUCCESS) {
             this.fetchData()
-            this.getCourseName()
           }
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
@@ -152,6 +208,10 @@ export default {
           return false
         }
       })
+    },
+    matchCourseName(id) {
+      return this.courseOptionsFrom.find(item => id === item.courseId)
+        .courseName
     },
     // 删除按钮
     deleteBtn() {
@@ -172,10 +232,8 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await qrylayerInfo({
-            layerId: ids.join(','),
-            arrangeId: this.$route.query.arrangeId,
-            a: '2'
+          const res = await delLayerInfo({
+            layerId: ids.join(',')
           })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
@@ -196,6 +254,40 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    // 文件上传的回调函数
+    uploadSuccess(res) {
+      if (res.SUCCESS) {
+        this.$message({
+          message: '文件上传成功!',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '文件上传失败!',
+          type: 'error'
+        })
+      }
+    },
+    // 文件上传前的钩子
+    beforeUpload(file) {
+      var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const extension = testmsg === 'xls'
+      const extension2 = testmsg === 'xlsx'
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!extension && !extension2) {
+        this.$message({
+          message: '上传文件只能是 xls、xlsx格式!',
+          type: 'warning'
+        })
+      }
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 10MB!',
+          type: 'warning'
+        })
+      }
+      return extension || (extension2 && isLt2M)
     }
   }
 }
@@ -212,6 +304,9 @@ export default {
   border: 1px solid #dddddd;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.uploadBtn {
+  display: inline-block;
 }
 </style>
 

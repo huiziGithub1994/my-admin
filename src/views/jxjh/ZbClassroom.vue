@@ -1,77 +1,66 @@
-<template><!-- 走班教室 tab页-->
+<template>
+  <!-- 走班教室 tab页-->
   <div>
-    <div v-area v-if="initArea">
+    <div v-area>
       <condition>
         <div class="condition">
           <label>课程分类</label>
-          <selectChild v-model="search['type']" clearable tp="yearSelect"/>
+          <el-select v-model="search['layerId']" clearable @change="fetchData">
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseLayerName" :value="item.layerId"></el-option>
+          </el-select>
         </div>
         <div class="condition">
           <label>教室名称</label>
-          <el-input v-model="search['type']"></el-input>
+          <el-input v-model="search['building']"></el-input>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>查询</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="height">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
-        <el-table-column label="教学楼" property="grade" fixed></el-table-column>
-        <el-table-column label="教室名称" property="classes" fixed></el-table-column>
-        <el-table-column label="可上课门数" property="stuno" width="100" fixed></el-table-column>
-        <el-table-column label="课程列表" property="stuname"></el-table-column>
-        <el-table-column fixed="right" width="90px" label="操作">
+        <el-table-column label="教学楼" property="building" width="130" fixed></el-table-column>
+        <el-table-column label="教室名称" property="room" width="130" fixed></el-table-column>
+        <el-table-column label="可上课门数" property="number" width="100" fixed></el-table-column>
+        <el-table-column label="课程列表" property="courses"></el-table-column>
+        <el-table-column fixed="right" width="110px" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="mini">修改</el-button>
-            <el-button type="text" size="mini" class="deleteBtn">删除</el-button>
+            <div class="table-btns">
+              <el-button type="primary" size="mini" plain @click="editBtn(scope.row.zbClassroomId)">修改</el-button>
+              <el-button type="danger" size="mini" plain @click="deleteBtn(scope.row.zbClassroomId)">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 新增修改弹窗-->
     <el-dialog :title="editDialogTitle" :visible.sync="editDialogFormVisible" width="700px">
-      <el-form :model="editForm" :rules="editRules" ref="ruleFormRef" label-width="70px">
+      <el-form :model="editForm" :rules="editRules" ref="ruleFormRef" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="学号" prop="xh">
-              <el-input v-model="editForm.xh" placeholder="请输入学号"></el-input>
+            <el-form-item label="教学楼" prop="building">
+              <el-input v-model="editForm.building"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="xm">
-              <el-input v-model="editForm.xm" placeholder="请输入姓名"></el-input>
+            <el-form-item label="教室名称" prop="room">
+              <el-input v-model="editForm.room"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="年级" prop="gradeCode">
-              <selectChild v-model="editForm.gradeCode" tp="gradeSelect"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="行政班" prop="xzb">
-              <el-select v-model="editForm.xzb" clearable placeholder="请选择">
-                <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
-              <el-radio-group v-model="editForm.xb">
-                <el-radio label="1">男</el-radio>
-                <el-radio label="2">女</el-radio>
-              </el-radio-group>
+            <el-form-item label="可上课程">
+              <el-checkbox v-model="editForm.number">全选</el-checkbox>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="选课">
               <div v-for="(course,index) in sbjestClass" :key="index">
-                <div> {{ course.courseName }} </div>
+                <div>{{ course.courseName }}</div>
                 <el-radio-group v-model="editForm[course.layerId]">
-                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo"> {{ courseLayer.courseLayerName }} </el-radio>
+                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo">{{ courseLayer.courseLayerName }}</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
@@ -86,15 +75,21 @@
   </div>
 </template>
 <script>
-import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
+import {
+  getZbClassroomListInfo,
+  getZbClassroomInfo,
+  getSbjestClassListInfo
+} from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 export default {
   data() {
     return {
       initArea: false,
       search: {
-        type: undefined
+        courseId: '',
+        building: ''
       },
+      courseOptions: [], // 课程分类选项
       tableData: [],
       // 表格高度
       height: document.body.clientHeight - 365,
@@ -104,24 +99,19 @@ export default {
       editDialogTitle: '',
       // 表单数据
       editForm: {
-        xh: undefined
+        building: '',
+        room: ''
       },
       // 表单规则
       editRules: {
-        xh: [
+        building: [
           { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ],
-        xm: [
+        room: [
           { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ],
         gradeCode: [
           { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xzb: [
-          { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xb: [
-          { required: true, validator: Validators.checkNull, trigger: 'blur' }
         ]
       },
       // 行政班数据
@@ -135,13 +125,18 @@ export default {
     this.fetchSbjestClass()
   },
   methods: {
+    // 查询按钮
+    queryBtn() {
+      this.fetchData()
+    },
     // 获取表格数据
     async fetchData() {
       const params = { id: 1 }
-      const res = await getChooseClassListInfo(params)
+      Object.assign(params, this.search)
+      const res = await getZbClassroomListInfo(params)
       this.tableData = res.DATA
     },
-    // 获取学生分层及课时数据
+    // 获取学科分层及课时数据, 重组数据成弹窗中的可选科目
     async fetchSbjestClass() {
       const res = await getSbjestClassListInfo({
         arrangeId: this.$route.query.arrangeId
@@ -155,7 +150,6 @@ export default {
           dispSeq: item.dispSeq,
           sumWeekClass: item.sumWeekClass
         }
-
         if (indexPos > -1) {
           newData[indexPos].courseLayers.push(tempCourseLayer)
         } else {
@@ -170,16 +164,42 @@ export default {
         }
       })
       this.sbjestClass = newData
+      this.courseOptions = [...res.DATA]
     },
     // 新增按钮
     addBtn() {
       this.editDialogFormVisible = true
-      this.editDialogTitle = '新增学生选课'
+      this.editDialogTitle = '新增走班教室'
     },
     // 修改按钮
-    editBtn() {
+    async editBtn(id) {
       this.editDialogFormVisible = true
-      this.editDialogTitle = '修改学生选课'
+      this.editDialogTitle = '修改走班教室'
+      const res = await getZbClassroomInfo({ id })
+      this.editForm = res.DATA
+    },
+    // 删除按钮
+    deleteBtn(id) {
+      this.$confirm('确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const res = await getZbClassroomInfo({ id, a: '2' })
+          this.$message({
+            type: res.SUCCESS ? 'success' : 'error',
+            message: res.SUCCESS ? '删除成功!' : '删除失败'
+          })
+          // 重新加载数据
+          if (res.SUCCESS) this.queryBtn()
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
@@ -196,8 +216,8 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.deleteBtn{
-  color:red;
+.deleteBtn {
+  color: red;
 }
 .table-wapper {
   border: 1px solid #dddddd;

@@ -21,29 +21,46 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
-export const constantRouterMap = [
+// 基础路由
+export const baseRouterMap = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/login',
     name: 'Dshboard',
-    hidden: true,
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        path: 'xlwh',
         name: 'Home',
-        meta: { title: '首页', icon: 'example' }
+        component: () => import('@/views/xlwh/index'),
+        meta: { title: '校历维护', icon: 'calendar' }
       }
     ]
   },
+  {
+    path: '/kcjhLayout',
+    component: Layout,
+    redirect: '/kcjhLayout/kcjh',
+    name: 'kcjhLayout',
+    children: [
+      {
+        path: '/kcjh',
+        name: 'Kcjh',
+        component: () => import('@/views/kcjh/index'),
+        meta: { title: '课程计划', icon: 'nested' }
+      }
+    ]
+  },
+  { path: '*', redirect: '/404', hidden: true }
+]
+// 走班排课路由
+export const zbRouterMap = [
   {
     path: '/zbpk',
     component: Layout,
@@ -55,60 +72,120 @@ export const constantRouterMap = [
         path: 'pkcx',
         name: 'Pkcx',
         component: () => import('@/views/pkcx/index'),
-        meta: { title: '排课查询', icon: 'table' }
+        meta: { title: '排课查询', icon: 'pkcx' }
       },
       {
         path: 'jxjh',
         name: 'Jxjh',
         component: () => import('@/views/jxjh/index'),
-        meta: { title: '教学计划', icon: 'tree' }
+        meta: { title: '教学计划', icon: 'jxjh' }
       },
       {
         path: 'pkgz',
         name: 'Pkgz',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '教学规则', icon: 'tree' }
+        component: () => import('@/views/pkgz/index'),
+        meta: { title: '排课规则', icon: 'pkgz' }
       },
       {
         path: 'pkgc',
         name: 'Pkgc',
         component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'tree' }
+        meta: { title: '排课过程', icon: 'pkgc' }
       },
       {
         path: 'kbcx',
         name: 'Kbxc',
         component: () => import('@/views/tree/index'),
-        meta: { title: '课表查询', icon: 'tree' }
+        meta: { title: '课表查询', icon: 'table' }
       }
     ]
-  },
-  {
-    path: '/xtgl',
-    component: Layout,
-    redirect: '/xtgl/sjzd',
-    name: 'Xtgl',
-    meta: { title: '系统管理', icon: 'example' },
-    children: [
-      {
-        path: 'sjzd',
-        name: 'Sjzd',
-        component: () => import('@/views/sjzd/index'),
-        meta: { title: '数据字典', icon: 'table' }
-      },
-      {
-        path: 'sjzd1',
-        name: 'Sjzd1',
-        component: () => import('@/views/pkcx/index'),
-        meta: { title: '数据字典', icon: 'table' }
-      }
-    ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
+  // {
+  //   path: '/xtgl',
+  //   component: Layout,
+  //   redirect: '/xtgl/sjzd',
+  //   name: 'Xtgl',
+  //   meta: { title: '系统管理', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'sjzd',
+  //       name: 'Sjzd',
+  //       component: () => import('@/views/sjzd/index'),
+  //       meta: { title: '数据字典', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'xlwh',
+  //       name: 'Xlwh',
+  //       component: () => import('@/views/Xlwh/index'),
+  //       meta: { title: '校历维护', icon: 'table' }
+  //     }
+  //   ]
+  // }
 ]
 
+// 普通排课路由
+export const ptRouterMap = [
+  {
+    path: '/ptpk',
+    component: Layout,
+    redirect: '/ptpk/pkcxPt',
+    name: 'Ptpk',
+    meta: { title: '普通排课', icon: 'ptpk' },
+    children: [
+      {
+        path: 'pkcxPt',
+        name: 'PkcxPt',
+        component: () => import('@/views/pkcxPt/index'),
+        meta: { title: '排课查询', icon: 'pkcx' }
+      },
+      {
+        path: 'jxjhPt',
+        name: 'JxjhPt',
+        component: () => import('@/views/jxjhPt/index'),
+        meta: { title: '教学计划', icon: 'jxjh' }
+      },
+      {
+        path: 'pkgzPt',
+        name: 'PkgzPt',
+        component: () => import('@/views/pkgzPt/index'),
+        meta: { title: '排课规则', icon: 'pkgz' }
+      }
+    ]
+  }
+]
+
+// 选课平台路由
+export const xkRouterMap = [
+  {
+    path: '/xkpt',
+    component: Layout,
+    redirect: '/xkpt/xxdy',
+    name: 'Xkpt',
+    meta: { title: '选课平台', icon: 'xkpt' },
+    children: [
+      {
+        path: 'xxdy',
+        name: 'Xxdy',
+        component: () => import('@/views/xkdy/index'),
+        meta: { title: '选学调研', icon: 'form' }
+      },
+      {
+        path: 'xksz',
+        name: 'Xksz',
+        component: () => import('@/views/xksz/index'),
+        meta: { title: '选课设置', icon: 'xksz' }
+      },
+      {
+        path: 'xkjg',
+        name: 'Xkjg',
+        component: () => import('@/views/xkjg/index'),
+        meta: { title: '选课结果', icon: 'result' }
+      }
+    ]
+  }
+]
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
+  routes: [...baseRouterMap, ...zbRouterMap, ...ptRouterMap, ...xkRouterMap]
 })

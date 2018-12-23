@@ -1,39 +1,37 @@
 <template>
   <div class="conent">
-    <div class="nav-block active">
-      <span>1</span>教学计划
+    <div class="nav-block">
+      <el-steps :active="1" finish-status="success" simple>
+        <el-step title="教学计划"></el-step>
+        <el-step title="排课规则"></el-step>
+        <el-step title="排课过程"></el-step>
+        <el-step title="课表查询"></el-step>
+      </el-steps>
     </div>
-    <div class="jxjh-tabs">
-      <el-tabs v-model="activeTabName" :disabled="tabDisabled.one" @tab-click="tabClick">
-        <el-tab-pane label="基础信息" name="one" >
-          <base-info />
+    <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
+      <el-tabs v-model="activeTabName">
+        <el-tab-pane label="基础信息" name="1">
+          <base-info v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="学科分层及课时" name="two" :disabled="tabDisabled.two">
-          <subject-layer v-if="activeTabName === 'two'" />
+        <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
+          <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane label="导入学生选课" name="three" :disabled="tabDisabled.three">
-          <choose-course ref="chooseCourseRef"/>
+        <el-tab-pane label="导入学生选课" name="3" :disabled="tabDisabled">
+          <choose-course v-if="activeTabName == 3"/>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" name="four" :disabled="tabDisabled.four">
-          <split-class-manage/>
+        <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
+          <split-class-manage v-if="activeTabName == 4"/>
         </el-tab-pane>
-        <el-tab-pane label="走班教室" name="five" :disabled="tabDisabled.five">
-          <zb-classroom ref="zbClassroomRef"/>
+        <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
+          <zb-classroom v-if="activeTabName == 5"/>
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div class="nav-block next">
-      <span>2</span>排课规则
-    </div>
     <div class="next-wapper">
-      <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
-      <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'six'">下一步</el-button>
-    </div>
-    <div class="nav-block">
-      <span>3</span>排课过程
-    </div>
-    <div class="nav-block">
-      <span>4</span>课表查询
+      <div>
+        <el-button type="success" @click="baseInfoPre" v-show="activeTabName != 1">上一步</el-button>
+        <el-button type="success" @click="baseInfoNext" v-show="activeTabName != 5">下一步</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -41,108 +39,72 @@
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
-import ClassManage from './ClassManage' // 学生分班管理tab页组件
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (Object.keys(vm.$route.query).length === 0) {
+        vm.$message({
+          showClose: true,
+          duration: 5000,
+          message: '请在排课查询页面，点击新增或者修改进入教学计划页面',
+          type: 'error'
+        })
+        vm.$router.push({ name: 'Pkcx' })
+      }
+    })
+  },
   components: {
     BaseInfo,
     SubjectLayer,
     ChooseCourse,
-    ClassManage,
     SplitClassManage,
     ZbClassroom
   },
   data() {
     return {
-      activeTabName: 'one', // tab页高亮
-      // 基础信息表单model
-      baseInfo: {
-        schoolYear: ''
-      }
+      tabsHeight: document.body.clientHeight - 180,
+      activeTabName: '1' // tab页高亮
     }
   },
   computed: {
     tabDisabled() {
-      const tabDisabled = {}
-      const arr = ['one', 'two', 'three', 'four', 'five', 'six']
-      arr.forEach(item => {
-        // if (item === this.activeTabName) {
-        //   Reflect.set(tabDisabled, item, false)
-        // } else {
-        Reflect.set(tabDisabled, item, false)
-        // }
-      })
-      return tabDisabled
+      return this.$route.query.arrangeId === undefined
     }
   },
-  created() {},
   methods: {
     // 基础信息 上一步 按钮
     baseInfoPre() {
-      this.activeTabName = 'two'
+      const temp = parseInt(this.activeTabName) - 1
+      this.activeTabName = temp + ''
     },
     // 基础信息 下一步 按钮
     baseInfoNext() {
-      this.activeTabName = 'two'
-    },
-    // tab页被点击
-    tabClick(tab) {
-      const { name: tabName } = tab
-      if (tabName === 'three') {
-        this.$refs.chooseCourseRef.initArea = true
-      } else if (tabName === 'five') {
-        this.$refs.zbClassroomRef.initArea = true
+      if (this.tabDisabled) {
+        this.$message.warning('请先保存基础信息，再进行下一步操作')
+        return
       }
+      const temp = parseInt(this.activeTabName) + 1
+      this.activeTabName = temp + ''
     }
   }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.conent {
-}
 .nav-block {
-  height: 35px;
-  line-height: 35px;
-  color: RGB(173, 173, 173);
-  > span {
-    border: 1px solid RGB(173, 173, 173);
-    display: inline-block;
-    width: 35px;
-    height: 100%;
-    border-radius: 50%;
-    text-align: center;
-    margin-right: 10px;
+  > .el-steps--simple {
+    padding: 8px 8%;
   }
-}
-.nav-block:not(:first-child) {
-  margin-bottom: 5px;
-}
-.nav-block.active {
-  color: RGB(51, 153, 255);
-  > span {
-    border: 1px solid RGB(51, 153, 255);
-  }
-}
-.nav-block.next {
-  display: inline-block;
-  color: black;
-  > span {
-    color: white;
-    background: RGB(51, 153, 255);
-    border: 1px solid RGB(51, 153, 255);
-  }
-}
-.jxjh-tabs {
-  border-left: 1px solid RGB(51, 153, 255);
-  margin-left: 17px;
-  padding: 0 17px;
 }
 .next-wapper {
-  display: inline-block;
-  float: right;
-  margin-right: 17px;
+  overflow: hidden;
+  > div {
+    display: inline-block;
+    float: right;
+    margin-right: 17px;
+  }
 }
 </style>
 

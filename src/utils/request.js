@@ -2,20 +2,20 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
 import Qs from 'qs'
-// import { getToken } from '@/utils/auth'
+import { setCookie } from '@/utils/auth'
 // 创建axios实例
 const axiosIns = axios.create()
 
 // request拦截器
 axiosIns.interceptors.request.use(
   config => {
-    if (store.getters.token) {
-      // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    const isGetCode = config.url.indexOf('createValidateCode') !== -1
+    if (store.getters.token && !isGetCode) {
+      config.headers.common['x_auth_token'] = store.getters.token
     }
     return config
   },
   error => {
-    // Do something with request error
     console.log(error) // for debug
     Promise.reject(error)
   }
@@ -24,10 +24,16 @@ axiosIns.interceptors.request.use(
 // response 拦截器
 axiosIns.interceptors.response.use(
   response => {
+    const token = response.headers['x_auth_token']
+    const isGetCode = response.config.url.indexOf('createValidateCode') !== -1
+    if (response.data.SUCCESS && token && isGetCode) {
+      setCookie('Admin-Token', token)
+      store.commit('SET_TOKEN', token)
+    }
     return response.data
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('interceptors.response-err' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
@@ -42,29 +48,51 @@ export default function service(settings) {
     baseURL: process.env.BASE_API, // api 的 base_url
     timeout: 5000, // 请求超时时间
     url: settings.url,
-    method: 'get'
+    method: settings.method ? settings.method : 'get'
   }
-  // a：'0' 新增     '1'：修改      '2'：删除
-  if (settings.params.a === '0' || settings.params.a === '1') {
-    defaultOption.method = 'post'
+
+  if (defaultOption.method === 'post') {
     defaultOption.data = settings.params
-    defaultOption.headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
-    defaultOption.transformRequest = [function(data) {
-      data = Qs.stringify(data)
-      return data
-    }]
+    defaultOption.headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    }
+    !settings.formData &&
+      (defaultOption.transformRequest = [
+        function(data) {
+          data = Qs.stringify(data)
+          return data
+        }
+      ])
   } else {
     defaultOption.params = settings.params
   }
+
   return new Promise(function(resolve, reject) {
-    axiosIns.request(defaultOption).then((response) => {
-      resolve(response)
-    }).catch((error) => {
-      //  1.判断请求超时
-      if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-        Message({ message: '请求超时，请稍后再试！', type: 'error', duration: 5 * 1000 })
-      }
-      resolve(error)
-    })
+    axiosIns
+      .request(defaultOption)
+      .then(res => {
+        if (res.SUCCESS) {
+          resolve(res)
+        } else {
+          Message({
+            message: res.MSG || '请求处理异常,请稍后再是',
+            type: 'error'
+          })
+          reject(res)
+        }
+      })
+      .catch(error => {
+        //  1.判断请求超时
+        if (
+          error.code === 'ECONNABORTED' &&
+          error.message.indexOf('timeout') !== -1
+        ) {
+          Message({
+            message: '请求超时，请稍后再试！',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+      })
   })
 }

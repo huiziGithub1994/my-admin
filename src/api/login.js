@@ -1,13 +1,19 @@
 import request from '@/utils/request'
+import URL from '@/api/url'
 
-export function login(username, password) {
+// 登录
+export function login(params) {
   return request({
-    url: '/user/login',
+    url: URL.userLogin,
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    params
+  })
+}
+
+// 获取验证码
+export function getValidCode() {
+  return request({
+    url: URL.qryValidCode
   })
 }
 
@@ -21,7 +27,6 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: URL.logout
   })
 }

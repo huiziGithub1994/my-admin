@@ -25,16 +25,17 @@ export default {
 .app-main {
   /*50 = navbar  */
   height: calc(100vh - 96px);
-  background: #efefef;
+  background: #f2f2f2;
   position: relative;
   overflow-y: auto;
-  overflow-x:hidden;
-  padding: 7px 7px 0 5px;
+  overflow-x: hidden;
+  padding-top: 8px;
+  padding-left: 10px;
 }
 .content-wapper {
   background: white;
   width: 100%;
-  min-height:100%;
+  min-height: 100%;
   padding: 10px 10px 5px 10px;
 }
 </style>
