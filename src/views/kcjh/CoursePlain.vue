@@ -9,7 +9,7 @@
         </div>
       </condition>
       <operation class="operation">
-        <a :href="downloadUrl" download="蓝墨水-学段专业-年级-课程">
+        <a :href="downloadUrl" download="蓝墨水-学段专业-年级-课程.xls">
           <el-button type="primary">模板下载</el-button>
         </a>
         <el-upload

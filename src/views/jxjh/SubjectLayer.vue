@@ -11,7 +11,7 @@
         </div>
       </condition>
       <operation>
-        <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义">
+        <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
           <el-button type="primary">模板下载</el-button>
         </a>
         <el-upload

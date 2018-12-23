@@ -14,9 +14,12 @@
       </condition>
       <operation>
         <el-button type="primary">查询</el-button>
+        <a :href="downloadUrl" download="蓝墨水-分层教学学生选课结果.xls">
+          <el-button type="primary">模板下载</el-button>
+        </a>
         <el-upload
           class="uploadBtn"
-          action="http://47.107.255.128:8089/zxx/upCourseLayer"
+          action="http://47.107.255.128:8089/zxx/upChoseLayer"
           name="filename"
           :show-file-list="false"
           :headers="httpHeaders"
@@ -27,7 +30,6 @@
           <el-button type="primary">导入</el-button>
         </el-upload>
         <el-button type="primary">导出</el-button>
-        <el-button type="primary">模板下载</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary">引入</el-button>
         <el-button type="primary">分析</el-button>
@@ -103,6 +105,7 @@
 import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
+import URL from '@/api/url'
 export default {
   data() {
     return {
@@ -110,6 +113,7 @@ export default {
       search: {
         type: undefined
       },
+      downloadUrl: URL.chooseCourseExcelTemplate,
       httpHeaders: {},
       tableData: [],
       // 表格高度
@@ -215,10 +219,17 @@ export default {
     },
     // 文件上传的回调函数
     uploadSuccess(res) {
-      this.$message({
-        message: '文件上传成功!',
-        type: 'success'
-      })
+      if (res.SUCCESS) {
+        this.$message({
+          message: '文件上传成功!',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '文件上传失败!',
+          type: 'error'
+        })
+      }
     },
     // 文件上传前的钩子
     beforeUpload(file) {

@@ -70,5 +70,6 @@ export default {
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls
   coursePlainExcelTemplate: `/static/template/coursePlain.xls`, // 课程计划
-  subjectLayerExcelTemplate: `/static/template/subjectLayer.xls` // 走班学科课程分层定义
+  subjectLayerExcelTemplate: `/static/template/subjectLayer.xls`, // 走班排课-教学计划-学科分层及课时-走班学科课程分层定义
+  chooseCourseExcelTemplate: `/static/template/chooseCourse.xls` // 走班排课-教学计划-导入学生选课 分层教学学生选课结果
 }
