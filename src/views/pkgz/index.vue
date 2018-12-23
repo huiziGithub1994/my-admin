@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       tabsHeight: document.body.clientHeight - 180,
-      activeTabName: 'four' // tab页高亮
+      activeTabName: 'one' // tab页高亮
     }
   },
   created() {},
