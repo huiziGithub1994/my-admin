@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
 import Qs from 'qs'
-import { setToken } from '@/utils/auth'
+import { setCookie } from '@/utils/auth'
 // 创建axios实例
 const axiosIns = axios.create()
 
@@ -27,7 +27,7 @@ axiosIns.interceptors.response.use(
     const token = response.headers['x_auth_token']
     const isGetCode = response.config.url.indexOf('createValidateCode') !== -1
     if (response.data.SUCCESS && token && isGetCode) {
-      setToken(token)
+      setCookie('Admin-Token', token)
       store.commit('SET_TOKEN', token)
     }
     return response.data

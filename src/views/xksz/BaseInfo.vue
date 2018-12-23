@@ -68,6 +68,7 @@
 
 <script>
 import moment from 'moment'
+// import { getChooseCourseBaseInfo } from '@/api/xkdy'
 export default {
   name: 'BaseInfo',
   data() {

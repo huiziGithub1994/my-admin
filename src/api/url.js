@@ -36,6 +36,10 @@ export default {
 
   // 选课平台 -》 选课列表（选学调研）
   qryXKDYList: `/base/qryXKDYList`, // 获取选课列表
+
+  // 选课平台 -》 选课设置 -》 基础信息
+  chooseCourseBaseInfo: `/base/toChooseTaskInfo`,
+
   // 选课平台 -》 选课设置 -》 可选学科tab
   qryOptionalCourse: `/base/qryOptionalCourse`, //  数据
   qryAllCourse: `/base/qryAllCourse`, // 包含学科下拉列表数据
@@ -65,5 +69,6 @@ export default {
 
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls
-  coursePlainExcelTemplate: `/static/template/coursePlain.xls` // 课程计划
+  coursePlainExcelTemplate: `/static/template/coursePlain.xls`, // 课程计划
+  subjectLayerExcelTemplate: `/static/template/subjectLayer.xls` // 走班学科课程分层定义
 }

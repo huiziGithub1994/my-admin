@@ -3,16 +3,16 @@
   <div class="conent">
     <el-tabs v-model="activeTabName">
       <el-tab-pane label="基础信息" name="one">
-        <base-info></base-info>
+        <base-info v-if="activeTabName == 'one'"></base-info>
       </el-tab-pane>
       <el-tab-pane label="可选学科" name="two">
-        <optional-subject></optional-subject>
+        <optional-subject v-if="activeTabName == 'two'"></optional-subject>
       </el-tab-pane>
       <el-tab-pane label="参选学生" name="three">
-        <joined-student></joined-student>
+        <joined-student v-if="activeTabName == 'three'"></joined-student>
       </el-tab-pane>
       <el-tab-pane label="选课说明" name="four">
-        <choose-explain></choose-explain>
+        <choose-explain v-if="activeTabName == 'four'"></choose-explain>
       </el-tab-pane>
     </el-tabs>
     <div class="next-wapper">

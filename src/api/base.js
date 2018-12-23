@@ -9,9 +9,10 @@ export function getBaseInfo() {
 }
 
 // 年级下拉列表数据
-export function getGrade() {
+export function getGrade(params) {
   return request({
-    url: URL.qryGrade
+    url: URL.qryGrade,
+    params
   })
 }
 

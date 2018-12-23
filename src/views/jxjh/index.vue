@@ -49,7 +49,7 @@ export default {
         vm.$message({
           showClose: true,
           duration: 5000,
-          message: '请在排课查询页面，点击新增或者修改进入该页面',
+          message: '请在排课查询页面，点击新增或者修改进入教学计划页面',
           type: 'error'
         })
         vm.$router.push({ name: 'Pkcx' })

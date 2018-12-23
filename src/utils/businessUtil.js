@@ -195,7 +195,7 @@ export function setDatas(originData, newData) {
 }
 
 // 页码参数转字符串
-export function handlePageTot(data) {
+export function paramsToString(data) {
   const params = {}
   Object.keys(data).forEach(key => {
     params[key] = data[key] + ''

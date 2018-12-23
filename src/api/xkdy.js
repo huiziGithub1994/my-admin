@@ -1,6 +1,14 @@
-// 选课调研
+// 选课平台
 import request from '@/utils/request'
 import URL from '@/api/url'
+
+// 选课设置 - 基础信息
+export function getChooseCourseBaseInfo(surveyId) {
+  return request({
+    url: URL.chooseCourseBaseInfo,
+    params: { surveyId }
+  })
+}
 
 // 选课列表
 export function getXKDYListInfo(listQuery) {

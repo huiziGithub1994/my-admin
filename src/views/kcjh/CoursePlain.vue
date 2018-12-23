@@ -9,15 +9,22 @@
         </div>
       </condition>
       <operation class="operation">
-        <a :href="downloadUrl" download="学段专业-年级-课程">
+        <a :href="downloadUrl" download="蓝墨水-学段专业-年级-课程">
           <el-button type="primary">模板下载</el-button>
         </a>
+        <el-upload
+          action="http://47.107.255.128:8089/zxx/uploadSeg"
+          name="filename"
+          :show-file-list="false"
+          :headers="httpHeaders"
+          :before-upload="beforeUpload"
+          :on-success="uploadSuccess"
+          ref="upload"
+        >
+          <el-button type="primary">导入</el-button>
+        </el-upload>
       </operation>
     </div>
-    <el-upload action="xx" :before-upload="beforeUpload" :on-success="uploadSuccess" ref="upload" :auto-upload="false">
-      <el-button type="primary">导入</el-button>
-    </el-upload>
-    <el-button type="primary" @click="toUpload">确认导入</el-button>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
         <el-table-column label="学段/专业" property="periodSepciality"></el-table-column>
@@ -31,7 +38,7 @@
 </template>
 <script>
 import { classCascaderSelect } from '@/components/selectChild/data'
-import { getCoursePlain, uploadCoursePlain } from '@/api/base'
+import { getCoursePlain } from '@/api/base'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
@@ -41,8 +48,7 @@ export default {
       classOptions: [], // 学段/专业/年级
       tableData: [], // 表格数据
       downloadUrl: URL.coursePlainExcelTemplate,
-      httpHeaders: {},
-      uploadForm: undefined // 发请求是数据的转换
+      httpHeaders: {}
     }
   },
   computed: {
@@ -50,13 +56,12 @@ export default {
   },
   created() {
     this.classOptions = [...classCascaderSelect]
-    // this.fetchData()
+    this.fetchData()
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
   },
   methods: {
     toUpload() {
       this.$refs.upload.submit()
-      uploadCoursePlain(this.uploadForm)
     },
     async fetchData() {
       const res = await getCoursePlain()
@@ -67,11 +72,17 @@ export default {
     },
     // 文件上传的回调函数
     uploadSuccess(res) {
-      this.$message({
-        message: '文件上传成功!',
-        type: 'success'
-      })
-      this.data = res.DATA
+      if (res.SUCCESS) {
+        this.$message({
+          message: '文件上传成功!',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '文件上传失败!',
+          type: 'error'
+        })
+      }
     },
     // 文件上传前的钩子
     beforeUpload(file) {
@@ -91,9 +102,7 @@ export default {
           type: 'warning'
         })
       }
-      this.uploadForm = new FormData()
-      this.uploadForm.append('file', file)
-      return false
+      return extension || (extension2 && isLt2M)
     }
   }
 }

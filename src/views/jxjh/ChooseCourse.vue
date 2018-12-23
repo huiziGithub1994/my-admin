@@ -14,12 +14,25 @@
       </condition>
       <operation>
         <el-button type="primary">查询</el-button>
-        <el-button type="primary">导入</el-button>
+        <el-upload
+          class="uploadBtn"
+          action="http://47.107.255.128:8089/zxx/upCourseLayer"
+          name="filename"
+          :show-file-list="false"
+          :headers="httpHeaders"
+          :before-upload="beforeUpload"
+          :on-success="uploadSuccess"
+          ref="upload"
+        >
+          <el-button type="primary">导入</el-button>
+        </el-upload>
         <el-button type="primary">导出</el-button>
         <el-button type="primary">模板下载</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary">引入</el-button>
         <el-button type="primary">分析</el-button>
+        <el-button type="primary" @click="editBtn">修改</el-button>
+        <el-button type="primary" @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -31,14 +44,6 @@
         <el-table-column label="姓名" property="stuname" fixed></el-table-column>
         <el-table-column label="性别" property="sex" width="55" fixed></el-table-column>
         <el-table-column label="课程组合" property="courses" min-width="900"></el-table-column>
-        <el-table-column fixed="right" width="110px" label="操作">
-          <template slot-scope="scope">
-            <div class="table-btns">
-              <el-button type="primary" size="mini" plain @click="editBtn(scope.row.id)">修改</el-button>
-              <el-button type="danger" size="mini" plain class="deleteBtn" @click="deleteBtn(scope.row.id)">删除</el-button>
-            </div>
-          </template>
-        </el-table-column>
       </el-table>
     </div>
     <!-- 新增修改弹窗-->
@@ -97,6 +102,7 @@
 <script>
 import { getChooseClassListInfo, getSbjestClassListInfo } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
 import { Validators } from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -104,6 +110,7 @@ export default {
       search: {
         type: undefined
       },
+      httpHeaders: {},
       tableData: [],
       // 表格高度
       height: document.body.clientHeight - 365,
@@ -139,9 +146,13 @@ export default {
       sbjestClass: []
     }
   },
+  computed: {
+    ...mapGetters(['token'])
+  },
   created() {
     this.fetchData()
     this.fetchSbjestClass()
+    Object.assign(this.httpHeaders, { x_auth_token: this.token })
   },
   methods: {
     // 获取表格数据
@@ -201,6 +212,33 @@ export default {
           return false
         }
       })
+    },
+    // 文件上传的回调函数
+    uploadSuccess(res) {
+      this.$message({
+        message: '文件上传成功!',
+        type: 'success'
+      })
+    },
+    // 文件上传前的钩子
+    beforeUpload(file) {
+      var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const extension = testmsg === 'xls'
+      const extension2 = testmsg === 'xlsx'
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!extension && !extension2) {
+        this.$message({
+          message: '上传文件只能是 xls、xlsx格式!',
+          type: 'warning'
+        })
+      }
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 10MB!',
+          type: 'warning'
+        })
+      }
+      return extension || (extension2 && isLt2M)
     }
   }
 }
@@ -212,6 +250,9 @@ export default {
 .table-wapper {
   border: 1px solid #dddddd;
   margin: 10px 0;
+}
+.uploadBtn {
+  display: inline-block;
 }
 </style>
 

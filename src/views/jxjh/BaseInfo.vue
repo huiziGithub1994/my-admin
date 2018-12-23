@@ -42,6 +42,7 @@
 import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
 import { getGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
+
 export default {
   name: 'BaseInfo',
   data() {
@@ -76,8 +77,9 @@ export default {
     }
   },
   async created() {
+    const { curYear, curTerm } = this.$route.query
+    Object.assign(this.data, { schoolYear: curYear, termCode: curTerm })
     await this.fetchGrade()
-    // this.arrangeId = this.$route.query.arrangeId
     if (this.arrangeId) {
       this.fetchFormData()
     }
@@ -85,7 +87,11 @@ export default {
   methods: {
     // 年级下拉列表
     async fetchGrade() {
-      const res = await getGrade()
+      const { curYear, curTerm } = this.$route.query
+      const res = await getGrade({
+        schoolYear: curYear,
+        termCode: curTerm
+      })
       this.gradeOptions = res.DATA
     },
     // 获取表单数据
@@ -105,6 +111,10 @@ export default {
             Object.assign(this.data, { arrangeId: this.arrangeId })
           }
           const res = await saveArrange(this.data)
+          this.$message.success('保存成功')
+          this.$nextTick(function() {
+            this.$refs['baseInfoRef'].clearValidate()
+          })
           if (!this.arrangeId) {
             this.$router.replace({
               name: 'Jxjh',

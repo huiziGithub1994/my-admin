@@ -27,7 +27,7 @@
     <div>
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
-        <el-table-column property="arrangName" show-overflow-tooltip min-width="160px" label="排课名称"/>
+        <el-table-column property="arrangeName" show-overflow-tooltip min-width="160px" label="排课名称"/>
         <el-table-column property="curStatus" label="状态" width="80px">
           <template slot-scope="scope">
             <span v-if="scope.row.curStatus === '1'" class="success">完成</span>
@@ -74,7 +74,7 @@
 
 <script>
 import { getPKCXListInfo, delArrange } from '@/api/pkcx'
-import { getTableBestRows, handlePageTot } from '@/utils/businessUtil'
+import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 export default {
   filters: {
@@ -118,17 +118,26 @@ export default {
     ...mapGetters(['curYear', 'curTerm'])
   },
   created() {
-    Object.assign(this.listQuery, {
-      'a.school_year01': this.curYear,
-      'a.term_code01': this.curTerm
-    })
-    this.fetchData()
+    if (this.curTerm === '' || this.curYear === '') {
+      this.$store.dispatch('GetInfo').then(() => {
+        this.getInitData()
+      })
+      return
+    }
+    this.getInitData()
   },
   methods: {
+    getInitData() {
+      Object.assign(this.listQuery, {
+        'a.school_year01': this.curYear,
+        'a.term_code01': this.curTerm
+      })
+      this.fetchData()
+    },
     // 获取表格数据
     fetchData() {
       this.listLoading = true
-      const params = Object.assign(this.listQuery, handlePageTot(this.pageTot))
+      const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
       getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTotal = res.SUM
         this.tableData = res.DATA

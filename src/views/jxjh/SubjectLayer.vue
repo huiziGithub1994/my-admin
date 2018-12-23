@@ -11,6 +11,21 @@
         </div>
       </condition>
       <operation>
+        <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义">
+          <el-button type="primary">模板下载</el-button>
+        </a>
+        <el-upload
+          class="uploadBtn"
+          action="http://47.107.255.128:8089/zxx/upCourseLayer"
+          name="filename"
+          :show-file-list="false"
+          :headers="httpHeaders"
+          :before-upload="beforeUpload"
+          :on-success="uploadSuccess"
+          ref="upload"
+        >
+          <el-button type="primary">导入</el-button>
+        </el-upload>
         <el-button type="primary">设置课程计划</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary" @click="editBtn">修改</el-button>
@@ -54,11 +69,19 @@ import {
   delLayerInfo,
   saveLayerInfo
 } from '@/api/pkcx'
-import { validEditBtn, resetForm, setDatas } from '@/utils/businessUtil'
-
+import {
+  validEditBtn,
+  resetForm,
+  setDatas,
+  paramsToString
+} from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
+import URL from '@/api/url'
 export default {
   data() {
     return {
+      downloadUrl: URL.subjectLayerExcelTemplate,
+      httpHeaders: {},
       // 表格数据
       tableData: [],
       search: {
@@ -101,21 +124,28 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['token'])
+  },
   created() {
+    Object.assign(this.httpHeaders, { x_auth_token: this.token })
     const { curYear, curTerm } = this.$route.query
     Object.assign(this.search, {
       'a.school_year01': curYear,
       'a.term_code01': curTerm
     })
     this.fetchData()
-    this.getCourseName()
+    // this.getCourseName()
   },
   methods: {
     // 获取表格数据
     async fetchData() {
-      const res = await getSbjestClassListInfo({
+      const getStrParams = paramsToString({
         ...this.pageTot,
         ...this.search
+      })
+      const res = await getSbjestClassListInfo({
+        dataStr: JSON.stringify(getStrParams)
       })
       this.tableData = res.DATA
     },
@@ -224,6 +254,40 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    // 文件上传的回调函数
+    uploadSuccess(res) {
+      if (res.SUCCESS) {
+        this.$message({
+          message: '文件上传成功!',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '文件上传失败!',
+          type: 'error'
+        })
+      }
+    },
+    // 文件上传前的钩子
+    beforeUpload(file) {
+      var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const extension = testmsg === 'xls'
+      const extension2 = testmsg === 'xlsx'
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!extension && !extension2) {
+        this.$message({
+          message: '上传文件只能是 xls、xlsx格式!',
+          type: 'warning'
+        })
+      }
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 10MB!',
+          type: 'warning'
+        })
+      }
+      return extension || (extension2 && isLt2M)
     }
   }
 }
@@ -240,6 +304,9 @@ export default {
   border: 1px solid #dddddd;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.uploadBtn {
+  display: inline-block;
 }
 </style>
 

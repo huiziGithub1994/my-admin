@@ -74,6 +74,7 @@ import { qryCalendar, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
 import { setDatas } from '@/utils/businessUtil'
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 const weeks = [
   '星期一',
@@ -215,6 +216,12 @@ export default {
     async saveBtn() {
       this.$refs['baseInfoRef'].validate(valid => {
         if (valid) {
+          // 教学时间的校验
+          const { beginDate, endDate } = this.data
+          if ((beginDate || endDate) && !moment(beginDate).isBefore(endDate)) {
+            this.$message.error('教学开始时间必须<教学结束时间')
+            return
+          }
           let isContinue = true
           this.hotInstance.validateColumns([0, 1], valid => {
             if (!valid) {
@@ -254,7 +261,6 @@ export default {
           })
           if (!isContinue) return
           Object.assign(this.data, { calFixList: newData })
-          console.log(this.data)
           saveCalendar({
             modelString: JSON.stringify(this.data)
           }).then(res => {

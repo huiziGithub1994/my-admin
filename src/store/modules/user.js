@@ -1,18 +1,17 @@
 import { login, logout } from '@/api/login'
 import { getBaseInfo } from '@/api/base'
-// import { getToken, setToken, removeToken } from '@/utils/auth'
-import { getToken, removeToken } from '@/utils/auth'
+import { getCookie, removeCookie, setCookie } from '@/utils/auth'
 
 const user = {
   state: {
-    token: getToken(),
+    token: getCookie('Admin-Token'),
     name: '',
     avatar: '',
     roles: [],
-    curYear: new Date().getFullYear(),
-    curTerm: '',
-    schoolId: '',
-    calenderId: ''
+    curYear: getCookie('curYear'),
+    curTerm: getCookie('curTerm'),
+    schoolId: getCookie('schoolId'),
+    calenderId: getCookie('calenderId')
   },
 
   mutations: {
@@ -82,7 +81,7 @@ const user = {
           .then(() => {
             commit('SET_TOKEN', '')
             commit('SET_ROLES', [])
-            removeToken()
+            removeCookie('Admin-Token')
             resolve()
           })
           .catch(error => {
@@ -95,7 +94,11 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
-        removeToken()
+        removeCookie('Admin-Token')
+        removeCookie('schoolId')
+        removeCookie('calenderId')
+        removeCookie('curYear')
+        removeCookie('curTerm')
         resolve()
       })
     }
@@ -109,5 +112,9 @@ function commitBaseInfo(commit, res) {
   commit('SET_CALENDERID', calendarId)
   commit('SET_CURYEAR', curXn)
   commit('SET_CURTERM', curXq)
+  setCookie('schoolId', schoolId)
+  setCookie('calenderId', calendarId)
+  setCookie('curYear', curXn)
+  setCookie('curTerm', curXq)
 }
 export default user

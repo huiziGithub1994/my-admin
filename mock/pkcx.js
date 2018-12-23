@@ -8,7 +8,7 @@ module.exports = {
       {
         arrangeId: '@inc(10000)',
         schoolId: '001',
-        arrangName: '2018-2019学年第一学期高中二年级走班排课',
+        arrangeName: '2018-2019学年第一学期高中二年级走班排课',
         'curStatus|1': ['1', '2', '0'],
         schoolYear: '2018',
         'termCode|1': ['1', '2'],
