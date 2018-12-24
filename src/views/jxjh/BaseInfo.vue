@@ -4,7 +4,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="学年" prop="schoolYear">
-            <selectChild v-model="data.schoolYear" clearable tp="yearSelect"/>
+            <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect" @change="changeSelect"/>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -14,7 +14,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="学期" prop="termCode">
-            <selectChild v-model="data.termCode" clearable tp="termSelect"/>
+            <selectChild v-model="data.termCode" :clearable="false" tp="termSelect" @change="changeSelect"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,6 +102,16 @@ export default {
       setDatas(this.data, res.DATA)
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
+      })
+    },
+    changeSelect() {
+      const { schoolYear, termCode } = this.data
+      this.$router.replace({
+        name: 'Jxjh',
+        query: {
+          ...this.$route.query,
+          ...{ curYear: schoolYear, curTerm: termCode }
+        }
       })
     },
     saveBtn() {

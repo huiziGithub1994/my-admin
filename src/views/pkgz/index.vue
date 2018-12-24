@@ -31,8 +31,27 @@ import ResourceAssessment from './ResourceAssessment' // 资源评估tab页组�
 import TeachGroup from './TeachGroup' // 教学分组tab页组件
 import SplitStudent from './SplitStudent' // 教学分组tab页组件
 import AdvanceArrange from './AdvanceArrange' // 课时预排tab页组件
-
+import { mapGetters } from 'vuex'
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      const { name } = from
+      const h = vm.$createElement
+      vm.$notify.close()
+      if (name !== 'Jxjh') {
+        vm.$notify({
+          title: '提示',
+          duration: 0,
+          message: h(
+            'i',
+            { style: 'color: teal' },
+            '请在排课查询页面，点击新增或者修改进入教学计划页面，执行完“教学计划”流程，再进入排课规则页面'
+          )
+        })
+        vm.$router.push({ name: 'Pkcx' })
+      }
+    })
+  },
   components: {
     ResourceAssessment,
     TeachGroup,
@@ -45,8 +64,34 @@ export default {
       activeTabName: 'one' // tab页高亮
     }
   },
-  created() {},
-  methods: {}
+  computed: {
+    ...mapGetters(['curYear', 'curTerm']),
+    arrangeId() {
+      return this.$route.query.arrangeId
+    }
+  },
+  created() {
+    this.judgeCanComeIn()
+  },
+  methods: {
+    judgeCanComeIn() {
+      if (this.arrangeId === undefined) {
+        this.$notify({
+          title: '提示',
+          duration: 0,
+          message: this.$createElement(
+            'i',
+            { style: 'color: teal' },
+            '请在教学计划页面，执行完新增“教学计划”流程，再进入排课规则页面。或者在排课查询页面，点击修改进入教学计划页面，执行完“教学计划”流程，再进入排课规则页面'
+          )
+        })
+        this.$router.push({
+          name: 'Jxjh',
+          query: { curYear: this.curYear, curTerm: this.curTerm }
+        })
+      }
+    }
+  }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

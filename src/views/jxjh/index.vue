@@ -30,7 +30,7 @@
     <div class="next-wapper">
       <div>
         <el-button type="success" @click="baseInfoPre" v-show="activeTabName != 1">上一步</el-button>
-        <el-button type="success" @click="baseInfoNext" v-show="activeTabName != 5">下一步</el-button>
+        <el-button type="success" @click="baseInfoNext">下一步</el-button>
       </div>
     </div>
   </div>
@@ -45,12 +45,18 @@ import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (Object.keys(vm.$route.query).length === 0) {
-        vm.$message({
-          showClose: true,
-          duration: 5000,
-          message: '请在排课查询页面，点击新增或者修改进入教学计划页面',
-          type: 'error'
+      const { name } = from
+      vm.$notify.close()
+      if (Object.keys(vm.$route.query).length === 0 && name !== 'Pkgz') {
+        const h = vm.$createElement
+        vm.$notify({
+          title: '提示',
+          message: h(
+            'i',
+            { style: 'color: teal' },
+            '请在排课查询页面，点击新增或者修改进入教学计划页面'
+          ),
+          duration: 8 * 1000
         })
         vm.$router.push({ name: 'Pkcx' })
       }
@@ -87,7 +93,15 @@ export default {
         return
       }
       const temp = parseInt(this.activeTabName) + 1
-      this.activeTabName = temp + ''
+      if (temp <= 5) {
+        this.activeTabName = temp + ''
+      } else {
+        console.log('arrangeId', this.$route.query.arrangeId)
+        this.$router.push({
+          name: 'Pkgz',
+          arrangeId: this.$route.query.arrangeId
+        })
+      }
     }
   }
 }
