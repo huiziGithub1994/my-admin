@@ -4,11 +4,20 @@
     <div>
       <condition>
         <div class="condition">
+          <label>学年</label>
+          <selectChild v-model="condition['a.school_year01']" :clearable="false" tp="yearSelect"/>
+        </div>
+        <div class="condition">
+          <label>学期</label>
+          <selectChild v-model="condition['a.term_code01']" :clearable="false" tp="termSelect"/>
+        </div>
+        <div class="condition">
           <label>学段/专业/年级</label>
-          <el-cascader expand-trigger="hover" :options="classOptions" clearable v-model="selectedClass" @change="selectedClassChange"></el-cascader>
+          <el-cascader expand-trigger="hover" :options="classOptions" clearable v-model="selectedClass" :props="selectProps"></el-cascader>
         </div>
       </condition>
       <operation class="operation">
+        <el-button type="primary" @click="fetchData">查询</el-button>
         <a :href="downloadUrl" download="蓝墨水-学段专业-年级-课程.xls">
           <el-button type="primary">模板下载</el-button>
         </a>
@@ -27,26 +36,38 @@
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
-        <el-table-column label="学年" property="schoolYear"></el-table-column>
-        <el-table-column label="学期" property="termCode"></el-table-column>
+        <el-table-column property="schoolYear" label="学年">
+          <template slot-scope="scope">
+            <span>{{ `${scope.row.schoolYear} - ${parseInt(scope.row.schoolYear)+1} 学年` }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column property="termCode" label="学期">
+          <template slot-scope="scope">
+            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="学段/专业" property="segName"></el-table-column>
         <el-table-column label="年级" property="gradeName"></el-table-column>
         <el-table-column label="课程" property="courseName"></el-table-column>
-        <el-table-column label="周课时(节)" property="sumWeek"></el-table-column>
-        <el-table-column label="授课方式" property="teaType"></el-table-column>
+        <el-table-column label="周课时(节)" property="sumWeek" width="100px"></el-table-column>
+        <el-table-column label="授课方式" property="teaType" width="90px"></el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
-import { classCascaderSelect } from '@/components/selectChild/data'
-import { getCoursePlain } from '@/api/base'
+import { getCoursePlain, getSegGrade } from '@/api/base'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
   data() {
     return {
       selectedClass: [], // 选中值
+      selectProps: {
+        value: 'gradeId',
+        label: 'gradeName',
+        children: 'gradesList'
+      },
       classOptions: [], // 学段/专业/年级
       tableData: [], // 表格数据
       downloadUrl: URL.coursePlainExcelTemplate,
@@ -54,6 +75,7 @@ export default {
       condition: {
         'a.school_year01': '',
         'a.term_code01': '',
+        'a.grade_id01': '',
         currentPage: '1',
         pageSize: '1000'
       }
@@ -62,22 +84,39 @@ export default {
   computed: {
     ...mapGetters(['token', 'curYear', 'curTerm'])
   },
-  created() {
-    this.classOptions = [...classCascaderSelect]
+  async created() {
+    Object.assign(this.httpHeaders, { x_auth_token: this.token })
     const { curYear, curTerm } = this.$route.query
     Object.assign(this.condition, {
       'a.school_year01': curYear && curTerm ? curYear : this.curYear,
       'a.term_code01': curYear && curTerm ? curTerm : this.curTerm
     })
-    this.fetchData()
-    Object.assign(this.httpHeaders, { x_auth_token: this.token })
+    await this.fetchSegGrade() // 年级级联下拉列表数据
+    await this.fetchData() // 表格数据
   },
   methods: {
     toUpload() {
       this.$refs.upload.submit()
     },
+    async fetchSegGrade() {
+      const res = await getSegGrade({
+        schoolYear: this.condition['a.school_year01'],
+        termCode: this.condition['a.term_code01']
+      })
+      res.DATA.forEach(item => {
+        Object.assign(item, {
+          gradeId: item.segId,
+          gradeName: item.segName
+        })
+      })
+      this.classOptions = res.DATA
+    },
     async fetchData() {
-      const res = await getCoursePlain()
+      const params = {
+        ...this.condition,
+        'a.grade_id01': this.selectedClass.length ? this.selectedClass[1] : ''
+      }
+      const res = await getCoursePlain({ dataStr: JSON.stringify(params) })
       this.tableData = res.DATA
     },
     selectedClassChange() {

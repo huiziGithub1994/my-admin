@@ -66,6 +66,7 @@ export default {
   saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/zxx/calendar/qryCoursePlanList`, // 课程计划列表查询
   qryGrade: `/zxx/arrange/qrySegGradeInfo`, // 年级
+  qrySegGrade: `/zxx/calendar/qrySegGradeRela`, // 级联年级
 
   /* 登录 */
   qryValidCode: `/zxx/visitor/picture/createValidateCode`, // 验证码

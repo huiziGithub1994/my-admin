@@ -16,6 +16,14 @@ export function getGrade(params) {
   })
 }
 
+// 年级级联下拉列表数据
+export function getSegGrade(params) {
+  return request({
+    url: URL.qrySegGrade,
+    params
+  })
+}
+
 // 数据字典列表
 export function getKeyList(listQuery) {
   return request({
