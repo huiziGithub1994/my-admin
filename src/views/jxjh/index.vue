@@ -99,7 +99,7 @@ export default {
         console.log('arrangeId', this.$route.query.arrangeId)
         this.$router.push({
           name: 'Pkgz',
-          arrangeId: this.$route.query.arrangeId
+          query: { arrangeId: this.$route.query.arrangeId }
         })
       }
     }
