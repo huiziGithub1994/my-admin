@@ -20,10 +20,8 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="年级" prop="gradeId">
-            <el-select v-model="data.gradeId" placeholder="请选择">
-              <el-option v-for="item in gradeOptions" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
-            </el-select>
+          <el-form-item label="年级" prop="selectedGrade">
+            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="selectedGrade" :props="selectProps"></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,7 +38,7 @@
 
 <script>
 import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
-import { getGrade } from '@/api/base'
+import { getSegGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
 
 export default {
@@ -54,6 +52,13 @@ export default {
         schoolYear: undefined,
         termCode: undefined
       },
+      selectedGrade: [], // 年级选中值
+      selectProps: {
+        value: 'gradeId',
+        label: 'gradeName',
+        children: 'gradesList'
+      },
+      gradeOptions: [], // 学段/专业/年级
       // arrangeId: undefined,
       // 基础信息表单规则
       baseInfoRules: {
@@ -63,12 +68,13 @@ export default {
         termCode: [
           { required: true, message: '请选择学期', trigger: 'change' }
         ],
-        gradeId: [{ required: true, message: '请选择年级', trigger: 'change' }],
+        selectedGrade: [
+          { required: true, message: '请选择年级', trigger: 'change' }
+        ],
         arrangeName: [
           { required: true, message: '请输入排课任务名称', trigger: 'blur' }
         ]
-      },
-      gradeOptions: []
+      }
     }
   },
   computed: {
@@ -88,9 +94,15 @@ export default {
     // 年级下拉列表
     async fetchGrade() {
       const { curYear, curTerm } = this.$route.query
-      const res = await getGrade({
+      const res = await getSegGrade({
         schoolYear: curYear,
         termCode: curTerm
+      })
+      res.DATA.forEach(item => {
+        Object.assign(item, {
+          gradeId: item.segId,
+          gradeName: item.segName
+        })
       })
       this.gradeOptions = res.DATA
     },
@@ -104,6 +116,7 @@ export default {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
+    // 学年学期改变时
     changeSelect() {
       const { schoolYear, termCode } = this.data
       this.$router.replace({
