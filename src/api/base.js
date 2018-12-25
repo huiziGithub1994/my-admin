@@ -41,7 +41,7 @@ export function saveCalendar(listQuery) {
   })
 }
 
-// 课程计划
+// 课程计划列表查询接口
 export function getCoursePlain(listQuery) {
   return request({
     url: URL.qryCoursePlain,

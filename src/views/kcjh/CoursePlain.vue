@@ -27,11 +27,13 @@
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
-        <el-table-column label="学段/专业" property="periodSepciality"></el-table-column>
-        <el-table-column label="年级" property="grade"></el-table-column>
-        <el-table-column label="课程" property="course"></el-table-column>
-        <el-table-column label="周课时(节)" property="weekTime"></el-table-column>
-        <el-table-column label="授课方式" property="teachStyle"></el-table-column>
+        <el-table-column label="学年" property="schoolYear"></el-table-column>
+        <el-table-column label="学期" property="termCode"></el-table-column>
+        <el-table-column label="学段/专业" property="segName"></el-table-column>
+        <el-table-column label="年级" property="gradeName"></el-table-column>
+        <el-table-column label="课程" property="courseName"></el-table-column>
+        <el-table-column label="周课时(节)" property="sumWeek"></el-table-column>
+        <el-table-column label="授课方式" property="teaType"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -48,14 +50,25 @@ export default {
       classOptions: [], // 学段/专业/年级
       tableData: [], // 表格数据
       downloadUrl: URL.coursePlainExcelTemplate,
-      httpHeaders: {}
+      httpHeaders: {},
+      condition: {
+        'a.school_year01': '',
+        'a.term_code01': '',
+        currentPage: '1',
+        pageSize: '1000'
+      }
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'curYear', 'curTerm'])
   },
   created() {
     this.classOptions = [...classCascaderSelect]
+    const { curYear, curTerm } = this.$route.query
+    Object.assign(this.condition, {
+      'a.school_year01': curYear && curTerm ? curYear : this.curYear,
+      'a.term_code01': curYear && curTerm ? curTerm : this.curTerm
+    })
     this.fetchData()
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
   },
