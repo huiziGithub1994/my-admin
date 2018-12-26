@@ -18,7 +18,7 @@
           </el-select>
         </div>
       </condition>
-      <operation>
+      <operation class="btns">
         <el-button type="primary" @click="queryBtn">查询</el-button>
         <el-button type="primary" @click="addBtn">新增</el-button>
         <el-button type="primary">合并课表</el-button>
@@ -208,4 +208,7 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.btns button {
+  width: 80px;
+}
 </style>

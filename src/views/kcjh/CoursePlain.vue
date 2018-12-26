@@ -1,7 +1,7 @@
 <template>
   <!-- 课程计划-->
   <div>
-    <div>
+    <div v-area>
       <condition>
         <div class="condition">
           <label>学年</label>
@@ -36,21 +36,11 @@
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
-        <el-table-column property="schoolYear" label="学年">
-          <template slot-scope="scope">
-            <span>{{ `${scope.row.schoolYear} - ${parseInt(scope.row.schoolYear)+1} 学年` }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column property="termCode" label="学期">
-          <template slot-scope="scope">
-            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="学段/专业" property="segName"></el-table-column>
         <el-table-column label="年级" property="gradeName"></el-table-column>
         <el-table-column label="课程" property="courseName"></el-table-column>
-        <el-table-column label="周课时(节)" property="sumWeek" width="100px"></el-table-column>
-        <el-table-column label="授课方式" property="teaType" width="90px"></el-table-column>
+        <el-table-column label="周课时(节)" property="sumWeek"></el-table-column>
+        <el-table-column label="授课方式" property="teaType"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -165,6 +155,9 @@ export default {
   margin-top: 5px;
   > div {
     display: inline-block;
+  }
+  button {
+    width: 80px;
   }
 }
 </style>

@@ -76,15 +76,6 @@ import { initTableData } from '@/utils/inlineEditTable'
 import { setDatas } from '@/utils/businessUtil'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-const weeks = [
-  '星期一',
-  '星期二',
-  '星期三',
-  '星期四',
-  '星期五',
-  '星期六',
-  '星期日'
-]
 export default {
   name: 'BaseInfo',
   components: {
@@ -239,24 +230,18 @@ export default {
           data.forEach((item, index) => {
             if (!isContinue) return
             for (const [key, val] of Object.entries(item)) {
-              if (val !== '' && !flag.includes(key)) {
-                if (item.beginTime === '' || item.endTime === '') {
-                  this.$message.error(
-                    `${weeks[key]}第${index + 1}节开始时间或结束时间不能为空`
-                  )
-                  isContinue = false
-                  return
-                }
-                newData.push({
-                  arrangeId: this.data.arrangeId,
-                  beginTime: item.beginTime,
-                  endTime: item.endTime,
-                  lessionSeq: index + 1,
-                  cellKey: `${index},${key}`,
-                  cellValue: val,
-                  segId: this.getSegId(index + 1) // 通过节次获取 segId
-                })
+              if (flag.includes(key)) {
+                continue
               }
+              newData.push({
+                arrangeId: this.data.arrangeId,
+                beginTime: item.beginTime,
+                endTime: item.endTime,
+                lessionSeq: index + 1,
+                cellKey: `${index},${key}`,
+                cellValue: val,
+                segId: this.getSegId(index + 1) // 通过节次获取 segId
+              })
             }
           })
           if (!isContinue) return
