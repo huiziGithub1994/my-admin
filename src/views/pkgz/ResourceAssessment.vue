@@ -1,7 +1,7 @@
 <template>
   <!-- 资源评估-->
   <div>
-    <el-button type="primary">运算走班所需资源</el-button>
+    <el-button type="primary" @click="computeResoureBtn">运算走班所需资源</el-button>
     <div class="desc">
       <table>
         <tr>
@@ -36,6 +36,7 @@
 import { qrySourceAssessment } from '@/api/pkgz'
 import { qryCalendar } from '@/api/base'
 import { initTableData } from '@/utils/inlineEditTable'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -45,15 +46,18 @@ export default {
       colHeaders: []
     }
   },
+  computed: {
+    ...mapGetters(['calenderId'])
+  },
   created() {
     this.fetchEditTableData()
-    // this.fetchFormData()
   },
   mounted() {},
   methods: {
-    // 获取表单数据
-    async fetchFormData() {
-      const res = await qrySourceAssessment({ schoolId: '111' })
+    // 运算走班排课资源按钮
+    async computeResoureBtn() {
+      const { arrangeId } = this.$route.query
+      const res = await qrySourceAssessment({ arrangeId })
       this.data = res.DATA
       // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
       this.initEditTableData()
@@ -66,9 +70,11 @@ export default {
     // 获取校历表格数据并初始化表格
     async fetchEditTableData() {
       // 获取校历信息
-      const res = await qryCalendar({ schoolId: '111' })
+      const res = await qryCalendar({ calenderId: this.calenderId })
       this.calendarData = res.DATA
       this.initEditTableData()
+      // 数据填充表格
+      this.fillTableData()
     },
     // 初始化表格的头部、行列、数据为空
     initEditTableData() {
@@ -80,9 +86,21 @@ export default {
       this.colHeaders = colHeaders
       this.tableData.push(...defaultData)
     },
+    // 数据填充表格
+    fillTableData() {
+      const { calFixList } = this.calendarData
+      calFixList.forEach(item => {
+        const [row, col] = item.cellKey.split(',').map(x => Number(x))
+        this.tableData[row][col] = item.cellValue
+      })
+    },
     cellClick(row, column, cell, event) {
       if (column.property === 'lessionSeq') return
       const val = row[column.property]
+      if (val.length > 1) {
+        this.$message.warning('校历维护中的数据不可被指定')
+        return
+      }
       if (val === '√') {
         row[column.property] = ''
       } else {

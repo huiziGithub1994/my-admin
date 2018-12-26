@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     judgeCanComeIn() {
-      console.log(this.arrangeId)
       if (this.arrangeId === undefined) {
         this.$notify({
           title: '提示',

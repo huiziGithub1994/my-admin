@@ -97,7 +97,6 @@ export default {
       if (temp <= 5) {
         this.activeTabName = temp + ''
       } else {
-        console.log('arrangeId', this.$route.query.arrangeId)
         this.$router.push({
           name: 'Pkgz',
           query: { arrangeId: this.$route.query.arrangeId }

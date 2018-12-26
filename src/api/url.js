@@ -17,7 +17,7 @@ export default {
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
   // 排课规则
-  qrySourceAssessment: `/base/qrySourceAssessment`, // 资源评估
+  qrySourceAssessment: `/zxx/computeResoure`, // 资源评估 运算走班排课资源按钮
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
   qryTeachHoursTree: `/base/qryTeachHoursTree`, // 课时预排 treedata
 
