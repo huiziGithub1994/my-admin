@@ -72,7 +72,7 @@ export const zbRouterMap = [
         path: 'pkcx',
         name: 'Pkcx',
         component: () => import('@/views/pkcx/index'),
-        meta: { title: '排课查询', icon: 'pkcx' }
+        meta: { title: '排课任务', icon: 'pkcx' }
       },
       {
         path: 'jxjh',
