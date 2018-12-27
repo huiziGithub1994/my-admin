@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      tabsHeight: document.body.clientHeight - 180,
+      tabsHeight: document.body.clientHeight - 190,
       activeTabName: '1' // tab页高亮
     }
   },

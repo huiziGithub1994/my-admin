@@ -70,8 +70,23 @@ export function delLayerInfo(params) {
 // 导入学生选课 表格数据查询
 export function getChooseClassListInfo(listQuery) {
   return request({
-    url: '/chooseclass/list',
+    url: URL.qryStuChoiceInfoList,
     params: listQuery
+  })
+}
+// 导入学生选课 表格数据删除
+export function delChooseClassListInfo(listQuery) {
+  return request({
+    url: URL.delStuChoiceInfoList,
+    params: listQuery
+  })
+}
+
+// 导入学生选课 课程分类下拉列表
+export function getCourseOptions(params) {
+  return request({
+    url: URL.qryArrangeCourseLayerRela,
+    params
   })
 }
 

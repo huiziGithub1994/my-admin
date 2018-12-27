@@ -21,7 +21,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="年级" prop="selectedGrade">
-            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="selectedGrade" :props="selectProps"></el-cascader>
+            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -50,9 +50,10 @@ export default {
         gradeName: undefined,
         arrangeName: undefined,
         schoolYear: undefined,
-        termCode: undefined
+        termCode: undefined,
+        segId: undefined,
+        selectedGrade: []
       },
-      selectedGrade: [], // 年级选中值
       selectProps: {
         value: 'gradeId',
         label: 'gradeName',
@@ -112,6 +113,8 @@ export default {
         arrangeId: this.arrangeId
       })
       setDatas(this.data, res.DATA)
+      const { segId, gradeId } = this.data
+      this.data.selectedGrade = [segId, gradeId]
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
@@ -133,10 +136,17 @@ export default {
           if (this.arrangeId) {
             Object.assign(this.data, { arrangeId: this.arrangeId })
           }
-          const temp = this.gradeOptions.filter(item => {
-            return item.gradeId === this.data.gradeId
-          })
-          Object.assign(this.data, { gradeName: temp[0].gradeName })
+          const [segId, gradeId] = this.data.selectedGrade
+          Object.assign(this.data, { segId, gradeId })
+          console.log()
+          const seg = this.gradeOptions.filter(
+            item => item.segId === this.data.segId
+          )[0]
+          const grade = seg.gradesList.filter(
+            grade => grade.gradeId === this.data.gradeId
+          )
+
+          Object.assign(this.data, { gradeName: grade[0].gradeName })
           const res = await saveArrange(this.data)
           this.$message.success('保存成功')
           this.$nextTick(function() {

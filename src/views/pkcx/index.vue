@@ -196,12 +196,12 @@ export default {
       this.$router.push({ name: 'Jxjh', query: queryParams })
     },
     handleSizeChange(val) {
-      this.pageTot.curPage = 1
+      this.pageTot.currentPage = 1
       this.pageTot.pageSize = val
       this.fetchData()
     },
     handleCurrentChange(val) {
-      this.pageTot.curPage = val
+      this.pageTot.currentPage = val
       this.fetchData()
     }
   }

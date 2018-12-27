@@ -5,15 +5,15 @@
       <condition>
         <div class="condition">
           <label>课程分类</label>
-          <selectChild v-model="search['type']" clearable tp="yearSelect"/>
+          <el-cascader expand-trigger="hover" :options="courseOptions" clearable v-model="choosedCourse" :props="selectProps"></el-cascader>
         </div>
         <div class="condition">
           <label>学号</label>
-          <el-input v-model="search['type']"></el-input>
+          <el-input v-model="search['a.stu_no01']" clearable></el-input>
         </div>
       </condition>
       <operation>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="fetchTableData">查询</el-button>
         <a :href="downloadUrl" download="蓝墨水-分层教学学生选课结果.xls">
           <el-button type="primary">模板下载</el-button>
         </a>
@@ -38,15 +38,26 @@
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%">
+      <el-table ref="multipleTable" :data="tableData" :height="tableH" tooltip-effect="dark" @current-change="tableCurrentChange" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
-        <el-table-column label="年级" property="grade" fixed></el-table-column>
-        <el-table-column label="行政班" property="classes" fixed></el-table-column>
-        <el-table-column label="学号" property="stuno" width="100" fixed></el-table-column>
-        <el-table-column label="姓名" property="stuname" fixed></el-table-column>
-        <el-table-column label="性别" property="sex" width="55" fixed></el-table-column>
-        <el-table-column label="课程组合" property="courses" min-width="300"></el-table-column>
+        <el-table-column label="年级" property="gradeName" fixed></el-table-column>
+        <el-table-column label="行政班" property="className" fixed></el-table-column>
+        <el-table-column label="学号" property="stuNo" width="100" fixed></el-table-column>
+        <el-table-column label="姓名" property="stuName" fixed></el-table-column>
+        <el-table-column label="性别" property="stuSex" width="55" fixed></el-table-column>
+        <el-table-column label="课程组合" property="allNameGroup" min-width="300"></el-table-column>
       </el-table>
+      <el-pagination
+        :current-page="pageTot.currentPage"
+        :page-sizes="pageSizes"
+        :page-size="pageTot.pageSize"
+        :total="pageTotal"
+        layout="total,sizes,slot ,->, prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      >
+        <slot/>
+      </el-pagination>
     </div>
     <!-- 新增修改弹窗-->
     <el-dialog :title="editDialogTitle" :visible.sync="editDialogFormVisible" width="700px">
@@ -54,22 +65,22 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="学号" prop="xh">
-              <el-input v-model="editForm.xh" placeholder="请输入学号"></el-input>
+              <el-input v-model="editForm.xh" placeholder="请输入学号" :disabled="formItemDisabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="姓名" prop="xm">
-              <el-input v-model="editForm.xm" placeholder="请输入姓名"></el-input>
+              <el-input v-model="editForm.xm" placeholder="请输入姓名" :disabled="formItemDisabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="年级" prop="gradeCode">
-              <selectChild v-model="editForm.gradeCode" tp="gradeSelect"/>
+              <selectChild v-model="editForm.gradeCode" tp="gradeSelect" :disabled="formItemDisabled"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="行政班" prop="xzb">
-              <el-select v-model="editForm.xzb" clearable placeholder="请选择">
+              <el-select v-model="editForm.xzb" clearable placeholder="请选择" :disabled="formItemDisabled">
                 <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -104,24 +115,48 @@
 <script>
 import {
   getChooseClassListInfo,
+  delChooseClassListInfo,
   getSbjestClassListInfo,
-  exportChooseCourse
+  exportChooseCourse,
+  getCourseOptions
 } from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
-import { Validators } from '@/utils/businessUtil'
+import {
+  Validators,
+  getTableBestRows,
+  paramsToString
+} from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
   data() {
+    const h = 330
+    const tableH = document.body.clientHeight - h
+    const pageSizes = getTableBestRows(tableH + 70)
     return {
-      initArea: false,
       search: {
-        type: undefined
+        'a.arrange_id01': '',
+        'a.stu_no01': '',
+        'a.all_name_group06': ''
+      },
+      courseOptions: [], // 课程分类
+      choosedCourse: [], // 课程分类下拉列表选中值
+      selectProps: {
+        value: 'allName',
+        label: 'allName',
+        children: 'layersList'
       },
       downloadUrl: URL.chooseCourseExcelTemplate,
       httpHeaders: {},
       tableData: [],
-      // 表格高度
-      height: document.body.clientHeight - 365,
+      pageSizes: pageSizes,
+      tableH: tableH,
+      pageTot: {
+        currentPage: 1,
+        pageSize: pageSizes[0]
+      },
+      pageTotal: 0,
+      currentRow: null, // 表格当前选中行
+      formItemDisabled: false, // 表单选项是否禁用
       // 新增修改弹窗的显示和隐藏
       editDialogFormVisible: false,
       // 新增修改弹窗的标题
@@ -155,19 +190,40 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token']),
+    arrangeId() {
+      return this.$route.query.arrangeId
+    }
   },
   created() {
-    this.fetchData()
-    this.fetchSbjestClass()
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
+    Object.assign(this.search, { 'a.arrange_id01': this.arrangeId })
+    this.fetchCourseOption()
+    this.fetchTableData()
+    // this.fetchSbjestClass()
   },
   methods: {
+    // 课程分类
+    async fetchCourseOption() {
+      const res = await getCourseOptions({ arrangeId: this.arrangeId })
+      res.DATA.forEach(item => {
+        Object.assign(item, { allName: item.courseName })
+      })
+      this.courseOptions = res.DATA
+    },
     // 获取表格数据
-    async fetchData() {
-      const params = { id: 1 }
-      const res = await getChooseClassListInfo(params)
-      this.tableData = res.DATA
+    async fetchTableData() {
+      const params = { ...this.search, ...paramsToString(this.pageTot) }
+      if (this.choosedCourse.length) {
+        Object.assign(params, { 'a.all_name_group06': this.choosedCourse[1] })
+      }
+
+      await getChooseClassListInfo({
+        dataStr: JSON.stringify(params)
+      }).then(res => {
+        this.pageTotal = res.NUM
+        this.tableData = res.DATA
+      })
     },
     // 获取学生分层及课时数据
     async fetchSbjestClass() {
@@ -200,16 +256,46 @@ export default {
     },
     // 新增按钮
     addBtn() {
+      this.formItemDisabled = false
       this.editDialogFormVisible = true
       this.editDialogTitle = '新增学生选课'
     },
     // 修改按钮
     editBtn() {
+      this.formItemDisabled = true
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改学生选课'
     },
     // 删除接口
-    deleteBtn() {},
+    deleteBtn() {
+      if (!this.currentRow) {
+        this.$message.info('请选择要删除的数据')
+        return
+      }
+      this.$confirm('确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const res = await delChooseClassListInfo({
+            arrangeId: this.arrangeId,
+            stuNo: this.currentRow.stuNo
+          })
+          this.$message({
+            type: res.SUCCESS ? 'success' : 'error',
+            message: res.SUCCESS ? '删除成功!' : '删除失败'
+          })
+          // 重新加载数据
+          if (res.SUCCESS) this.fetchTableData()
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
       this.$refs['ruleFormRef'].validate(valid => {
@@ -263,6 +349,18 @@ export default {
         })
       }
       return extension || (extension2 && isLt2M)
+    },
+    tableCurrentChange(val) {
+      this.currentRow = val
+    },
+    handleSizeChange(val) {
+      this.pageTot.currentPage = 1
+      this.pageTot.pageSize = val
+      this.fetchTableData()
+    },
+    handleCurrentChange(val) {
+      this.pageTot.currentPage = val
+      this.fetchTableData()
     }
   }
 }
@@ -273,7 +371,7 @@ export default {
 }
 .table-wapper {
   border: 1px solid #dddddd;
-  margin: 10px 0;
+  margin-top: 10px;
 }
 .uploadBtn {
   display: inline-block;
