@@ -165,6 +165,7 @@ export default {
         arrangeId: '',
         stuNo: '',
         stuName: '',
+        segId:'',
         segName: '',
         gradeName: '',
         className: '',
@@ -221,12 +222,13 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
-      const { arrangeId, segName, gradeName, schoolYear, termCode } = res.DATA
+      const { arrangeId, segName, gradeName, schoolYear, termCode,segId } = res.DATA
       Object.assign(this.editForm, {
         arrangeId,
         segName,
         gradeName,
         schoolYear,
+        segId,
         termCode
       })
     },
