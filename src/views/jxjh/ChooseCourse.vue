@@ -29,7 +29,7 @@
         >
           <el-button type="primary">导入</el-button>
         </el-upload>
-        <!-- <el-button type="primary" @click="exportBtn">导出</el-button> -->
+        <el-button type="primary" @click="exportBtn">导出</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <!-- <el-button type="primary">引入</el-button> -->
         <!-- <el-button type="primary">分析</el-button> -->
@@ -119,13 +119,24 @@ import {
   delChooseClassListInfo,
   getArrangeClasses,
   saveChooseCourseInfo,
+  getChooseCourseInfo,
   exportChooseCourse,
   getCourseOptions,
   qryArrangeDetail
 } from '@/api/pkcx'
-import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
+import {
+  getTableBestRows,
+  paramsToString,
+  setDatas
+} from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
+const initFromData = {
+  stuSex: '',
+  stuNo: '',
+  stuName: '',
+  className: ''
+}
 export default {
   data() {
     const h = 330
@@ -138,6 +149,7 @@ export default {
         'a.all_name_group06': ''
       },
       courseOptions: [], // 课程分类
+      addCourseOptions: [], // 新增时课程分类
       choosedCourse: [], // 课程分类下拉列表选中值
       selectProps: {
         value: 'allName',
@@ -163,16 +175,13 @@ export default {
       // 表单数据
       editForm: {
         arrangeId: '',
-        stuNo: '',
-        stuName: '',
-        segId:'',
-        segName: '',
+        segId: '',
         gradeName: '',
-        className: '',
-        stuSex: '',
+        segName: '',
         schoolYear: '',
         termCode: '',
-        modelString: ''
+        modelString: '',
+        ...initFromData
       },
       // 表单规则
       editRules: {
@@ -201,7 +210,7 @@ export default {
     this.fetchCourseOption() // 课程分类
     this.fetchTableData() // 表格数据
     this.fetchArrangeClasses() // 行政班级数据
-    this.fetchGrade() // 获取专业/年级数据
+    this.fetchGrade() // 获取基础信息，并初始化表单数据
   },
   methods: {
     // 课程分类
@@ -210,19 +219,26 @@ export default {
       res.DATA.forEach(item => {
         Object.assign(item, { allName: item.courseName })
       })
-      this.courseOptions = res.DATA
+      this.addCourseOptions = res.DATA
     },
     // 行政班级数据
     async fetchArrangeClasses() {
       const res = await getArrangeClasses({ arrangeId: this.arrangeId })
       this.xzbOptions = res.DATA
     },
-    // 获取专业/年级数据
+    // 获取基础信息，并初始化表单数据
     async fetchGrade() {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
-      const { arrangeId, segName, gradeName, schoolYear, termCode,segId } = res.DATA
+      const {
+        arrangeId,
+        segName,
+        gradeName,
+        schoolYear,
+        termCode,
+        segId
+      } = res.DATA
       Object.assign(this.editForm, {
         arrangeId,
         segName,
@@ -247,16 +263,36 @@ export default {
     },
     // 新增按钮
     addBtn() {
+      this.courseOptions = [...this.addCourseOptions]
+      Object.assign(this.editForm, { ...initFromData })
       this.formItemDisabled = false
       this.editDialogFormVisible = true
       this.editDialogTitle = '新增学生选课'
+      this.$nextTick(function() {
+        this.$refs['ruleFormRef'].clearValidate()
+      })
     },
     // 修改按钮
-    editBtn() {
+    async editBtn() {
+      if (!this.currentRow) {
+        this.$message.info('请选择要删除的数据')
+        return
+      }
+      // 获取详情
+      const res = await getChooseCourseInfo({ stuNo: this.currentRow.stuNo })
+      setDatas(this.editForm, res.DATA)
+      // layersData 选课分层数据
+      const { courseLayers } = res.DATA
+      courseLayers.forEach(item => {
+        this.$set(this.layersData, item.courseId, item.allName)
+      })
+      this.courseOptions = [...courseLayers]
       this.formItemDisabled = true
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改学生选课'
+      console.log(this.layersData)
     },
+
     // 删除接口
     deleteBtn() {
       if (!this.currentRow) {

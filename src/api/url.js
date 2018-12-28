@@ -16,6 +16,7 @@ export default {
   delStuChoiceInfoList: `zxx/stuCourseLayer/delChoiceInfoById`, // 导入学生选课 列表数据删除
   qryArrangeClasses: `zxx/stuCourseLayer/qryArrangeClasses`, // 导入学生选课 行政班
   saveChooseCourseInfo: `zxx/stuCourseLayer/saveChoiceInfo`, // 导入学生选课 新增选课的保存
+  getChooseCourseInfo: `zxx/stuCourseLayer/qryStuCourseDetail`, // 导入学生选课 修改按钮，获取详细信息
   splitClasses: `/zxx/transLayer2Class`, // 导入学生选课 试分班
   exportChooseCourse: `/zxx/layer/getStuChoiceCourseExcel`, // 导入学生选课 导出功能
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口

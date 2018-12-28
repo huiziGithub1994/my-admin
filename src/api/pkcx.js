@@ -97,6 +97,13 @@ export function getArrangeClasses(params) {
     params
   })
 }
+// 导入学生选课 修改按钮，获取详细信息
+export function getChooseCourseInfo(params) {
+  return request({
+    url: URL.getChooseCourseInfo,
+    params
+  })
+}
 // 导入学生选课 新增选课的保存
 export function saveChooseCourseInfo(params) {
   return request({
