@@ -97,6 +97,14 @@ export function getArrangeClasses(params) {
     params
   })
 }
+// 导入学生选课 新增选课的保存
+export function saveChooseCourseInfo(params) {
+  return request({
+    url: URL.saveChooseCourseInfo,
+    method: 'post',
+    params
+  })
+}
 
 // 教学分班管理 表格查询
 export function getSplitClassManage(listQuery) {

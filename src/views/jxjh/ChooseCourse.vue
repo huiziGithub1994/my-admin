@@ -99,7 +99,7 @@
               <div v-for="course in courseOptions" :key="course.courseId">
                 <div>{{ course.courseName }}</div>
                 <el-radio-group v-model="layersData[course.courseId]">
-                  <el-radio :label="layer.layerId" v-for="layer in course.layersList" :key="layer.layerId">{{ layer.courseLayerName }}</el-radio>
+                  <el-radio :label="layer.allName" v-for="layer in course.layersList" :key="layer.layerId">{{ layer.courseLayerName }}</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
@@ -118,6 +118,7 @@ import {
   getChooseClassListInfo,
   delChooseClassListInfo,
   getArrangeClasses,
+  saveChooseCourseInfo,
   exportChooseCourse,
   getCourseOptions,
   qryArrangeDetail
@@ -196,8 +197,8 @@ export default {
   created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
     Object.assign(this.search, { 'a.arrange_id01': this.arrangeId })
-    this.fetchCourseOption()
-    this.fetchTableData()
+    this.fetchCourseOption() // 课程分类
+    this.fetchTableData() // 表格数据
     this.fetchArrangeClasses() // 行政班级数据
     this.fetchGrade() // 获取专业/年级数据
   },
@@ -207,7 +208,6 @@ export default {
       const res = await getCourseOptions({ arrangeId: this.arrangeId })
       res.DATA.forEach(item => {
         Object.assign(item, { allName: item.courseName })
-        this.layersData[item.courseId] = ''
       })
       this.courseOptions = res.DATA
     },
@@ -221,8 +221,14 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
-      const { arrangeId, segName, gradeName } = res.DATA
-      Object.assign(this.editForm, { arrangeId, segName, gradeName })
+      const { arrangeId, segName, gradeName, schoolYear, termCode } = res.DATA
+      Object.assign(this.editForm, {
+        arrangeId,
+        segName,
+        gradeName,
+        schoolYear,
+        termCode
+      })
     },
     // 获取表格数据
     async fetchTableData() {
@@ -281,12 +287,18 @@ export default {
     },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
-      console.log(this.layersData)
-      this.$refs['ruleFormRef'].validate(valid => {
+      this.$refs['ruleFormRef'].validate(async valid => {
         if (valid) {
-          console.log('submit!')
+          const modelString = []
+          Object.keys(this.layersData).forEach(key => {
+            modelString.push({ layerId: key, allName: this.layersData[key] })
+          })
+          this.editForm.modelString = JSON.stringify(modelString)
+          await saveChooseCourseInfo(this.editForm)
+          this.$message.success('保存成功')
+          this.editDialogFormVisible = false
+          this.fetchTableData()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
