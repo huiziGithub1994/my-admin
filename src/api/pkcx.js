@@ -90,6 +90,14 @@ export function getCourseOptions(params) {
   })
 }
 
+// 导入学生选课 行政班下拉列表
+export function getArrangeClasses(params) {
+  return request({
+    url: URL.qryArrangeClasses,
+    params
+  })
+}
+
 // 教学分班管理 表格查询
 export function getSplitClassManage(listQuery) {
   return request({

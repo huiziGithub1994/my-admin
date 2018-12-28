@@ -14,6 +14,7 @@ export default {
   qryArrangeCourseLayerRela: `zxx/stuCourseLayer/qryArrangeCourseLayerRela`, // 导入学生选课 课程下拉列表数据
   qryStuChoiceInfoList: `zxx/stuCourseLayer/qryStuChoiceInfoList`, // 导入学生选课 列表数据
   delStuChoiceInfoList: `zxx/stuCourseLayer/delChoiceInfoById`, // 导入学生选课 列表数据删除
+  qryArrangeClasses: `zxx/stuCourseLayer/qryArrangeClasses`, // 导入学生选课 行政班
   splitClasses: `/zxx/transLayer2Class`, // 导入学生选课 试分班
   exportChooseCourse: `/zxx/layer/getStuChoiceCourseExcel`, // 导入学生选课 导出功能
   qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口

@@ -40,6 +40,7 @@
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" :height="tableH" tooltip-effect="dark" @current-change="tableCurrentChange" highlight-current-row style="width: 100%">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
+        <el-table-column label="学段/专业" property="segName" fixed></el-table-column>
         <el-table-column label="年级" property="gradeName" fixed></el-table-column>
         <el-table-column label="行政班" property="className" fixed></el-table-column>
         <el-table-column label="学号" property="stuNo" width="100" fixed></el-table-column>
@@ -64,41 +65,41 @@
       <el-form :model="editForm" :rules="editRules" ref="ruleFormRef" label-width="70px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="学号" prop="xh">
-              <el-input v-model="editForm.xh" placeholder="请输入学号" :disabled="formItemDisabled"></el-input>
+            <el-form-item label="学号" prop="stuNo">
+              <el-input v-model="editForm.stuNo" placeholder="请输入学号" :disabled="formItemDisabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="xm">
-              <el-input v-model="editForm.xm" placeholder="请输入姓名" :disabled="formItemDisabled"></el-input>
+            <el-form-item label="姓名" prop="stuName">
+              <el-input v-model="editForm.stuName" placeholder="请输入姓名" :disabled="formItemDisabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="年级" prop="gradeCode">
-              <selectChild v-model="editForm.gradeCode" tp="gradeSelect" :disabled="formItemDisabled"/>
+            <el-form-item label="年级" prop="gradeName">
+              <div>{{ editForm.segName }}/{{ editForm.gradeName }}</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="行政班" prop="xzb">
-              <el-select v-model="editForm.xzb" clearable placeholder="请选择" :disabled="formItemDisabled">
-                <el-option v-for="item in xzbOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-form-item label="行政班" prop="className">
+              <el-select v-model="editForm.className" clearable placeholder="请选择" :disabled="formItemDisabled">
+                <el-option v-for="item in xzbOptions" :key="item.classId" :label="item.className" :value="item.className"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
-              <el-radio-group v-model="editForm.xb">
-                <el-radio label="1">男</el-radio>
-                <el-radio label="2">女</el-radio>
+            <el-form-item label="性别" prop="stuSex">
+              <el-radio-group v-model="editForm.stuSex">
+                <el-radio label="男">男</el-radio>
+                <el-radio label="女">女</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="选课">
-              <div v-for="(course,index) in sbjestClass" :key="index">
+              <div v-for="course in courseOptions" :key="course.courseId">
                 <div>{{ course.courseName }}</div>
-                <el-radio-group v-model="editForm[course.layerId]">
-                  <el-radio :label="courseLayer.dispSeq" v-for="(courseLayer,indexNo) in course.courseLayers" :key="indexNo">{{ courseLayer.courseLayerName }}</el-radio>
+                <el-radio-group v-model="layersData[course.courseId]">
+                  <el-radio :label="layer.layerId" v-for="layer in course.layersList" :key="layer.layerId">{{ layer.courseLayerName }}</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
@@ -116,22 +117,19 @@
 import {
   getChooseClassListInfo,
   delChooseClassListInfo,
-  getSbjestClassListInfo,
+  getArrangeClasses,
   exportChooseCourse,
-  getCourseOptions
-} from '@/api/pkcx' // getSbjestClassListInfo:学生分层课时数据
-import {
-  Validators,
-  getTableBestRows,
-  paramsToString
-} from '@/utils/businessUtil'
+  getCourseOptions,
+  qryArrangeDetail
+} from '@/api/pkcx'
+import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
   data() {
     const h = 330
     const tableH = document.body.clientHeight - h
-    const pageSizes = getTableBestRows(tableH + 70)
+    const pageSizes = getTableBestRows(tableH + 30)
     return {
       search: {
         'a.arrange_id01': '',
@@ -163,30 +161,30 @@ export default {
       editDialogTitle: '',
       // 表单数据
       editForm: {
-        xh: undefined
+        arrangeId: '',
+        stuNo: '',
+        stuName: '',
+        segName: '',
+        gradeName: '',
+        className: '',
+        stuSex: '',
+        schoolYear: '',
+        termCode: '',
+        modelString: ''
       },
       // 表单规则
       editRules: {
-        xh: [
-          { required: true, validator: Validators.checkNull, trigger: 'blur' }
+        stuNo: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+        stuName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        gradeName: [{ required: true, message: '请输入年级', trigger: 'blur' }],
+        className: [
+          { required: true, message: '请选择行政班', trigger: 'change' }
         ],
-        xm: [
-          { required: true, validator: Validators.checkNull, trigger: 'blur' }
-        ],
-        gradeCode: [
-          { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xzb: [
-          { required: true, validator: Validators.checkNull, trigger: 'change' }
-        ],
-        xb: [
-          { required: true, validator: Validators.checkNull, trigger: 'blur' }
-        ]
+        stuSex: [{ required: true, message: '请选择性别', trigger: 'blur' }]
       },
+      layersData: {}, // 选课分层数据
       // 行政班数据
-      xzbOptions: [],
-      // 学生分层及课时数据
-      sbjestClass: []
+      xzbOptions: []
     }
   },
   computed: {
@@ -200,7 +198,8 @@ export default {
     Object.assign(this.search, { 'a.arrange_id01': this.arrangeId })
     this.fetchCourseOption()
     this.fetchTableData()
-    // this.fetchSbjestClass()
+    this.fetchArrangeClasses() // 行政班级数据
+    this.fetchGrade() // 获取专业/年级数据
   },
   methods: {
     // 课程分类
@@ -208,8 +207,22 @@ export default {
       const res = await getCourseOptions({ arrangeId: this.arrangeId })
       res.DATA.forEach(item => {
         Object.assign(item, { allName: item.courseName })
+        this.layersData[item.courseId] = ''
       })
       this.courseOptions = res.DATA
+    },
+    // 行政班级数据
+    async fetchArrangeClasses() {
+      const res = await getArrangeClasses({ arrangeId: this.arrangeId })
+      this.xzbOptions = res.DATA
+    },
+    // 获取专业/年级数据
+    async fetchGrade() {
+      const res = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { arrangeId, segName, gradeName } = res.DATA
+      Object.assign(this.editForm, { arrangeId, segName, gradeName })
     },
     // 获取表格数据
     async fetchTableData() {
@@ -217,42 +230,12 @@ export default {
       if (this.choosedCourse.length) {
         Object.assign(params, { 'a.all_name_group06': this.choosedCourse[1] })
       }
-
       await getChooseClassListInfo({
         dataStr: JSON.stringify(params)
       }).then(res => {
         this.pageTotal = res.NUM
         this.tableData = res.DATA
       })
-    },
-    // 获取学生分层及课时数据
-    async fetchSbjestClass() {
-      const res = await getSbjestClassListInfo({
-        arrangeId: this.$route.query.arrangeId
-      })
-      const courseIds = []
-      const newData = []
-      res.DATA.forEach(item => {
-        const indexPos = courseIds.indexOf(item.courseId)
-        const tempCourseLayer = {
-          courseLayerName: item.courseLayerName,
-          dispSeq: item.dispSeq,
-          sumWeekClass: item.sumWeekClass
-        }
-        if (indexPos > -1) {
-          newData[indexPos].courseLayers.push(tempCourseLayer)
-        } else {
-          newData.push({
-            layerId: item.layerId,
-            arrangeId: item.arrangeId,
-            courseId: item.courseId,
-            courseLayers: [tempCourseLayer],
-            courseName: item.courseName
-          })
-          courseIds.push(item.courseId)
-        }
-      })
-      this.sbjestClass = newData
     },
     // 新增按钮
     addBtn() {
@@ -298,6 +281,7 @@ export default {
     },
     // 修改、新增弹窗中的保存按钮
     saveEditDialog() {
+      console.log(this.layersData)
       this.$refs['ruleFormRef'].validate(valid => {
         if (valid) {
           console.log('submit!')
