@@ -62,7 +62,6 @@ export function uploadCoursePlain(data) {
   return request({
     url: URL.uploadCoursePlain,
     method: 'post',
-    params: data,
-    formData: true
+    params: data
   })
 }

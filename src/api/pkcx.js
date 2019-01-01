@@ -58,8 +58,15 @@ export function saveLayerInfo(params) {
     params: params
   })
 }
-
-// 学科分层保存接口
+// 学科分层 导出
+export function exportStuChoiceCourseExcel(params) {
+  return request({
+    url: URL.exportStuChoiceCourseExcel,
+    responseType: 'blob',
+    params
+  })
+}
+// 学科分层删除接口
 export function delLayerInfo(params) {
   return request({
     url: URL.dellayerInfo,
@@ -97,6 +104,7 @@ export function getArrangeClasses(params) {
     params
   })
 }
+
 // 导入学生选课 修改按钮，获取详细信息
 export function getChooseCourseInfo(params) {
   return request({
@@ -112,11 +120,19 @@ export function saveChooseCourseInfo(params) {
     params
   })
 }
+// 导入学生选课 修改选课的保存
+export function updatechooseCourseInfo(params) {
+  return request({
+    url: URL.updatechooseCourseInfo,
+    method: 'post',
+    params
+  })
+}
 
 // 教学分班管理 表格查询
 export function getSplitClassManage(listQuery) {
   return request({
-    url: '/splitClassManage/list',
+    url: URL.getSplitClassManage,
     params: listQuery
   })
 }
@@ -130,9 +146,18 @@ export function exportChooseCourse(params) {
 }
 
 // 教学分班管理 试分班
-export function splitClasses() {
+export function splitClasses(params) {
   return request({
-    url: URL.splitClasses
+    url: URL.splitClasses,
+    params
+  })
+}
+// 教学分班管理 试分班
+export function saveTeachTask(params) {
+  return request({
+    url: URL.saveTeachTask,
+    method: 'post',
+    params
   })
 }
 
@@ -143,10 +168,25 @@ export function getZbClassroomListInfo(listQuery) {
     params: listQuery
   })
 }
+// 走班教室 新增保存
+export function saveAddArrangeClassRoom(params) {
+  return request({
+    url: URL.saveAddArrangeClassRoom,
+    method: 'post',
+    params
+  })
+}
 // 走班教室详情查询
 export function getZbClassroomInfo(listQuery) {
   return request({
     url: URL.qryZbClassroom,
     params: listQuery
+  })
+}
+// 走班教室 删除
+export function delClassRoomById(params) {
+  return request({
+    url: URL.delClassRoomById,
+    params
   })
 }

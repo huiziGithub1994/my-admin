@@ -143,7 +143,8 @@ export default {
   },
   watch: {
     calenderId(newVal) {
-      if (this.calenderId !== undefined) {
+      console.log(newVal)
+      if (this.calenderId !== '') {
         this.fetchFormData()
       }
     }
@@ -152,7 +153,7 @@ export default {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
     this.assembleWorkDaysOptions() // 作习安排 天/周 下拉选项数据 的初始化
     this.initEditTableData() // 作息安排初始化表格的头部、行列、数据为空
-    if (this.calenderId !== undefined) {
+    if (this.calenderId !== '') {
       this.fetchFormData()
     }
   },

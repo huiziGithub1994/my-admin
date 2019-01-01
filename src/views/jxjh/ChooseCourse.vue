@@ -5,7 +5,7 @@
       <condition>
         <div class="condition">
           <label>课程分类</label>
-          <el-cascader expand-trigger="hover" :options="courseOptions" clearable v-model="choosedCourse" :props="selectProps"></el-cascader>
+          <el-cascader expand-trigger="hover" :options="completeCourseOptions" clearable v-model="choosedCourse" :props="selectProps"></el-cascader>
         </div>
         <div class="condition">
           <label>学号</label>
@@ -13,10 +13,8 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="fetchTableData">查询</el-button>
-        <a :href="downloadUrl" download="蓝墨水-分层教学学生选课结果.xls">
-          <el-button type="primary">模板下载</el-button>
-        </a>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
+        <el-button type="primary" @click="downTemplate">下载导入模板</el-button>
         <el-upload
           class="uploadBtn"
           action="http://47.107.255.128:8089/zxx/upChoseLayer"
@@ -25,11 +23,12 @@
           :headers="httpHeaders"
           :before-upload="beforeUpload"
           :on-success="uploadSuccess"
+          :data="uploadParams"
           ref="upload"
         >
           <el-button type="primary">导入</el-button>
         </el-upload>
-        <el-button type="primary" @click="exportBtn">导出</el-button>
+        <el-button type="primary">导出</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <!-- <el-button type="primary">引入</el-button> -->
         <!-- <el-button type="primary">分析</el-button> -->
@@ -39,7 +38,7 @@
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" :height="tableH" tooltip-effect="dark" @current-change="tableCurrentChange" highlight-current-row style="width: 100%">
-        <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
+        <el-table-column type="index" :index="getTableIndex" width="55" label="序号" fixed></el-table-column>
         <el-table-column label="学段/专业" property="segName" fixed></el-table-column>
         <el-table-column label="年级" property="gradeName" fixed></el-table-column>
         <el-table-column label="行政班" property="className" fixed></el-table-column>
@@ -81,7 +80,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="行政班" prop="className">
-              <el-select v-model="editForm.className" clearable placeholder="请选择" :disabled="formItemDisabled">
+              <el-select v-model="editForm.className" clearable placeholder="请选择">
                 <el-option v-for="item in xzbOptions" :key="item.classId" :label="item.className" :value="item.className"></el-option>
               </el-select>
             </el-form-item>
@@ -119,10 +118,12 @@ import {
   delChooseClassListInfo,
   getArrangeClasses,
   saveChooseCourseInfo,
+  updatechooseCourseInfo,
   getChooseCourseInfo,
   exportChooseCourse,
   getCourseOptions,
-  qryArrangeDetail
+  qryArrangeDetail,
+  exportStuChoiceCourseExcel
 } from '@/api/pkcx'
 import {
   getTableBestRows,
@@ -130,7 +131,6 @@ import {
   setDatas
 } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
-import URL from '@/api/url'
 const initFromData = {
   stuSex: '',
   stuNo: '',
@@ -143,20 +143,20 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH + 30)
     return {
+      uploadParams: {},
       search: {
         'a.arrange_id01': '',
         'a.stu_no01': '',
         'a.all_name_group06': ''
       },
       courseOptions: [], // 课程分类
-      addCourseOptions: [], // 新增时课程分类
+      completeCourseOptions: [], // 新增时课程分类/完整
       choosedCourse: [], // 课程分类下拉列表选中值
       selectProps: {
         value: 'allName',
         label: 'allName',
         children: 'layersList'
       },
-      downloadUrl: URL.chooseCourseExcelTemplate,
       httpHeaders: {},
       tableData: [],
       pageSizes: pageSizes,
@@ -207,19 +207,50 @@ export default {
   created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
     Object.assign(this.search, { 'a.arrange_id01': this.arrangeId })
+    this.uploadParams.arrangeId = this.arrangeId
     this.fetchCourseOption() // 课程分类
     this.fetchTableData() // 表格数据
     this.fetchArrangeClasses() // 行政班级数据
     this.fetchGrade() // 获取基础信息，并初始化表单数据
   },
   methods: {
+    // 下载导入模板
+    async downTemplate() {
+      const params = {
+        'a.arrange_id01': this.arrangeId,
+        currentPage: '1',
+        pageSize: '10000'
+      }
+      const res = await exportStuChoiceCourseExcel({
+        dataStr: JSON.stringify(params)
+      })
+      const blob = new Blob([res])
+      const fileName = '学生选课分层模板.xls'
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href)
+      document.body.removeChild(elink)
+    },
+    // 查询按钮
+    queryBtn() {
+      this.pageTot.currentPage = 1
+      this.fetchTableData() // 表格数据
+    },
+    getTableIndex(index) {
+      const { currentPage, pageSize } = this.pageTot
+      return (currentPage - 1) * pageSize + index + 1
+    },
     // 课程分类
     async fetchCourseOption() {
       const res = await getCourseOptions({ arrangeId: this.arrangeId })
       res.DATA.forEach(item => {
         Object.assign(item, { allName: item.courseName })
       })
-      this.addCourseOptions = res.DATA
+      this.completeCourseOptions = res.DATA
     },
     // 行政班级数据
     async fetchArrangeClasses() {
@@ -263,7 +294,12 @@ export default {
     },
     // 新增按钮
     addBtn() {
-      this.courseOptions = [...this.addCourseOptions]
+      this.courseOptions = JSON.parse(
+        JSON.stringify(this.completeCourseOptions)
+      )
+      this.courseOptions.forEach(item => {
+        this.$set(this.layersData, item.courseId, '')
+      })
       Object.assign(this.editForm, { ...initFromData })
       this.formItemDisabled = false
       this.editDialogFormVisible = true
@@ -290,7 +326,6 @@ export default {
       this.formItemDisabled = true
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改学生选课'
-      console.log(this.layersData)
     },
 
     // 删除接口
@@ -328,11 +363,41 @@ export default {
       this.$refs['ruleFormRef'].validate(async valid => {
         if (valid) {
           const modelString = []
+          let isContinue = true
           Object.keys(this.layersData).forEach(key => {
-            modelString.push({ layerId: key, allName: this.layersData[key] })
+            if (this.layersData[key] === '') {
+              isContinue = false
+              this.$message.warning('请选择分层')
+              return
+            }
+            const item = {
+              layerId: this.getLayerId(key, this.layersData[key]),
+              allName: this.layersData[key]
+            }
+            if (this.editDialogTitle === '修改学生选课') {
+              item.resultId = this.getResultId(key)
+            }
+            modelString.push(item)
           })
-          this.editForm.modelString = JSON.stringify(modelString)
-          await saveChooseCourseInfo(this.editForm)
+          if (!isContinue) return
+          if (this.editDialogTitle === '新增学生选课') {
+            await saveChooseCourseInfo(
+              Object.assign({}, this.editForm, {
+                modelString: JSON.stringify(modelString)
+              })
+            )
+          } else {
+            const params = {
+              className: this.editForm.className,
+              stuSex: this.editForm.stuSex
+            }
+            await updatechooseCourseInfo(
+              Object.assign({}, params, {
+                modelString: JSON.stringify(modelString)
+              })
+            )
+          }
+
           this.$message.success('保存成功')
           this.editDialogFormVisible = false
           this.fetchTableData()
@@ -340,6 +405,19 @@ export default {
           return false
         }
       })
+    },
+    getResultId(courseId) {
+      const course = this.courseOptions.find(
+        course => course.courseId === courseId
+      )
+      return course.resultId
+    },
+    getLayerId(courseId, allName) {
+      const course = this.completeCourseOptions.find(
+        course => course.courseId === courseId
+      )
+      const layer = course.layersList.find(layer => layer.allName === allName)
+      return layer.layerId
     },
     // 导出按钮
     async exportBtn() {
@@ -357,12 +435,16 @@ export default {
           message: '文件上传成功!',
           type: 'success'
         })
+        this.fetchCourseOption() // 课程分类
+        this.fetchTableData() // 表格数据
+        this.fetchArrangeClasses() // 行政班级数据
       } else {
         this.$message({
           message: '文件上传失败!',
           type: 'error'
         })
       }
+      this.loading = false
     },
     // 文件上传前的钩子
     beforeUpload(file) {
@@ -382,6 +464,7 @@ export default {
           type: 'warning'
         })
       }
+      this.loading = true
       return extension || (extension2 && isLt2M)
     },
     tableCurrentChange(val) {

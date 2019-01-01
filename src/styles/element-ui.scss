@@ -33,6 +33,31 @@
   font-size: 1rem;
 }
 
+.el-table__body tr:hover > td {
+  background-color: #e0edfb !important;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+.el-table__body tr.current-row > td,
+.el-table__body tr.hover-row.current-row > td,
+.el-table__body tr.hover-row.el-table__row--striped.current-row > td,
+.el-table__body tr.hover-row.el-table__row--striped > td,
+.el-table__body tr.hover-row > td {
+  background-color: #cde5ff !important;
+}
+.splitClassManage {
+  .el-table__body tr:hover > td {
+    background-color: white !important;
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+  .el-table__body tr.current-row > td,
+  .el-table__body tr.hover-row.current-row > td,
+  .el-table__body tr.hover-row.el-table__row--striped.current-row > td,
+  .el-table__body tr.hover-row.el-table__row--striped > td,
+  .el-table__body tr.hover-row > td {
+    background-color: white !important;
+  }
+}
+
 //表单
 .el-form-item .el-select {
   display: unset;

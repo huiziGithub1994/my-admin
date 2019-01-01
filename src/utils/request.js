@@ -47,24 +47,21 @@ export default function service(settings) {
   const defaultOption = {
     baseURL: process.env.BASE_API, // api 的 base_url
     timeout: 5000, // 请求超时时间
-    url: settings.url,
-    method: settings.method ? settings.method : 'get'
+    method: 'get',
+    ...settings
   }
-
   if (defaultOption.method === 'post') {
     defaultOption.data = settings.params
+    Reflect.deleteProperty(defaultOption, 'params')
     defaultOption.headers = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     }
-    !settings.formData &&
-      (defaultOption.transformRequest = [
-        function(data) {
-          data = Qs.stringify(data)
-          return data
-        }
-      ])
-  } else {
-    defaultOption.params = settings.params
+    defaultOption.transformRequest = [
+      function(data) {
+        data = Qs.stringify(data)
+        return data
+      }
+    ]
   }
 
   return new Promise(function(resolve, reject) {
@@ -74,11 +71,15 @@ export default function service(settings) {
         if (res.SUCCESS) {
           resolve(res)
         } else {
-          Message({
-            message: res.MSG || '请求处理异常,请稍后再是',
-            type: 'error'
-          })
-          reject(res)
+          if (defaultOption.responseType === 'blob') {
+            resolve(res)
+          } else {
+            Message({
+              message: res.DATA || res.MSG || '请求处理异常,请稍后再试',
+              type: 'error'
+            })
+            reject(res)
+          }
         }
       })
       .catch(error => {

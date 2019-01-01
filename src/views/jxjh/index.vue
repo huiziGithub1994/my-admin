@@ -117,7 +117,7 @@ export default {
   > div {
     display: inline-block;
     float: right;
-    margin-right: 17px;
+    margin-left: 17px;
   }
 }
 </style>

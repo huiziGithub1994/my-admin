@@ -53,7 +53,6 @@ const user = {
             resolve(res)
           })
           .catch(error => {
-            console.log(2, error)
             reject(error)
           })
       })

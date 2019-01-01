@@ -22,23 +22,52 @@
           :headers="httpHeaders"
           :before-upload="beforeUpload"
           :on-success="uploadSuccess"
+          :data="uploadParams"
           ref="upload"
         >
           <el-button type="primary">导入</el-button>
         </el-upload>
-        <el-button type="primary">设置课程计划</el-button>
+        <!-- <el-button type="primary" @click="exportBtn">导出</el-button>
+        <el-button type="primary">设置课程计划</el-button>-->
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary" @click="editBtn">修改</el-button>
         <el-button type="primary" @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        row-key="layerId"
+        v-loading="loading"
+        fit
+        tooltip-effect="dark"
+        highlight-current-row
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55"/>
         <el-table-column type="index" width="55" label="序号"></el-table-column>
-        <el-table-column label="课程名称" property="courseName"></el-table-column>
-        <el-table-column label="分层类型" property="courseLayerName"></el-table-column>
-        <el-table-column label="周课时(节)" property="weekHours"></el-table-column>
+        <el-table-column label="课程名称">
+          <template slot-scope="scope">
+            <span>{{ scope.row.courseName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="分层类型">
+          <template slot-scope="scope">
+            <span>{{ scope.row.courseLayerName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="周课时(节)">
+          <template slot-scope="scope">
+            <span>{{ scope.row.weekHours }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="拖拽" width="80">
+          <template slot-scope="scope">
+            <svg-icon class="drag-handler" icon-class="drag"/>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="500px">
@@ -63,6 +92,7 @@
   </div>
 </template>
 <script>
+import Sortable from 'sortablejs'
 import {
   getSbjestClassListInfo,
   getlayerCourseName,
@@ -76,14 +106,19 @@ import {
   paramsToString
 } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
-import URL from '@/api/url'
+import apUrl from '@/api/url'
 export default {
   data() {
     return {
-      downloadUrl: URL.subjectLayerExcelTemplate,
+      loading: false,
+      downloadUrl: apUrl.subjectLayerExcelTemplate,
       httpHeaders: {},
+      uploadParams: {},
       // 表格数据
       tableData: [],
+      sortable: null,
+      oldList: [],
+      newList: [],
       search: {
         'a.course_id01': ''
       },
@@ -129,17 +164,19 @@ export default {
   },
   created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
-    const { curYear, curTerm } = this.$route.query
+    const { curYear, curTerm, arrangeId } = this.$route.query
     Object.assign(this.search, {
       'a.school_year01': curYear,
       'a.term_code01': curTerm
     })
+    this.uploadParams.arrangeId = arrangeId
     this.fetchData()
     this.getCourseName()
   },
   methods: {
     // 获取表格数据
     async fetchData() {
+      this.loading = true
       const getStrParams = paramsToString({
         ...this.pageTot,
         ...this.search
@@ -147,7 +184,34 @@ export default {
       const res = await getSbjestClassListInfo({
         dataStr: JSON.stringify(getStrParams)
       })
+      this.loading = false
       this.tableData = res.DATA
+      this.oldList = this.tableData.map(v => v.courseId)
+      this.newList = this.oldList.slice()
+      this.$nextTick(() => {
+        this.setSort()
+      })
+    },
+    setSort() {
+      const el = document.querySelectorAll(
+        '.el-table__body-wrapper > table > tbody'
+      )[0]
+      this.sortable = Sortable.create(el, {
+        ghostClass: 'sortable-ghost',
+        setData: function(dataTransfer) {
+          dataTransfer.setData('Text', '')
+          // to avoid Firefox bug
+          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        },
+        onEnd: evt => {
+          const targetRow = this.tableData.splice(evt.oldIndex, 1)[0]
+          this.tableData.splice(evt.newIndex, 0, targetRow)
+
+          // for show the changes, you can delete in you code
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+        }
+      })
     },
     // 课程名称下拉列表数据
     async getCourseName() {
@@ -262,12 +326,16 @@ export default {
           message: '文件上传成功!',
           type: 'success'
         })
+        // 重新加载数据
+        this.fetchData()
+        this.getCourseName()
       } else {
         this.$message({
           message: '文件上传失败!',
           type: 'error'
         })
       }
+      this.loading = false
     },
     // 文件上传前的钩子
     beforeUpload(file) {
@@ -287,11 +355,19 @@ export default {
           type: 'warning'
         })
       }
+      this.loading = true
       return extension || (extension2 && isLt2M)
     }
   }
 }
 </script>
+<style>
+.sortable-ghost {
+  opacity: 0.8;
+  color: #fff !important;
+  background: #42b983 !important;
+}
+</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .operation-btns {
   overflow: hidden;
@@ -307,6 +383,11 @@ export default {
 }
 .uploadBtn {
   display: inline-block;
+}
+.drag-handler {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 </style>
 

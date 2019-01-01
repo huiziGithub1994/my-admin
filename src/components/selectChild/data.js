@@ -1,3 +1,4 @@
+import store from '../../store'
 // 下拉列表 固定静态数据
 // 学期
 export const tearmSelect = [
@@ -8,12 +9,12 @@ export const tearmSelect = [
 // 学年
 export function yearSelect() {
   const date = new Date()
-  let year = date.getFullYear()
+  let year = store.getters.curYear || date.getFullYear()
   const month = date.getMonth() + 1
   const resultArr = []
   if (month >= 3 && month <= 8) year--
   for (let i = year; i > year - 3; i--) {
-    resultArr.push({ value: i, label: `${i} - ${i + 1} 学年` })
+    resultArr.push({ value: +i, label: `${i} - ${+i + 1} 学年` })
   }
   return resultArr
 }

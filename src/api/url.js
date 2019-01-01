@@ -11,15 +11,20 @@ export default {
   qrylayerCourseName: `/zxx/layer/qryCourseNameListForArrange`, // 学科分层课程名称下拉列表查询接口
   savelayerInfo: `/zxx/layer/saveCourseLayerInfo`, // 学科分层详情保存接口
   dellayerInfo: `/zxx/layer/delCourseLayerById`, // 学科分层详情删除接口
+  exportStuChoiceCourseExcel: `/zxx/layer/getStuChoiceCourseExcel`, // 学科分层 导出功能
   qryArrangeCourseLayerRela: `zxx/stuCourseLayer/qryArrangeCourseLayerRela`, // 导入学生选课 课程下拉列表数据
   qryStuChoiceInfoList: `zxx/stuCourseLayer/qryStuChoiceInfoList`, // 导入学生选课 列表数据
   delStuChoiceInfoList: `zxx/stuCourseLayer/delChoiceInfoById`, // 导入学生选课 列表数据删除
   qryArrangeClasses: `zxx/stuCourseLayer/qryArrangeClasses`, // 导入学生选课 行政班
   saveChooseCourseInfo: `zxx/stuCourseLayer/saveChoiceInfo`, // 导入学生选课 新增选课的保存
+  updatechooseCourseInfo: `zxx/stuCourseLayer/updateChoiceInfo`, // 导入学生选课 修改选课的保存
   getChooseCourseInfo: `zxx/stuCourseLayer/qryStuCourseDetail`, // 导入学生选课 修改按钮，获取详细信息
-  splitClasses: `/zxx/transLayer2Class`, // 导入学生选课 试分班
-  exportChooseCourse: `/zxx/layer/getStuChoiceCourseExcel`, // 导入学生选课 导出功能
-  qryZbClassroomList: `base/qryzbClassroomList`, // 走班排课列表查询接口
+  getSplitClassManage: `zxx/teach/qryClassManagerList`, // 教学分班管理-列表查询
+  splitClasses: `/zxx/transLayer2Class`, // 教学分班管理 试分班
+  saveTeachTask: `zxx/teach/saveTeachingTask`, // 教学分班管理 保存教学任务
+  qryZbClassroomList: `zxx/teachingRoom/qryArrangeClassRoomList`, // 走班教室 列表查询接口
+  saveAddArrangeClassRoom: `zxx/teachingRoom/saveArrangeClassRoom`, // 走班教室 新增保存
+  delClassRoomById: `zxx/teachingRoom/delClassRoomById`, // 走班教室 删除
   qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
 
   // 排课规则
