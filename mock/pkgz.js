@@ -31,23 +31,40 @@ module.exports = {
     MSG: '成功获取数据',
     DATA: [
       {
-        label: '教学一组 5课时'
-      },
-      {
-        label: '教学二组 5课时',
+        label: '教学一组',
+        hours: 5,
         children: [
           {
-            label: '二级 1-1',
-            children: [
-              {
-                label: '三级 1-1-1'
-              }
-            ]
+            label: '高二1班 谭明'
+          },
+          {
+            label: '高二1班 谭明'
           }
         ]
       },
       {
-        label: '教学三组 5课时'
+        label: '教学二组',
+        hours: 5,
+        children: [
+          {
+            label: '高二1班 谭明'
+          },
+          {
+            label: '高二1班 谭明'
+          }
+        ]
+      },
+      {
+        label: '教学三组',
+        hours: 5,
+        children: [
+          {
+            label: '高二1班 谭明'
+          },
+          {
+            label: '高二1班 谭明'
+          }
+        ]
       }
     ]
   }

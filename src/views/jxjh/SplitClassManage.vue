@@ -72,18 +72,13 @@ export default {
     }
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     // 获取表格数据
     async fetchData() {
-      const params = {
-        'a.arrange_id01': this.arrangeId,
-        currentPage: '1',
-        pageSize: '1000'
-      }
-      await getSplitClassManage({ dataStr: JSON.stringify(params) })
-      this.tableData = []
+      const res = await getSplitClassManage({ arrangeId: this.arrangeId })
+      this.tableData = res.DATA
     },
     // 试分班按钮
     async splitClassesBtn() {

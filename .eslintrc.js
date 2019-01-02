@@ -78,7 +78,7 @@ module.exports = {
         SwitchCase: 1
       }
     ],
-    'jsx-quotes': [2, 'prefer-single'],
+    'jsx-quotes': [2, 'prefer-double'],
     'key-spacing': [
       2,
       {

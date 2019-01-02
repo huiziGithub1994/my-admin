@@ -1,5 +1,5 @@
 <template>
-  <!-- 校历维护-->
+  <!-- 课时预排 -->
   <div>
     <div class="operation">
       <p class="tip">
@@ -9,7 +9,7 @@
     </div>
     <div class="area-data">
       <div class="left" :style="{height:treeHeight+'px'}">
-        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" highlight-current :expand-on-click-node="false" :render-content="renderContent"></el-tree>
       </div>
       <div class="right my-table">
         <el-table ref="singleTable" :data="tableData" style="width: 800px" border @cell-click="cellClick">
@@ -29,6 +29,8 @@ export default {
   data() {
     return {
       treeHeight: document.body.clientHeight - 250,
+      calendarData: {},
+      calendaCell: [],
       treeData: [],
       defaultProps: {
         children: 'children',
@@ -50,6 +52,19 @@ export default {
       const res = await qryCalendar({ schoolId: '111' })
       this.calendarData = res.DATA
       this.initEditTableData()
+      // 数据填充表格
+      this.fillTableData()
+    },
+    // 数据填充表格
+    fillTableData() {
+      const { calFixList } = this.calendarData
+      const calendaCell = []
+      calFixList.forEach(item => {
+        const [row, col] = item.cellKey.split(',').map(x => Number(x))
+        this.tableData[row][col] = item.cellValue
+        calendaCell.push(item.cellKey)
+      })
+      this.calendaCell = calendaCell
     },
     // 初始化表格的头部、行列、数据为空
     initEditTableData() {
@@ -69,11 +84,20 @@ export default {
         return
       }
       const val = row[column.property]
+      if (this.isCalenderData(row, column.property)) {
+        this.$message.warning('校历维护中的数据不可以进行课时预排')
+        return
+      }
       if (val !== '') {
         row[column.property] = ''
       } else {
         row[column.property] = this.choosedTreeNode.label
       }
+    },
+    isCalenderData(rowData, column) {
+      const reg = /[1-9][0-9]*/g
+      const row = rowData.lessionSeq.match(reg)[0]
+      return this.calendaCell.includes(`${row - 1},${column}`)
     },
     // 获取教学组信息
     async getTreeData() {
@@ -82,12 +106,40 @@ export default {
     },
     // 树节点的点击事件
     handleNodeClick(data) {
+      console.log(data)
       this.choosedTreeNode = data
+    },
+    renderContent(h, { node, data, store }) {
+      if (node.isLeaf) {
+        return <span>{data.label}</span>
+      } else {
+        return (
+          <span class="mycustom-tree-node">
+            <span>{data.label}</span>
+            <span class="nodeSpan-right">
+              <span>{data.hours}课时</span>(0/3)
+            </span>
+          </span>
+        )
+      }
     },
     saveBtn() {}
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss">
+.mycustom-tree-node {
+  width: 270px;
+
+  .nodeSpan-right {
+    float: right;
+    > span {
+      margin-right: 20px;
+    }
+  }
+}
+</style>
+
 <style rel="stylesheet/scss" lang="scss" scoped>
 .area-data {
   margin-top: 10px;
