@@ -72,7 +72,7 @@ import {
   getZbClassroomListInfo,
   getZbClassroomInfo,
   delClassRoomById,
-  saveAddArrangeClassRoom
+  saveArrangeClassRoom
 } from '@/api/pkcx'
 import { setDatas } from '@/utils/businessUtil'
 const initSearch = {
@@ -90,6 +90,7 @@ export default {
         ...initSearch
       },
       courseOptions: [], // 课程分类选项
+      allLayerLen: 0,
       choosedCourse: [],
       selectProps: {
         value: 'allName',
@@ -174,14 +175,14 @@ export default {
     // 课程分类
     async fetchCourseOption() {
       const res = await getCourseOptions({ arrangeId: this.arrangeId })
+      let allLayerLen = 0
       res.DATA.forEach(item => {
         Object.assign(item, { allName: item.courseName })
-      })
-      res.DATA.forEach(item => {
         this.$set(this.layersData, item.courseId, [])
+        allLayerLen = allLayerLen + item.layersList.length
       })
+      this.allLayerLen = allLayerLen
       this.courseOptions = res.DATA
-      this.checkbokAllChange(true)
     },
     // 获取表格数据
     async fetchData() {
@@ -198,6 +199,8 @@ export default {
     },
     // 新增按钮
     addBtn() {
+      this.selectAll = true
+      this.checkbokAllChange(true)
       this.editDialogFormVisible = true
       this.editDialogTitle = '新增走班教室'
     },
@@ -209,9 +212,22 @@ export default {
       }
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改走班教室'
-      setDatas(this.editForm, this.currentRow)
-      await getZbClassroomInfo()
-      console.log(this.layersData)
+
+      const res = await getZbClassroomInfo({ roomId: this.currentRow.roomId })
+      setDatas(this.editForm, res.DATA)
+      const { courseList } = res.DATA
+      let selectedLen = 0
+      courseList.forEach(course => {
+        const temp = []
+        course.layersList.forEach(layer => {
+          if (layer.roomCanHaveFlag === '1') {
+            temp.push(layer.layerId)
+            selectedLen += 1
+          }
+        })
+        temp.length && (this.layersData[course.courseId] = [...temp])
+      })
+      this.selectAll = selectedLen === this.allLayerLen
     },
     // 删除按钮
     deleteBtn() {
@@ -250,22 +266,33 @@ export default {
             this.$message.warning('请选择选课')
             return
           }
+          const layerIdStrArr = []
+          Object.keys(this.layersData).forEach(key => {
+            layerIdStrArr.push(this.layersData[key].join(','))
+          })
+          const layerIdStr = {
+            layerIdStr: layerIdStrArr.filter(item => item.length).join(',')
+          }
+
           if (this.editDialogTitle === '新增走班教室') {
-            const layerIdStrArr = []
-            Object.keys(this.layersData).forEach(key => {
-              layerIdStrArr.push(this.layersData[key].join(','))
-            })
-            const layerIdStr = {
-              layerIdStr: layerIdStrArr.filter(item => item.length).join(',')
-            }
-            await saveAddArrangeClassRoom({
+            await saveArrangeClassRoom({
               ...this.editForm,
               ...layerIdStr
             })
-            this.$message.success('保存成功')
-            Object.assign(this.search, initSearch)
-            this.choosedCourse = []
-            this.fetchData()
+          } else {
+            await saveArrangeClassRoom({
+              ...this.editForm,
+              ...layerIdStr,
+              roomId: this.currentRow.roomId
+            })
+          }
+
+          this.$message.success('保存成功')
+          Object.assign(this.search, initSearch)
+          this.choosedCourse = []
+          this.fetchData()
+          if (this.editDialogTitle === '修改走班教室') {
+            this.editDialogFormVisible = false
           }
         } else {
           console.log('error submit!!')

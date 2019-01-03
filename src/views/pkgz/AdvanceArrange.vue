@@ -11,9 +11,14 @@
       <div class="left" :style="{height:treeHeight+'px'}">
         <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" highlight-current :expand-on-click-node="false" :render-content="renderContent"></el-tree>
       </div>
-      <div class="right my-table">
-        <el-table ref="singleTable" :data="tableData" style="width: 800px" border @cell-click="cellClick">
-          <el-table-column :property="index === 0 ? 'lessionSeq': index-1+''" :label="item" v-for="(item,index) in colHeaders" :key="index"/>
+      <div class="right my-table advanceArrange">
+        <el-table ref="singleTable" :data="tableData" style="width: 800px" border @cell-click="cellClick" :cell-class-name="cellClassName">
+          <el-table-column :label="item" v-for="(item,index) in colHeaders" :key="index">
+            <template slot-scope="scope">
+              <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
+              <div v-else>{{ scope.row[index-1+''].value }}</div>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -29,6 +34,56 @@ export default {
   data() {
     return {
       treeHeight: document.body.clientHeight - 250,
+      completeData: [
+        {
+          teaGroupId: '001',
+          teaGroupName: '数学课时组1',
+          weekHours: 5,
+          cellKey: ['0,1', '1,1', '2,1', '3,1', '4,1'],
+          arrangeId: '001',
+          arrangeName: '回龙中学2018-2019第一学期高一走班排课',
+          teachingClasses: [
+            {
+              classId: 'w23132923keo',
+              className: '数A-1班',
+              roomId: 'asdiwerk',
+              roomFullName: '第一教学楼101',
+              teaName: '张清纯'
+            },
+            {
+              classId: 'DKkdiekei2230',
+              className: '数B-1班',
+              roomId: '1234123',
+              roomFullName: '第一教学楼102',
+              teaName: '王春红'
+            }
+          ]
+        },
+        {
+          teaGroupId: '002',
+          teaGroupName: '数学课时组2',
+          weekHours: 5,
+          cellKey: ['0,2', '1,2', '2,2', '3,2', '4,2'],
+          arrangeId: '001',
+          arrangeName: '回龙中学2018-2019第一学期高一走班排课',
+          teachingClasses: [
+            {
+              classId: 'askkasdkl',
+              className: '数A-2班',
+              roomId: '299393',
+              roomFullName: '第一教学楼101',
+              teaName: '张清纯'
+            },
+            {
+              classId: 'dskksldklf',
+              className: '数B-2班',
+              roomId: '1234123',
+              roomFullName: '第一教学楼102',
+              teaName: '王春红'
+            }
+          ]
+        }
+      ],
       calendarData: {},
       calendaCell: [],
       treeData: [],
@@ -41,15 +96,17 @@ export default {
       choosedTreeNode: {}
     }
   },
-  created() {
-    this.fetchEditTableData()
-    this.getTreeData()
+  async created() {
+    // 获取校历维护数据
+    await this.fetchEditTableData()
+    this.getTreeAndArrangeData()
   },
   methods: {
+    getTreeAndArrangeData() {},
     // 获取校历表格数据并初始化表格
     async fetchEditTableData() {
       // 获取校历信息
-      const res = await qryCalendar({ schoolId: '111' })
+      const res = await qryCalendar({ calenderId: this.$route.query.arrangeId })
       this.calendarData = res.DATA
       this.initEditTableData()
       // 数据填充表格
@@ -58,13 +115,15 @@ export default {
     // 数据填充表格
     fillTableData() {
       const { calFixList } = this.calendarData
-      const calendaCell = []
       calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        this.tableData[row][col] = item.cellValue
-        calendaCell.push(item.cellKey)
+        // 将每个cell的数据变成对象
+        if (item.cellValue) {
+          this.tableData[row][col] = { value: item.cellValue, isCalendar: true }
+        } else {
+          this.tableData[row][col] = { value: item.cellValue }
+        }
       })
-      this.calendaCell = calendaCell
     },
     // 初始化表格的头部、行列、数据为空
     initEditTableData() {
@@ -84,20 +143,15 @@ export default {
         return
       }
       const val = row[column.property]
-      if (this.isCalenderData(row, column.property)) {
+      if (val.isCalendar) {
         this.$message.warning('校历维护中的数据不可以进行课时预排')
         return
       }
       if (val !== '') {
-        row[column.property] = ''
+        row[column.property].value = ''
       } else {
-        row[column.property] = this.choosedTreeNode.label
+        row[column.property].value = this.choosedTreeNode.label
       }
-    },
-    isCalenderData(rowData, column) {
-      const reg = /[1-9][0-9]*/g
-      const row = rowData.lessionSeq.match(reg)[0]
-      return this.calendaCell.includes(`${row - 1},${column}`)
     },
     // 获取教学组信息
     async getTreeData() {
@@ -123,20 +177,32 @@ export default {
         )
       }
     },
-    saveBtn() {}
+    saveBtn() {},
+    // 表格单元添加样式
+    cellClassName({ row, column, rowIndex, columnIndex }) {
+      console.log(row[columnIndex])
+
+      if (row[columnIndex - 1] && row[columnIndex - 1].isCalendar === true) {
+        return 'isCalendar'
+      }
+      return ''
+    }
   }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
 .mycustom-tree-node {
   width: 270px;
-
   .nodeSpan-right {
     float: right;
     > span {
       margin-right: 20px;
     }
   }
+}
+
+.advanceArrange .el-table__body tr > td.isCalendar {
+  background: #e6e6e6 !important;
 }
 </style>
 

@@ -24,9 +24,9 @@ export default {
   splitClasses: `/zxx/transLayer2Class`, // 教学分班管理 试分班
   saveTeachTask: `zxx/teach/saveTeachingTask`, // 教学分班管理 保存教学任务
   qryZbClassroomList: `zxx/teachingRoom/qryArrangeClassRoomList`, // 走班教室 列表查询接口
-  saveAddArrangeClassRoom: `zxx/teachingRoom/saveArrangeClassRoom`, // 走班教室 新增保存
+  saveArrangeClassRoom: `zxx/teachingRoom/saveArrangeClassRoom`, // 走班教室 新增保存
   delClassRoomById: `zxx/teachingRoom/delClassRoomById`, // 走班教室 删除
-  qryZbClassroom: `/base/zbClassroom`, // 走班排课详情查询接口
+  qryZbClassroom: `zxx/teachingRoom/qryClassRoomDetail`, // 走班排课详情查询接口
 
   // 排课规则
   qrySourceAssessment: `/zxx/computeResoure`, // 资源评估 运算走班排课资源按钮

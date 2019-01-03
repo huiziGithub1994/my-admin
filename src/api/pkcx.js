@@ -169,9 +169,9 @@ export function getZbClassroomListInfo(listQuery) {
   })
 }
 // 走班教室 新增保存
-export function saveAddArrangeClassRoom(params) {
+export function saveArrangeClassRoom(params) {
   return request({
-    url: URL.saveAddArrangeClassRoom,
+    url: URL.saveArrangeClassRoom,
     method: 'post',
     params
   })

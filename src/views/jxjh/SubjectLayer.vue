@@ -167,7 +167,8 @@ export default {
     const { curYear, curTerm, arrangeId } = this.$route.query
     Object.assign(this.search, {
       'a.school_year01': curYear,
-      'a.term_code01': curTerm
+      'a.term_code01': curTerm,
+      'a.arrange_id01': arrangeId
     })
     this.uploadParams.arrangeId = arrangeId
     this.fetchData()

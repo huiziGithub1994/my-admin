@@ -141,16 +141,3 @@ span.danger {
     padding: 4px 8px;
   }
 }
-
-.my-table {
-  // tr > th,
-  // tr > td:nth-child(1) {
-  //   background: #f2f3f3 !important;
-  // }
-  .el-table__body tr:hover > td {
-    background: white;
-  }
-  .el-table__body tr > td:hover {
-    background: #f2f3f3 !important;
-  }
-}
