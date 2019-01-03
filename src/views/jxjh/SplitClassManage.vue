@@ -60,6 +60,7 @@ export default {
         minSize: 38,
         maxSize: 45
       },
+      currentSplitNum: {}, // 最后一次试分班的班额数据
       // 表格数据
       tableData: [],
       // 表格高度
@@ -95,6 +96,16 @@ export default {
       const res = await splitClasses(params)
       this.tableData = res.DATA
       this.loading = false
+      Object.assign(this.currentSplitNum, this.search)
+      this.$notify({
+        title: '提示',
+        duration: 0,
+        message: this.$createElement(
+          'i',
+          { style: 'color: teal' },
+          '试分班成功，请填写任课教师后保存教学任务，否则试分班数据不会保存。'
+        )
+      })
     },
     // 保存教学任务
     async saveBtn() {
@@ -109,7 +120,11 @@ export default {
         })
       })
       if (!continueFlag) return
-      await saveTeachTask({ modelString: JSON.stringify(this.tableData) })
+      await saveTeachTask({
+        arrangeId: this.arrangeId,
+        ...this.currentSplitNum,
+        modelString: JSON.stringify(this.tableData)
+      })
       this.$message.success('保存成功')
     }
   }
