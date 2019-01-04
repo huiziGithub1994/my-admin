@@ -79,7 +79,10 @@ export default {
     // 获取表格数据
     async fetchData() {
       const res = await getSplitClassManage({ arrangeId: this.arrangeId })
-      this.tableData = res.DATA
+      const { dataList, minSize, maxSize } = res.DATA
+      this.tableData = dataList
+      Object.assign(this.search, { minSize, maxSize })
+      Object.assign(this.currentSplitNum, { minSize, maxSize })
     },
     // 试分班按钮
     async splitClassesBtn() {

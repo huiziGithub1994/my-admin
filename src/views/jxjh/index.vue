@@ -54,7 +54,7 @@ export default {
           message: h(
             'i',
             { style: 'color: teal' },
-            '请在排课查询页面，点击新增或者修改进入教学计划页面'
+            '请在“排课任务”页面，点击新增或者排课进入“教学计划”页面'
           ),
           duration: 8 * 1000
         })

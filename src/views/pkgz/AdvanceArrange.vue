@@ -9,7 +9,18 @@
     </div>
     <div class="area-data">
       <div class="left" :style="{height:treeHeight+'px'}">
-        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" highlight-current :expand-on-click-node="false" :render-content="renderContent"></el-tree>
+        <el-collapse class="my-collapse">
+          <el-collapse-item :name="index" v-for="(item,index) in hoursGroup" :key="item.teaGroupId">
+            <template slot="title">
+              <div :class="{title:true,active:currentGroup == index}" @click="currentGroup=index">
+                <span>{{ item.teaGroupName }}</span>
+                <span class="hours">{{ item.weekHours }}课时</span>
+                <span class="percent">({{ item.teachingClasses.length }}/{{ item.cellKey.length }})</span>
+              </div>
+            </template>
+            <div v-for="sClass in item.teachingClasses" :key="sClass.classId" class="class-style">{{ `${sClass.className} - ${sClass.teaName}` }}</div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <div class="right my-table advanceArrange">
         <el-table ref="singleTable" :data="tableData" style="width: 800px" border @cell-click="cellClick" :cell-class-name="cellClassName">
@@ -85,12 +96,9 @@ export default {
         }
       ],
       calendarData: {},
-      calendaCell: [],
-      treeData: [],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
+      calendaCell: [], // 记录校历数据
+      currentGroup: {}, // 当前选中的group
+      hoursGroup: [],
       tableData: [],
       colHeaders: [],
       choosedTreeNode: {}
@@ -99,10 +107,27 @@ export default {
   async created() {
     // 获取校历维护数据
     await this.fetchEditTableData()
-    this.getTreeAndArrangeData()
+    this.getArrangeData()
   },
   methods: {
-    getTreeAndArrangeData() {},
+    getArrangeData() {
+      this.completeData.forEach((item, index) => {
+        this.$set(this.hoursGroup, index, item)
+        item.cellKey.forEach(cell => {
+          const [row, col] = cell.split(',').map(x => Number(x))
+          this.tableData[row][col].value = item.teaGroupName
+        })
+      })
+      const len = this.completeData.length
+      const names = []
+      for (let i = 1; i <= len; i++) {
+        names.push(i)
+      }
+      this.activeNames = [...names]
+      // console.log(this.activeNames)
+    },
+    // 当前group改变时
+    collapseChange(index) {},
     // 获取校历表格数据并初始化表格
     async fetchEditTableData() {
       // 获取校历信息
@@ -158,30 +183,9 @@ export default {
       const res = await qryTeachHours()
       this.treeData = res.DATA
     },
-    // 树节点的点击事件
-    handleNodeClick(data) {
-      console.log(data)
-      this.choosedTreeNode = data
-    },
-    renderContent(h, { node, data, store }) {
-      if (node.isLeaf) {
-        return <span>{data.label}</span>
-      } else {
-        return (
-          <span class="mycustom-tree-node">
-            <span>{data.label}</span>
-            <span class="nodeSpan-right">
-              <span>{data.hours}课时</span>(0/3)
-            </span>
-          </span>
-        )
-      }
-    },
     saveBtn() {},
     // 表格单元添加样式
     cellClassName({ row, column, rowIndex, columnIndex }) {
-      console.log(row[columnIndex])
-
       if (row[columnIndex - 1] && row[columnIndex - 1].isCalendar === true) {
         return 'isCalendar'
       }
@@ -191,18 +195,11 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-.mycustom-tree-node {
-  width: 270px;
-  .nodeSpan-right {
-    float: right;
-    > span {
-      margin-right: 20px;
-    }
-  }
-}
-
 .advanceArrange .el-table__body tr > td.isCalendar {
   background: #e6e6e6 !important;
+}
+.my-collapse .title.active {
+  color: #409eff;
 }
 </style>
 
@@ -215,6 +212,20 @@ export default {
     width: 300px;
     margin-right: 10px;
     overflow: auto;
+    padding: 0 10px;
+    div.title {
+      .hours {
+        margin-left: 10px;
+        font-size: 0.8rem;
+      }
+      .percent {
+        float: right;
+        margin-right: 10px;
+      }
+    }
+    .class-style {
+      padding-left: 10px;
+    }
   }
   > .right {
     flex: 1;
