@@ -151,8 +151,6 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .operation {
-  float: right;
-  margin-top: 5px;
   > div {
     display: inline-block;
   }

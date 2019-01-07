@@ -45,9 +45,11 @@ import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      const { name } = from
       vm.$notify.close()
-      if (Object.keys(vm.$route.query).length === 0 && name !== 'Pkgz') {
+      if (
+        !sessionStorage.getItem('local_curTerm') ||
+        !sessionStorage.getItem('local_curYear')
+      ) {
         const h = vm.$createElement
         vm.$notify({
           title: '提示',
@@ -77,7 +79,7 @@ export default {
   },
   computed: {
     tabDisabled() {
-      return this.$route.query.arrangeId === undefined
+      return sessionStorage.getItem('local_arrangeId') === undefined
     }
   },
   methods: {
@@ -87,7 +89,6 @@ export default {
       this.activeTabName = temp + ''
     },
     // 基础信息 下一步 按钮
-
     baseInfoNext() {
       if (this.tabDisabled) {
         this.$message.warning('请先保存基础信息，再进行下一步操作')
@@ -97,10 +98,7 @@ export default {
       if (temp <= 5) {
         this.activeTabName = temp + ''
       } else {
-        this.$router.push({
-          name: 'Pkgz',
-          query: { arrangeId: this.$route.query.arrangeId }
-        })
+        this.$router.push({ name: 'Pkgz' })
       }
     }
   }

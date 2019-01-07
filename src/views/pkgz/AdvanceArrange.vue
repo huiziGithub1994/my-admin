@@ -9,19 +9,19 @@
     </div>
     <div class="area-data">
       <div class="left" :style="{height:treeHeight+'px'}">
-        <div :name="index" v-for="(item,index) in hoursGroup" :key="item.teaGroupId" class="block">
-          <div :class="{title:true,active:currentGroup == index}" @click="currentGroup = index">
+        <div v-for="(item,gropuIndex) in hoursGroup" :key="item.teaGroupId" class="block">
+          <div :class="{title:true,active:currentGroup == gropuIndex}" @click="currentGroupClick(gropuIndex)">
             <span>{{ item.teaGroupName }}</span>
             <span class="hours">{{ item.weekHours }}课时</span>
             <div>
               <span class="percent">({{ item.cellKey.length }}/{{ item.weekHours }})</span>
-              <span class="header-icon" @click="iconArrowClick(index)">
-                <i v-if="iconArrowMap[index]" class="el-icon-arrow-down"></i>
-                <i v-else class="el-icon-arrow-right"></i>
+              <span class="header-icon" @click.stop="iconArrowClick(gropuIndex)">
+                <i v-show="iconArrowMap[gropuIndex]" class="el-icon-arrow-down"></i>
+                <i v-show="!iconArrowMap[gropuIndex]" class="el-icon-arrow-right"></i>
               </span>
             </div>
           </div>
-          <div v-show="iconArrowMap[index]" v-for="sClass in item.teachingClasses" :key="sClass.classId" class="class-style">{{ `${sClass.className} - ${sClass.teaName}` }}</div>
+          <div v-show="iconArrowMap[gropuIndex]" v-for="sClass in item.teachingClasses" :key="sClass.classId" class="class-style">{{ `${sClass.className} - ${sClass.teaName}` }}</div>
         </div>
       </div>
       <div class="right my-table advanceArrange">
@@ -49,6 +49,7 @@ import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       treeHeight: document.body.clientHeight - 250,
       completeData: [
         {
@@ -119,31 +120,30 @@ export default {
     // 获取详情信息
     getArrangeData() {
       this.completeData.forEach((item, index) => {
+        this.$set(this.iconArrowMap, index, true)
         this.$set(this.hoursGroup, index, item) // 课时组数据
-        this.iconArrowMap[index] = true // group 展开或关闭集合赋初始值
         // 已排课时数据的回填
         item.cellKey.forEach(cell => {
           const [row, col] = cell.split(',').map(x => Number(x))
           this.tableData[row][col].value = item.teaGroupName
         })
       })
-      const len = this.completeData.length
-      const names = []
-      for (let i = 1; i <= len; i++) {
-        names.push(i)
-      }
-      this.activeNames = [...names]
+    },
+    currentGroupClick(index) {
+      this.currentGroup = index
     },
     // group 展开或关闭
     iconArrowClick(index) {
-      console.log(index)
       this.iconArrowMap[index] = !this.iconArrowMap[index]
-      console.log(this.iconArrowMap)
     },
     // 获取校历表格数据并初始化表格
     async fetchEditTableData() {
+      if (!this.arrangeId) {
+        this.$message.error('请先选择排课任务')
+        return
+      }
       // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.$route.query.arrangeId })
+      const res = await qryCalendar({ calenderId: this.arrangeId })
       this.calendarData = res.DATA
       this.initEditTableData()
       // 数据填充表格
@@ -165,9 +165,13 @@ export default {
     // 初始化表格的头部、行列、数据为空
     initEditTableData() {
       const baseHeader = ['节次/星期']
+      if (!this.calendarData) {
+        return
+      }
       const { colHeaders, defaultData } = initTableData(
         this.calendarData,
-        baseHeader
+        baseHeader,
+        '2'
       )
       this.colHeaders = colHeaders
       this.tableData.push(...defaultData)
@@ -188,6 +192,10 @@ export default {
         return
       }
       const group = this.hoursGroup[this.currentGroup]
+      if (group.cellKey.length >= group.weekHours) {
+        this.$message.warning('该课时组已经排满')
+        return
+      }
       // 表格填值
       row[column.property].value = group.teaGroupName
       // 课时组修改
@@ -249,8 +257,8 @@ export default {
   display: flex;
   > .left {
     border: 1px solid #dddddd;
-    width: 300px;
-    margin-right: 10px;
+    width: 28%;
+    margin-right: 0.5%;
     overflow: auto;
     padding: 0 10px;
     div.block {

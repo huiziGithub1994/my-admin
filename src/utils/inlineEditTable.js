@@ -12,6 +12,7 @@ const weeks = [
   '星期六',
   '星期日'
 ]
+// valueTpye 1:string 2 object
 export function initTableData(
   data = {
     workDays: 5,
@@ -20,7 +21,8 @@ export function initTableData(
     countAfternoon: 4,
     countNight: 0
   },
-  baseHeader = []
+  baseHeader = [],
+  valueType = '1'
 ) {
   const {
     workDays,
@@ -79,7 +81,7 @@ export function initTableData(
         // j=-1 :后台数据j=0表示周一
         defaultRow.lessionSeq = `第${i + 1}节`
       } else {
-        defaultRow[j] = ''
+        defaultRow[j] = valueType === '1' ? '' : {}
       }
     }
     defaultData.push(Object.assign({}, defaultRow))

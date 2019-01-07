@@ -35,18 +35,18 @@
             <span v-else class="primary">进行中</span>
           </template>
         </el-table-column>
-        <el-table-column property="schoolYear" label="学年">
+        <el-table-column property="schoolYear" label="学年" width="130px">
           <template slot-scope="scope">
             <span>{{ `${scope.row.schoolYear} - ${parseInt(scope.row.schoolYear)+1} 学年` }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="termCode" label="学期">
+        <el-table-column property="termCode" label="学期" width="100px">
           <template slot-scope="scope">
             <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
           </template>
         </el-table-column>
         <el-table-column property="gradeName" label="年级"/>
-        <el-table-column property="createDate" show-overflow-tooltip label="创建时间">
+        <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="150px">
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | filterTime }}</span>
           </template>
@@ -54,7 +54,7 @@
         <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
-              <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>排课</el-button>
+              <el-button type="primary" size="mini" @click="arrangeClass(scope.row)" plain>排课</el-button>
               <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
               <el-button type="primary" size="mini" plain>复制</el-button>
             </div>
@@ -150,13 +150,17 @@ export default {
     },
     // 新增按钮
     addBtn() {
-      this.$router.push({
-        name: 'Jxjh',
-        query: {
-          curYear: this.listQuery['a.school_year01'],
-          curTerm: this.listQuery['a.term_code01']
-        }
-      })
+      if (sessionStorage) {
+        sessionStorage.setItem(
+          'local_curYear',
+          this.listQuery['a.school_year01']
+        )
+        sessionStorage.setItem('local_curTerm', this.listQuery['a.term_code01'])
+        sessionStorage.removeItem('local_arrangeId')
+        sessionStorage.removeItem('arrangeName')
+        this.$store.commit('SET_ARRANGENAME', '')
+      }
+      this.$router.push({ name: 'Jxjh' })
     },
     // 查询按钮
     queryBtn() {
@@ -187,13 +191,19 @@ export default {
         })
     },
     // 排课按钮
-    arrangeClass(arrangeId) {
-      const queryParams = {
-        arrangeId,
-        curYear: this.listQuery['a.school_year01'],
-        curTerm: this.listQuery['a.term_code01']
+    arrangeClass(row) {
+      const { schoolYear, termCode, arrangeId, arrangeName } = row
+      if (sessionStorage) {
+        sessionStorage.setItem('local_curYear', schoolYear)
+        sessionStorage.setItem('local_curTerm', termCode)
+        sessionStorage.setItem('local_arrangeId', arrangeId)
+        const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
+          +termCode === 1 ? '一' : '二'
+        } 学期 , ${arrangeName}`
+        sessionStorage.setItem('arrangeName', nameStr)
+        this.$store.commit('SET_ARRANGENAME', nameStr)
       }
-      this.$router.push({ name: 'Jxjh', query: queryParams })
+      this.$router.push({ name: 'Jxjh' })
     },
     handleSizeChange(val) {
       this.pageTot.currentPage = 1

@@ -54,6 +54,7 @@ import { getSplitClassManage, splitClasses, saveTeachTask } from '@/api/pkcx' //
 export default {
   data() {
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       loading: false,
       // 检索字段
       search: {
@@ -65,11 +66,6 @@ export default {
       tableData: [],
       // 表格高度
       height: document.body.clientHeight - 365
-    }
-  },
-  computed: {
-    arrangeId() {
-      return this.$route.query.arrangeId
     }
   },
   created() {

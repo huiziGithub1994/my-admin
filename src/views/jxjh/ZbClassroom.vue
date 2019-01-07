@@ -85,7 +85,7 @@ const initSearch = {
 export default {
   data() {
     return {
-      initArea: false,
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       search: {
         ...initSearch
       },
@@ -126,11 +126,6 @@ export default {
       xzbOptions: [],
       // 学生分层及课时数据
       sbjestClass: []
-    }
-  },
-  computed: {
-    arrangeId() {
-      return this.$route.query.arrangeId
     }
   },
   created() {

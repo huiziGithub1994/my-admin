@@ -78,7 +78,7 @@ export default {
     return {
       codeSrc: '',
       ruleForm: {
-        loginid: 'rjadmin', // 用户名
+        loginid: 'lmsadmin', // 用户名
         loginpwd: '123456', // 密码
         validateCode: ''
       },
@@ -118,14 +118,14 @@ export default {
     submitForm() {
       this.$refs['rule'].validate(valid => {
         if (valid) {
-          this.$store.dispatch('Login', this.ruleForm).then(res => {
-            if (res.SUCCESS) {
+          this.$store.dispatch('Login', this.ruleForm).then(
+            res => {
               this.$router.push({ name: 'Home' })
-            } else {
+            },
+            errorRes => {
               this.fetchValidCode()
-              this.$message.error(res.MSG)
             }
-          })
+          )
         } else {
           return false
         }

@@ -4,7 +4,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="学年" prop="schoolYear">
-            <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect" @change="changeSelect"/>
+            <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect"/>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -14,7 +14,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="学期" prop="termCode">
-            <selectChild v-model="data.termCode" :clearable="false" tp="termSelect" @change="changeSelect"/>
+            <selectChild v-model="data.termCode" :clearable="false" tp="termSelect"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -45,6 +45,7 @@ export default {
   name: 'BaseInfo',
   data() {
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       data: {
         gradeId: undefined,
         gradeName: undefined,
@@ -78,14 +79,12 @@ export default {
       }
     }
   },
-  computed: {
-    arrangeId() {
-      return this.$route.query.arrangeId
-    }
-  },
   async created() {
-    const { curYear, curTerm } = this.$route.query
-    Object.assign(this.data, { schoolYear: curYear, termCode: curTerm })
+    const { local_curYear, local_curTerm } = sessionStorage
+    Object.assign(this.data, {
+      schoolYear: local_curYear,
+      termCode: local_curTerm
+    })
     await this.fetchGrade()
     if (this.arrangeId) {
       this.fetchFormData()
@@ -94,10 +93,10 @@ export default {
   methods: {
     // 年级下拉列表
     async fetchGrade() {
-      const { curYear, curTerm } = this.$route.query
+      const { local_curYear, local_curTerm } = sessionStorage
       const res = await getSegGrade({
-        schoolYear: curYear,
-        termCode: curTerm
+        schoolYear: local_curYear,
+        termCode: local_curTerm
       })
       res.DATA.forEach(item => {
         Object.assign(item, {
@@ -119,17 +118,6 @@ export default {
         this.$refs['baseInfoRef'].clearValidate()
       })
     },
-    // 学年学期改变时
-    changeSelect() {
-      const { schoolYear, termCode } = this.data
-      this.$router.replace({
-        name: 'Jxjh',
-        query: {
-          ...this.$route.query,
-          ...{ curYear: schoolYear, curTerm: termCode }
-        }
-      })
-    },
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
@@ -138,25 +126,30 @@ export default {
           }
           const [segId, gradeId] = this.data.selectedGrade
           Object.assign(this.data, { segId, gradeId })
-          console.log()
+          // 获取年级名称
           const seg = this.gradeOptions.filter(
             item => item.segId === this.data.segId
           )[0]
           const grade = seg.gradesList.filter(
             grade => grade.gradeId === this.data.gradeId
           )
-
           Object.assign(this.data, { gradeName: grade[0].gradeName })
           const res = await saveArrange(this.data)
           this.$message.success('保存成功')
           this.$nextTick(function() {
             this.$refs['baseInfoRef'].clearValidate()
           })
+          // 存储数据
+          const { schoolYear, termCode, arrangeName } = this.data
+          sessionStorage.setItem('local_curYear', schoolYear)
+          sessionStorage.setItem('local_curTerm', termCode)
+          const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
+            +termCode === 1 ? '一' : '二'
+          } 学期 , ${arrangeName}`
+          sessionStorage.setItem('arrangeName', nameStr)
+          this.$store.commit('SET_ARRANGENAME', nameStr)
           if (!this.arrangeId) {
-            this.$router.replace({
-              name: 'Jxjh',
-              query: { arrangeId: res.DATA, ...this.$route.query }
-            })
+            sessionStorage.setItem('local_arrangeId', res.DATA)
           }
         } else {
           return false

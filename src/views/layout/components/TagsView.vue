@@ -16,6 +16,7 @@
         {{ tag.title }}
         <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
+      <span class="arrangeName">{{ arrangeName }}</span>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">刷新</li>
@@ -41,7 +42,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['sidebar']),
+    ...mapGetters(['sidebar', 'arrangeName']),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     }
@@ -148,6 +149,12 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.arrangeName {
+  float: right;
+  margin-top: 10px;
+  margin-right: 15px;
+  color: #10d821;
+}
 .tags-view-container {
   height: 36px;
   width: 100%;

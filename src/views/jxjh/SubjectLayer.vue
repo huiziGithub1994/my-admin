@@ -64,7 +64,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="拖拽" width="80">
-          <template slot-scope="scope">
+          <template>
             <svg-icon class="drag-handler" icon-class="drag"/>
           </template>
         </el-table-column>
@@ -94,10 +94,10 @@
 <script>
 import Sortable from 'sortablejs'
 import {
-  getSbjestClassListInfo,
   getlayerCourseName,
+  saveLayerInfo,
   delLayerInfo,
-  saveLayerInfo
+  getSbjestClassListInfo
 } from '@/api/pkcx'
 import {
   validEditBtn,
@@ -156,6 +156,11 @@ export default {
         weekHours: 1,
         arrangeId: ''
         // layerId
+      },
+      query: {
+        curYear: sessionStorage.getItem('local_curYear'),
+        curTerm: sessionStorage.getItem('local_curTerm'),
+        arrangeId: sessionStorage.getItem('local_arrangeId')
       }
     }
   },
@@ -164,7 +169,7 @@ export default {
   },
   created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
-    const { curYear, curTerm, arrangeId } = this.$route.query
+    const { curYear, curTerm, arrangeId } = this.query
     Object.assign(this.search, {
       'a.school_year01': curYear,
       'a.term_code01': curTerm,
@@ -217,7 +222,7 @@ export default {
     // 课程名称下拉列表数据
     async getCourseName() {
       const res = await getlayerCourseName({
-        arrangeId: this.$route.query.arrangeId
+        arrangeId: this.query.arrangeId
       })
       this.courseOptions = res.DATA
       this.courseOptionsFrom = [...res.DATA]
@@ -227,7 +232,7 @@ export default {
       this.dialogFormVisible = true
       this.dialogTitle = '新增'
       resetForm(this.formData)
-      const { curYear, curTerm, arrangeId } = this.$route.query
+      const { curYear, curTerm, arrangeId } = this.query
       Object.assign(this.formData, {
         schoolYear: curYear,
         termCode: curTerm,

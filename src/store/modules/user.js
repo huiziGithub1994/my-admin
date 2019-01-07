@@ -11,7 +11,8 @@ const user = {
     curYear: getCookie('curYear'),
     curTerm: getCookie('curTerm'),
     schoolId: getCookie('schoolId'),
-    calenderId: getCookie('calenderId')
+    calenderId: getCookie('calenderId'),
+    arrangeName: sessionStorage.getItem('arrangeName')
   },
 
   mutations: {
@@ -26,6 +27,9 @@ const user = {
     },
     SET_CURTERM: (state, curTerm) => {
       state.curTerm = curTerm
+    },
+    SET_ARRANGENAME: (state, arrangeName) => {
+      state.arrangeName = arrangeName
     },
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -78,34 +82,41 @@ const user = {
       return new Promise((resolve, reject) => {
         logout()
           .then(() => {
-            commit('SET_TOKEN', '')
-            commit('SET_SCHOOLID', '')
-            commit('SET_CALENDERID', '')
-            commit('SET_CURYEAR', '')
-            commit('SET_CURTERM', '')
-            removeCookie('Admin-Token')
-            removeCookie('schoolId')
-            removeCookie('calenderId')
-            removeCookie('curYear')
-            removeCookie('curTerm')
+            const commits = [
+              'SET_TOKEN',
+              'SET_SCHOOLID',
+              'SET_CALENDERID',
+              'SET_CURYEAR',
+              'SET_CURTERM',
+              'SET_ARRANGENAME'
+            ]
+            commits.forEach(key => {
+              commit(key, '')
+            })
+            const removeCookies = [
+              'Admin-Token',
+              'schoolId',
+              'calenderId',
+              'calenderId',
+              'curTerm'
+            ]
+            removeCookies.forEach(key => {
+              removeCookie(key)
+            })
+            const sessions = [
+              'local_arrangeId',
+              'local_curYear',
+              'local_curTerm',
+              'arrangeName'
+            ]
+            sessions.forEach(key => {
+              sessionStorage.removeItem(key)
+            })
             resolve()
           })
           .catch(error => {
             reject(error)
           })
-      })
-    },
-
-    // 前端 登出
-    FedLogOut({ commit }) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        removeCookie('Admin-Token')
-        removeCookie('schoolId')
-        removeCookie('calenderId')
-        removeCookie('curYear')
-        removeCookie('curTerm')
-        resolve()
       })
     }
   }

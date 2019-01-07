@@ -94,8 +94,8 @@ export const zbRouterMap = [
       },
       {
         path: 'kbcx',
-        name: 'Kbxc',
-        component: () => import('@/views/tree/index'),
+        name: 'kbcx',
+        component: () => import('@/views/kbcx/index'),
         meta: { title: '课表查询', icon: 'table' }
       }
     ]

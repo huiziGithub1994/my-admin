@@ -143,6 +143,7 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH + 30)
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       uploadParams: {},
       search: {
         'a.arrange_id01': '',
@@ -199,10 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token']),
-    arrangeId() {
-      return this.$route.query.arrangeId
-    }
+    ...mapGetters(['token'])
   },
   created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
@@ -422,7 +420,7 @@ export default {
     // 导出按钮
     async exportBtn() {
       const params = {
-        'a.arrange_id01': this.$route.query.arrangeId,
+        'a.arrange_id01': this.arrangeId,
         currentPage: '1',
         pageSize: '10000'
       }
