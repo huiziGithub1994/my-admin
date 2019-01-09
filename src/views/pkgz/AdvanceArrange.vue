@@ -204,7 +204,6 @@ export default {
       group.cellKey.push(
         `${row.lessionSeq.match(reg)[0] - 1},${column.property}`
       )
-      console.log(group)
     },
     // 获取教学组信息
     async getTreeData() {

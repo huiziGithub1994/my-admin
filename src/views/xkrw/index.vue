@@ -37,8 +37,8 @@
           <template slot-scope="scope">
             <div class="table-btns">
               <el-button type="primary" size="mini" plain @click="editXk(scope.row)">修改</el-button>
-              <el-button type="danger" size="mini" @click="deleteXK(scope.row.arrangeId)" plain>删除</el-button>
-              <el-button type="primary" size="mini" @click="analysisXK(scope.row.arrangeId)" plain>分析</el-button>
+              <el-button type="danger" size="mini" @click="deleteXK(scope.row.choseRsId)" plain>删除</el-button>
+              <el-button type="primary" size="mini" @click="analysisXK(scope.row.choseRsId)" plain>分析</el-button>
             </div>
           </template>
         </el-table-column>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { qryChoseCourseList } from '@/api/xkrw'
+import { qryChoseCourseList, delChooseCourse } from '@/api/xkrw'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -113,26 +113,7 @@ export default {
       const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
       qryChoseCourseList({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTotal = res.SUM
-        this.tableData = [
-          {
-            choseRsId: '932ejew9qur',
-            gradeId: null,
-            modifyDate: null,
-            choseCourseType: '1',
-            modifyId: null,
-            moreDesc: null,
-            pubFlag: '未发布',
-            choseType: null,
-            choseTastName: '2018高一走班选课',
-            createId: null,
-            schoolId: '001',
-            schoolYear: '2018',
-            beginTime: '2019-01-08T22:06:42.000+0000',
-            endTime: '2019-01-08T22:06:45.000+0000',
-            termCode: '1',
-            createDate: '2019-01-08T14:05:47.000+0000'
-          }
-        ]
+        this.tableData = res.DATA
         this.listLoading = false
       })
     },
@@ -155,21 +136,18 @@ export default {
       this.fetchData()
     },
     // 删除按钮
-    deleteXK(arrangeId) {
+    deleteXK(choseRsId) {
       this.$confirm('确定删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async () => {
-          // const res = await qryArrangeDetail({ arrangeId: arrangeId, a: '2' })
-          const res = { SUCCESS: true }
-          this.$message({
-            type: res.SUCCESS ? 'success' : 'error',
-            message: res.SUCCESS ? '删除成功!' : '删除失败'
-          })
+          await delChooseCourse({ choseRsId })
+          this.$message.success('删除成功')
           // 重新加载数据
-          if (res.SUCCESS) this.queryBtn()
+          this.pageTot.currentPage = 1
+          this.queryBtn()
         })
         .catch(() => {
           this.$message({

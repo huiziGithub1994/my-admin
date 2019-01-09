@@ -41,7 +41,7 @@
       <el-row :gutter="10">
         <el-col :span="12">
           <el-form-item label="选课时间段">
-            <el-date-picker v-model="chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="formatTime" value-format="formatTime"></el-date-picker>
+            <el-date-picker v-model="chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :format="formatTime" :value-format="formatTime"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -49,8 +49,8 @@
         <el-col :span="18">
           <el-form-item prop="status" label="发布状态">
             <el-radio-group v-model="data.pubFlag">
-              <el-radio label="0">发布</el-radio>
-              <el-radio label="1">未发布</el-radio>
+              <el-radio label="1">发布</el-radio>
+              <el-radio label="0">未发布</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -69,19 +69,18 @@
 <script>
 import { qrySjsChoseTaskByChoseId, saveSjsChoseCourseDef } from '@/api/xkrw'
 import { setDatas } from '@/utils/businessUtil'
-import moment from 'moment'
+// import moment from 'moment'
 export default {
   name: 'BaseInfo',
   data() {
     return {
       choseRsId: sessionStorage.getItem('local_arrangeId'),
-      formatTime: 'yyyy-MM-dd hh:mm',
+      formatTime: 'yyyy-MM-dd HH:mm',
       // 表单数据
       data: {
         beginTime: '',
-        choseCourseType: '',
+        choseCourseType: '1',
         choseTaskName: '',
-        createDate: '',
         endTime: '',
         moreDesc: null, // 简要说明
         pubFlag: '',
@@ -89,7 +88,7 @@ export default {
         schoolYear: '',
         termCode: ''
       },
-      chooseTime: null,
+      chooseTime: [],
       // 基础信息表单规则
       baseInfoRules: {
         schoolYear: [
@@ -128,13 +127,15 @@ export default {
     async fetchFormData() {
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       setDatas(this.data, res.DATA)
-      this.$set(this.chooseTime)
-      // this.chooseTime.push(...[res.DATA.beginTime, res.DATA.endTime])
-      console.log(this.chooseTime)
+      const timeArr = ['beginTime', 'endTime']
+      timeArr.forEach((key, index) => {
+        this.$set(this.chooseTime, index, res.DATA[key])
+      })
     },
     // 保存按钮
     saveBtn() {
-      if (!this.chooseTime) {
+      console.log(this.chooseTime)
+      if (this.chooseTime === null || this.chooseTime.length === 0) {
         this.$message.error('选课时间段不能为空')
         return
       }
@@ -142,8 +143,8 @@ export default {
         if (valid) {
           const params = {
             ...this.data,
-            beginTime: moment(this.chooseTime[0]).format(this.formatTime),
-            endTime: moment(this.chooseTime[1]).format(this.formatTime)
+            beginTime: this.chooseTime[0],
+            endTime: this.chooseTime[1]
           }
           if (this.choseRsId) {
             params.choseRsId = this.choseRsId

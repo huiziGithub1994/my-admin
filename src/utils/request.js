@@ -65,6 +65,7 @@ export default function service(settings) {
   }
 
   return new Promise(function(resolve, reject) {
+    // console.log(defaultOption)
     axiosIns
       .request(defaultOption)
       .then(res => {

@@ -9,6 +9,13 @@ export function qryChoseCourseList(listQuery) {
     params: listQuery
   })
 }
+// 选课列表 删除
+export function delChooseCourse(listQuery) {
+  return request({
+    url: URL.delChooseCourse,
+    params: listQuery
+  })
+}
 
 // 选课设置 - 基础信息
 export function qrySjsChoseTaskByChoseId(params) {
@@ -23,6 +30,9 @@ export function saveSjsChoseCourseDef(params) {
   return request({
     url: URL.saveSjsChoseCourseDef,
     method: 'post',
+    // headers: {
+    //   'Content-Type': 'application/json'
+    // },
     params
   })
 }

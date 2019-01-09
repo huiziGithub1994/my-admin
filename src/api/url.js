@@ -52,8 +52,9 @@ export default {
 
   /** 选课平台  */
 
-  // 选课列表（选学调研）
+  // 选课列表（选课任务）
   qryChoseCourseList: `/zxx/chose/qryChoseCourseList`, // 获取选课列表
+  delChooseCourse: `/zxx/chose/dSjsChoseCourseDef`, // 获取选课列表 删除
 
   // 选课设置 -》 基础信息
   qrySjsChoseTaskByChoseId: `/zxx/chose/qrySjsChoseTaskByChoseId`, // 查寻
