@@ -159,15 +159,15 @@ export const xkRouterMap = [
   {
     path: '/xkpt',
     component: Layout,
-    redirect: '/xkpt/xxdy',
+    redirect: '/xkpt/xkrw',
     name: 'Xkpt',
     meta: { title: '选课平台', icon: 'xkpt' },
     children: [
       {
-        path: 'xxdy',
-        name: 'Xxdy',
-        component: () => import('@/views/xkdy/index'),
-        meta: { title: '选学调研', icon: 'form' }
+        path: 'xkrw',
+        name: 'Xkrw',
+        component: () => import('@/views/xkrw/index'),
+        meta: { title: '选课任务', icon: 'form' }
       },
       {
         path: 'xksz',

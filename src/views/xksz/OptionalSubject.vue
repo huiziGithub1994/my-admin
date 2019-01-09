@@ -39,7 +39,7 @@
   </div>
 </template>
 <script>
-import { getOptionalSubject, getAllCourse } from '@/api/xkdy'
+import { getOptionalSubject, getAllCourse } from '@/api/xkrw'
 export default {
   name: 'OptionalSubject',
   data() {

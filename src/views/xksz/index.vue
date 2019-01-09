@@ -29,6 +29,27 @@ import OptionalSubject from './OptionalSubject' // 可选学科tab页组件
 import JoinedStudent from './JoinedStudent' // 本次参选学生tab页组件
 import ChooseExplain from './ChooseExplain' // 选课说明tab页组件
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$notify.close()
+      if (
+        !sessionStorage.getItem('local_curTerm') ||
+        !sessionStorage.getItem('local_curYear')
+      ) {
+        const h = vm.$createElement
+        vm.$notify({
+          title: '提示',
+          message: h(
+            'i',
+            { style: 'color: teal' },
+            '请在“选课任务”页面，点击新增或者修改进入“选课设置”页面'
+          ),
+          duration: 8 * 1000
+        })
+        vm.$router.push({ name: 'Xkrw' })
+      }
+    })
+  },
   components: { BaseInfo, OptionalSubject, JoinedStudent, ChooseExplain },
   data() {
     return {

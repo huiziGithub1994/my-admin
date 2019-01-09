@@ -9,7 +9,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-button type="primary" class="saveBtn">保存</el-button>
+          <el-button type="primary" class="saveBtn" @click="saveBtn">保存</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="10">
@@ -22,14 +22,14 @@
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="chooseName" label="选课任务名称">
-            <el-input placeholder="请输入内容" v-model="data.chooseName" clearable></el-input>
+            <el-input placeholder="请输入内容" v-model="data.choseTaskName" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="chooseType" label="选课类型">
-            <el-radio-group v-model="data.chooseType">
+            <el-radio-group v-model="data.choseCourseType">
               <el-radio label="1">6选3</el-radio>
               <el-radio label="2">7选3</el-radio>
               <el-radio label="3">分层教学</el-radio>
@@ -40,17 +40,17 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="12">
-          <el-form-item prop="chooseTime" label="选课时间段">
-            <el-date-picker v-model="data.chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+          <el-form-item label="选课时间段">
+            <el-date-picker v-model="chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="formatTime" value-format="formatTime"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="status" label="发布状态">
-            <el-radio-group v-model="data.status">
-              <el-radio label="1">发布</el-radio>
-              <el-radio label="2">未发布</el-radio>
+            <el-radio-group v-model="data.pubFlag">
+              <el-radio label="0">发布</el-radio>
+              <el-radio label="1">未发布</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -58,7 +58,7 @@
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="desc" label="简要说明">
-            <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="data.desc"></el-input>
+            <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="data.moreDesc"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -67,14 +67,29 @@
 </template>
 
 <script>
+import { qrySjsChoseTaskByChoseId, saveSjsChoseCourseDef } from '@/api/xkrw'
+import { setDatas } from '@/utils/businessUtil'
 import moment from 'moment'
-// import { getChooseCourseBaseInfo } from '@/api/xkdy'
 export default {
   name: 'BaseInfo',
   data() {
     return {
+      choseRsId: sessionStorage.getItem('local_arrangeId'),
+      formatTime: 'yyyy-MM-dd hh:mm',
       // 表单数据
-      data: {},
+      data: {
+        beginTime: '',
+        choseCourseType: '',
+        choseTaskName: '',
+        createDate: '',
+        endTime: '',
+        moreDesc: null, // 简要说明
+        pubFlag: '',
+        schoolId: '',
+        schoolYear: '',
+        termCode: ''
+      },
+      chooseTime: null,
       // 基础信息表单规则
       baseInfoRules: {
         schoolYear: [
@@ -83,47 +98,61 @@ export default {
         termCode: [
           { required: true, message: '请选择学期', trigger: 'change' }
         ],
-        chooseName: [
+        choseTaskName: [
           { required: true, message: '请输入选课任务名称', trigger: 'blur' }
         ],
-        chooseType: [
+        choseCourseType: [
           { required: true, message: '请选择选课类型', trigger: 'change' }
         ],
-        chooseTime: [
-          { required: true, message: '请选择选课时间段', trigger: 'change' }
-        ],
-        status: [
+        // chooseTime: [
+        //   { required: true, message: '请选择选课时间段', trigger: 'change' }
+        // ],
+        pubFlag: [
           { required: true, message: '请选择发布状态', trigger: 'change' }
         ]
       }
     }
   },
-  created() {},
+  created() {
+    const { local_curYear, local_curTerm } = sessionStorage
+    Object.assign(this.data, {
+      schoolYear: local_curYear,
+      termCode: local_curTerm
+    })
+    if (this.choseRsId) {
+      this.fetchFormData()
+    }
+  },
   methods: {
     // 获取表单数据
-    async fetchFormData() {},
-    // 下一步按钮
-    baseInfoNext() {
-      this.$refs['baseInfoRef'].validate(valid => {
+    async fetchFormData() {
+      const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
+      setDatas(this.data, res.DATA)
+      this.$set(this.chooseTime)
+      // this.chooseTime.push(...[res.DATA.beginTime, res.DATA.endTime])
+      console.log(this.chooseTime)
+    },
+    // 保存按钮
+    saveBtn() {
+      if (!this.chooseTime) {
+        this.$message.error('选课时间段不能为空')
+        return
+      }
+      this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
-          console.log('submit!')
+          const params = {
+            ...this.data,
+            beginTime: moment(this.chooseTime[0]).format(this.formatTime),
+            endTime: moment(this.chooseTime[1]).format(this.formatTime)
+          }
+          if (this.choseRsId) {
+            params.choseRsId = this.choseRsId
+          }
+          await saveSjsChoseCourseDef(params)
+          this.$message.success('保存成功')
         } else {
-          console.log('error submit!!')
           return false
         }
-      })
-    },
-    // 节次时间数据的重组
-    assembleLession(data) {
-      data.forEach(item => {
-        item.lessionsTime.forEach(lession => {
-          Object.assign(lession, {
-            time: [
-              moment(lession.beginTime, 'HH:mm'),
-              moment(lession.endTime, 'HH:mm')
-            ]
-          })
-        })
       })
     }
   }

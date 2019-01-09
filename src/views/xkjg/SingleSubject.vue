@@ -64,7 +64,7 @@ require('echarts/lib/component/title')
 require('echarts/lib/component/legend')
 
 import { classCascaderSelect } from '@/components/selectChild/data'
-import { getSingleSubjectAnalysis } from '@/api/xkdy'
+import { getSingleSubjectAnalysis } from '@/api/xkrw'
 
 export default {
   data() {

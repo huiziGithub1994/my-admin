@@ -2,19 +2,28 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
 
-// 选课设置 - 基础信息
-export function getChooseCourseBaseInfo(surveyId) {
+// 选课列表
+export function qryChoseCourseList(listQuery) {
   return request({
-    url: URL.chooseCourseBaseInfo,
-    params: { surveyId }
+    url: URL.qryChoseCourseList,
+    params: listQuery
   })
 }
 
-// 选课列表
-export function getXKDYListInfo(listQuery) {
+// 选课设置 - 基础信息
+export function qrySjsChoseTaskByChoseId(params) {
   return request({
-    url: URL.qryXKDYList,
-    params: listQuery
+    url: URL.qrySjsChoseTaskByChoseId,
+    params
+  })
+}
+
+// 选课设置 - 基础信息保存
+export function saveSjsChoseCourseDef(params) {
+  return request({
+    url: URL.saveSjsChoseCourseDef,
+    method: 'post',
+    params
   })
 }
 

@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { getClassesOptions, getJoinedStudents } from '@/api/xkdy'
+import { getClassesOptions, getJoinedStudents } from '@/api/xkrw'
 export default {
   data() {
     return {

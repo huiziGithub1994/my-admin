@@ -38,6 +38,8 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+// import { getCookie } from '@/utils/auth'
+
 export default {
   name: 'Layout',
   components: {
@@ -94,9 +96,24 @@ export default {
       if (this.choosedMenu.command === choosed.command) return
       this.choosedMenu = choosed
       this.$store.commit('SET_MENUTYPE', choosed.command)
+      this.initLocal() // local 变量
       this.$store.dispatch('delAllViews')
       this.$router.push({ name: 'Home' })
       this.$store.dispatch('addView', this.$route)
+    },
+    initLocal() {
+      this.$store.commit('SET_ARRANGENAME', '')
+      const sessions = [
+        'local_arrangeId',
+        'arrangeName',
+        'local_curYear',
+        'local_curTerm'
+      ]
+      sessions.forEach(key => {
+        sessionStorage.removeItem(key)
+      })
+      // sessionStorage.setItem('local_curYear', getCookie('curYear'))
+      // sessionStorage.setItem('local_curTerm', getCookie('curTerm'))
     },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
