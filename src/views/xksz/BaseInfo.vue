@@ -36,7 +36,7 @@
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="chooseType" label="选课类型">
-            <el-radio-group v-model="data.choseType">
+            <el-radio-group v-model="data.choseCourseType">
               <el-radio label="1">新高考选考</el-radio>
               <el-radio label="2">分层教学</el-radio>
               <el-radio label="3">校本课</el-radio>
@@ -86,7 +86,7 @@ export default {
       // 表单数据
       data: {
         beginTime: '',
-        choseType: '1',
+        choseCourseType: '1',
         choseTaskName: '',
         endTime: '',
         moreDesc: null, // 简要说明
@@ -113,7 +113,7 @@ export default {
         choseTaskName: [
           { required: true, message: '请输入选课任务名称', trigger: 'blur' }
         ],
-        choseType: [
+        choseCourseType: [
           { required: true, message: '请选择选课类型', trigger: 'change' }
         ],
         // chooseTime: [
