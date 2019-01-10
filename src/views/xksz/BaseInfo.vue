@@ -134,7 +134,6 @@ export default {
     },
     // 保存按钮
     saveBtn() {
-      console.log(this.chooseTime)
       if (this.chooseTime === null || this.chooseTime.length === 0) {
         this.$message.error('选课时间段不能为空')
         return

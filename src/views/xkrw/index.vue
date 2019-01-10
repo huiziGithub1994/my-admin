@@ -26,7 +26,7 @@
     <div>
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
-        <el-table-column property="choseTastName" show-overflow-tooltip min-width="160px" label="选课任务名称"/>
+        <el-table-column property="choseTaskName" show-overflow-tooltip min-width="160px" label="选课任务名称"/>
         <el-table-column property="pubFlag" label="排课状态" width="80px"></el-table-column>
         <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="150px">
           <template slot-scope="scope">

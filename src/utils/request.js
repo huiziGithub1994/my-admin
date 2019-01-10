@@ -53,19 +53,21 @@ export default function service(settings) {
   if (defaultOption.method === 'post') {
     defaultOption.data = settings.params
     Reflect.deleteProperty(defaultOption, 'params')
-    defaultOption.headers = {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    }
-    defaultOption.transformRequest = [
-      function(data) {
-        data = Qs.stringify(data)
-        return data
+    if (!defaultOption.headers) {
+      defaultOption.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       }
-    ]
+      defaultOption.transformRequest = [
+        function(data) {
+          data = Qs.stringify(data)
+          return data
+        }
+      ]
+    }
   }
 
   return new Promise(function(resolve, reject) {
-    // console.log(defaultOption)
+    console.log(defaultOption)
     axiosIns
       .request(defaultOption)
       .then(res => {

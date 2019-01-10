@@ -30,9 +30,9 @@ export function saveSjsChoseCourseDef(params) {
   return request({
     url: URL.saveSjsChoseCourseDef,
     method: 'post',
-    // headers: {
-    //   'Content-Type': 'application/json'
-    // },
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
     params
   })
 }
