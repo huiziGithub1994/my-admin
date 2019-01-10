@@ -38,9 +38,9 @@ export function saveSjsChoseCourseDef(params) {
 }
 
 // 选课设置-》可选学科tab  表单信息
-export function getOptionalSubject(listQuery) {
+export function qrySGKCourseList(listQuery) {
   return request({
-    url: URL.qryOptionalCourse,
+    url: URL.qrySGKCourseList,
     params: listQuery
   })
 }

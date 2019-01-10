@@ -20,6 +20,13 @@
         </el-col>
       </el-row>
       <el-row :gutter="10">
+        <el-col :span="8">
+          <el-form-item label="年级" prop="selectedGrade">
+            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="chooseName" label="选课任务名称">
             <el-input placeholder="请输入内容" v-model="data.choseTaskName" clearable></el-input>
@@ -29,11 +36,10 @@
       <el-row :gutter="10">
         <el-col :span="18">
           <el-form-item prop="chooseType" label="选课类型">
-            <el-radio-group v-model="data.choseCourseType">
-              <el-radio label="1">6选3</el-radio>
-              <el-radio label="2">7选3</el-radio>
-              <el-radio label="3">分层教学</el-radio>
-              <el-radio label="4">校本课</el-radio>
+            <el-radio-group v-model="data.choseType">
+              <el-radio label="1">新高考选考</el-radio>
+              <el-radio label="2">分层教学</el-radio>
+              <el-radio label="3">校本课</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -68,6 +74,7 @@
 
 <script>
 import { qrySjsChoseTaskByChoseId, saveSjsChoseCourseDef } from '@/api/xkrw'
+import { getSegGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
 // import moment from 'moment'
 export default {
@@ -79,7 +86,7 @@ export default {
       // 表单数据
       data: {
         beginTime: '',
-        choseCourseType: '1',
+        choseType: '1',
         choseTaskName: '',
         endTime: '',
         moreDesc: null, // 简要说明
@@ -88,6 +95,12 @@ export default {
         schoolYear: '',
         termCode: ''
       },
+      selectProps: {
+        value: 'gradeId',
+        label: 'gradeName',
+        children: 'gradesList'
+      },
+      gradeOptions: [], // 学段/专业/年级
       chooseTime: [],
       // 基础信息表单规则
       baseInfoRules: {
@@ -100,7 +113,7 @@ export default {
         choseTaskName: [
           { required: true, message: '请输入选课任务名称', trigger: 'blur' }
         ],
-        choseCourseType: [
+        choseType: [
           { required: true, message: '请选择选课类型', trigger: 'change' }
         ],
         // chooseTime: [
@@ -121,8 +134,24 @@ export default {
     if (this.choseRsId) {
       this.fetchFormData()
     }
+    this.fetchGrade()
   },
   methods: {
+    // 年级下拉列表
+    async fetchGrade() {
+      const { local_curYear, local_curTerm } = sessionStorage
+      const res = await getSegGrade({
+        schoolYear: local_curYear,
+        termCode: local_curTerm
+      })
+      res.DATA.forEach(item => {
+        Object.assign(item, {
+          gradeId: item.segId,
+          gradeName: item.segName
+        })
+      })
+      this.gradeOptions = res.DATA
+    },
     // 获取表单数据
     async fetchFormData() {
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })

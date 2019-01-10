@@ -61,7 +61,7 @@ export default {
   saveSjsChoseCourseDef: `/zxx/chose/doSjsChoseCourseDef`, // 保存
 
   // 选课设置 -》 可选学科tab
-  qryOptionalCourse: `/base/qryOptionalCourse`, //  数据
+  qrySGKCourseList: `/zxx/chose/qrySGKCourseList`, // 选课模式查询
   qryAllCourse: `/base/qryAllCourse`, // 包含学科下拉列表数据
 
   // 班次参选学生tab

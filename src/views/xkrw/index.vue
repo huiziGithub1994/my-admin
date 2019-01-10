@@ -28,7 +28,9 @@
         <el-table-column type="index" width="50"/>
         <el-table-column property="choseTaskName" show-overflow-tooltip min-width="160px" label="选课任务名称"/>
         <el-table-column property="pubFlag" label="排课状态" width="80px"></el-table-column>
-        <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="150px">
+        <el-table-column property="beginTime" label="开始时间" width="170px"></el-table-column>
+        <el-table-column property="endTime" label="结束时间" width="170px"></el-table-column>
+        <el-table-column property="createDate" label="创建时间" width="170px">
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | filterTime }}</span>
           </template>
