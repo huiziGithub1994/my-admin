@@ -62,7 +62,7 @@ export default {
 
   // 选课设置 -》 可选学科tab
   qrySGKCourseList: `/zxx/chose/qrySGKCourseList`, // 选课模式查询
-  qryAllCourse: `/base/qryAllCourse`, // 包含学科下拉列表数据
+  saveSGKCourseList: `/zxx/chose/saveSGKCourseList`, // 包含学科下拉列表数据
 
   // 班次参选学生tab
   qryClassesOptions: `/base/qryClassesOptions`, // 班级下拉列表

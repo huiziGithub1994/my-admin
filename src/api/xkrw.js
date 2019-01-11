@@ -45,10 +45,11 @@ export function qrySGKCourseList(listQuery) {
   })
 }
 
-// 选课设置-》可选学科tab  包含学科下拉列表数据
-export function getAllCourse() {
+// 选课设置-》可选学科tab  保存
+export function saveSGKCourseList(params) {
   return request({
-    url: URL.qryAllCourse
+    url: URL.saveSGKCourseList,
+    params
   })
 }
 

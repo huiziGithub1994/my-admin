@@ -35,8 +35,8 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="18">
-          <el-form-item prop="chooseType" label="选课类型">
-            <el-radio-group v-model="data.choseCourseType">
+          <el-form-item prop="chooseType" label="任务类型">
+            <el-radio-group v-model="data.choseType">
               <el-radio label="1">新高考选考</el-radio>
               <el-radio label="2">分层教学</el-radio>
               <el-radio label="3">校本课</el-radio>
@@ -86,14 +86,17 @@ export default {
       // 表单数据
       data: {
         beginTime: '',
-        choseCourseType: '1',
+        choseType: '1',
         choseTaskName: '',
         endTime: '',
         moreDesc: null, // 简要说明
         pubFlag: '',
         schoolId: '',
         schoolYear: '',
-        termCode: ''
+        termCode: '',
+        gradeId: undefined,
+        segId: undefined,
+        selectedGrade: []
       },
       selectProps: {
         value: 'gradeId',
@@ -113,8 +116,11 @@ export default {
         choseTaskName: [
           { required: true, message: '请输入选课任务名称', trigger: 'blur' }
         ],
-        choseCourseType: [
+        choseType: [
           { required: true, message: '请选择选课类型', trigger: 'change' }
+        ],
+        selectedGrade: [
+          { required: true, message: '请选择年级', trigger: 'change' }
         ],
         // chooseTime: [
         //   { required: true, message: '请选择选课时间段', trigger: 'change' }
@@ -156,6 +162,8 @@ export default {
     async fetchFormData() {
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       setDatas(this.data, res.DATA)
+      const { segId, gradeId } = this.data
+      this.data.selectedGrade = [segId, gradeId]
       const timeArr = ['beginTime', 'endTime']
       timeArr.forEach((key, index) => {
         this.$set(this.chooseTime, index, res.DATA[key])
@@ -172,7 +180,9 @@ export default {
           const params = {
             ...this.data,
             beginTime: this.chooseTime[0],
-            endTime: this.chooseTime[1]
+            endTime: this.chooseTime[1],
+            segId: this.data.selectedGrade[0],
+            gradeId: this.data.selectedGrade[1]
           }
           if (this.choseRsId) {
             params.choseRsId = this.choseRsId

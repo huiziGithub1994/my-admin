@@ -114,7 +114,7 @@ export default {
       this.listLoading = true
       const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
       qryChoseCourseList({ dataStr: JSON.stringify(params) }).then(res => {
-        this.pageTotal = res.SUM
+        this.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false
       })
@@ -160,15 +160,15 @@ export default {
     },
     // 修改按钮
     editXk(row) {
-      const { schoolYear, termCode, choseRsId, choseTastName } = row
+      const { schoolYear, termCode, choseRsId, choseTaskName } = row
       if (sessionStorage) {
         sessionStorage.setItem('local_curYear', schoolYear)
         sessionStorage.setItem('local_curTerm', termCode)
         sessionStorage.setItem('local_arrangeId', choseRsId) // choseRsId
         const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
           +termCode === 1 ? '一' : '二'
-        } 学期 , ${choseTastName}`
-        sessionStorage.setItem('arrangeName', nameStr) // choseTastName
+        } 学期 , ${choseTaskName}`
+        sessionStorage.setItem('arrangeName', nameStr) // choseTaskName
         this.$store.commit('SET_ARRANGENAME', nameStr)
       }
       this.$router.push({ name: 'Xksz' })
