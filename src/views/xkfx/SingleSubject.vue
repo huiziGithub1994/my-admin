@@ -3,13 +3,13 @@
   <div>
     <div class="top-operation">
       <div>
-        <label>选课任务名称</label>
-        <span>{{ data.taskName }}</span>
+        <label>选课任务名称：</label>
+        <span>{{ arrangeName }}</span>
       </div>
-      <div>
+      <!-- <div>
         <label>年级</label>
         <el-cascader expand-trigger="hover" :options="classOptions" v-model="selectedClass" @change="fetchData"></el-cascader>
-      </div>
+      </div>-->
     </div>
     <div>
       <div class="left">
@@ -19,31 +19,31 @@
             <ul>
               <li>
                 本次应选课
-                <span class="text-green">{{ data.analysis.needNum }}</span>人
+                <span class="text-green">{{ data.needNum }}</span>人
               </li>
               <li>
                 实际选课
-                <span class="text-red">{{ data.analysis.truthNum }}</span>人
+                <span class="text-red">{{ data.truthNum }}</span>人
               </li>
               <li>
                 未完成选课
-                <span class="text-red">{{ data.analysis.noChoose }}</span>人
+                <span class="text-red">{{ data.noChoose }}</span>人
               </li>
               <li>
                 共
-                <span class="text-green">{{ data.analysis.allClasses }}</span>个班级
+                <span class="text-green">{{ data.allClasses }}</span>个班级
               </li>
               <li>
                 共完成选课班级
-                <span class="text-green">{{ data.analysis.completeClass }}</span>个
+                <span class="text-green">{{ data.completeClass }}</span>个
               </li>
             </ul>
           </div>
         </div>
         <div class="table-outer">
           <el-table ref="multipleTable" :data="data.tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="325">
-            <el-table-column label="科目" property="name"></el-table-column>
-            <el-table-column label="选课人数" property="value"></el-table-column>
+            <el-table-column label="科目" property="courseName"></el-table-column>
+            <el-table-column label="选课人数" property="tmpCount"></el-table-column>
           </el-table>
         </div>
       </div>
@@ -63,41 +63,53 @@ require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
 require('echarts/lib/component/legend')
 
-import { classCascaderSelect } from '@/components/selectChild/data'
 import { getSingleSubjectAnalysis } from '@/api/xkrw'
+import { setDatas } from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
+      choseRsId: sessionStorage.getItem('local_arrangeId'),
       // 年级选中值
       selectedClass: ['01', '01'],
-      classOptions: [],
       data: {
-        analysis: {},
-        tableData: []
+        needNum: 0,
+        truthNum: 0,
+        noChoose: 0,
+        allClasses: 0,
+        completeClass: 0,
+        tableData: [{ courseName: '', tmpCount: 0 }]
       },
       chartInstance: undefined
     }
   },
   computed: {
     legend() {
-      return this.data.tableData.map(item => item.name)
+      return this.data.tableData.map(item => item.courseName)
     },
     series() {
-      return this.data.tableData
-    }
+      const newData = []
+      this.data.tableData.forEach(item => {
+        newData.push({
+          name: item.courseName,
+          value: item.tmpCount
+        })
+      })
+      console.log(newData)
+      return newData
+    },
+    ...mapGetters(['arrangeName'])
   },
-  created() {
-    this.classOptions = [...classCascaderSelect]
-  },
+  created() {},
   mounted() {
     this.drawLine() // 初始化
     this.fetchData()
   },
   methods: {
     async fetchData() {
-      const res = await getSingleSubjectAnalysis()
-      this.data = res.DATA
+      const res = await getSingleSubjectAnalysis({ choseRsId: this.choseRsId })
+      setDatas(this.data, res.DATA)
       this.selectedClassChange()
     },
     drawLine() {
@@ -158,13 +170,13 @@ export default {
     > label {
       width: 100px;
       display: inline-block;
-      &:after {
-        content: '*';
-        color: red;
-        position: relative;
-        top: 3px;
-        margin-left: 3px;
-      }
+      // &:after {
+      //   content: '*';
+      //   color: red;
+      //   position: relative;
+      //   top: 3px;
+      //   margin-left: 3px;
+      // }
     }
   }
 }

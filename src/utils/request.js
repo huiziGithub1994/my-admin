@@ -46,7 +46,7 @@ axiosIns.interceptors.response.use(
 export default function service(settings) {
   const defaultOption = {
     baseURL: process.env.BASE_API, // api 的 base_url
-    timeout: 5000, // 请求超时时间
+    timeout: 8000, // 请求超时时间
     method: 'get',
     ...settings
   }

@@ -176,10 +176,10 @@ export const xkRouterMap = [
         meta: { title: '选课设置', icon: 'xksz' }
       },
       {
-        path: 'xkjg',
-        name: 'Xkjg',
-        component: () => import('@/views/xkjg/index'),
-        meta: { title: '选课结果', icon: 'result' }
+        path: 'xkfx',
+        name: 'Xkfx',
+        component: () => import('@/views/xkfx/index'),
+        meta: { title: '选课分析', icon: 'result' }
       }
     ]
   }

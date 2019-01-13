@@ -9,6 +9,13 @@ export function qryChoseCourseList(listQuery) {
     params: listQuery
   })
 }
+// 选课列表
+export function pubChoseTask(listQuery) {
+  return request({
+    url: URL.pubChoseTask,
+    params: listQuery
+  })
+}
 // 选课列表 删除
 export function delChooseCourse(listQuery) {
   return request({
@@ -53,14 +60,14 @@ export function saveSGKCourseList(params) {
   })
 }
 
-// 选课设置-》班次参选学生tab  班级下拉列表
+// 选课设置-》参选学生tab  班级下拉列表
 export function getClassesOptions(listQuery) {
   return request({
     url: URL.qryClassesOptions,
     params: listQuery
   })
 }
-// 选课设置-》班次参选学生tab 参与学生列表
+// 选课设置-》参选学生tab 参与学生列表
 export function getJoinedStudents(listQuery) {
   return request({
     url: URL.qryJoinedStudents,

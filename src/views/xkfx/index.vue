@@ -16,15 +16,30 @@ import SingleSubject from './SingleSubject' // 单科分析tab页组件
 import AssembleSubject from './AssembleSubject' // 选课组合分析tab页组件
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$notify.close()
+      if (!sessionStorage.getItem('local_arrangeId')) {
+        const h = vm.$createElement
+        vm.$notify({
+          title: '提示',
+          message: h(
+            'i',
+            { style: 'color: teal' },
+            '请在“选课任务”页面，点击分析进入“选课分析”页面'
+          ),
+          duration: 8 * 1000
+        })
+        vm.$router.push({ name: 'Xkrw' })
+      }
+    })
+  },
   components: { SingleSubject, AssembleSubject },
   data() {
     return {
       activeTabName: 'one' // tab页高亮
     }
-  },
-  computed: {},
-  created() {},
-  methods: {}
+  }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

@@ -8,8 +8,11 @@
             <selectChild v-model="data.schoolYear" clearable tp="yearSelect"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-button type="primary" class="saveBtn" @click="saveBtn">保存</el-button>
+        <el-col :span="16">
+          <div class="btns-right">
+            <el-button type="primary" @click="saveBtn">保 存</el-button>
+            <el-button type="success" @click="nextStep">下一步</el-button>
+          </div>
         </el-col>
       </el-row>
       <el-row :gutter="10">
@@ -53,18 +56,15 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="18">
-          <el-form-item prop="status" label="发布状态">
-            <el-radio-group v-model="data.pubFlag">
-              <el-radio label="1">发布</el-radio>
-              <el-radio label="0">未发布</el-radio>
-            </el-radio-group>
+          <el-form-item label="发布状态">
+            <span>{{ data.pubFlag == '1' ? '发布':'未发布' }}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="desc" label="简要说明">
-            <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="data.moreDesc"></el-input>
+        <el-col :span="24">
+          <el-form-item prop="desc" label="选课说明">
+            <div ref="editor"></div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,6 +76,7 @@
 import { qrySjsChoseTaskByChoseId, saveSjsChoseCourseDef } from '@/api/xkrw'
 import { getSegGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
+import E from 'wangeditor'
 // import moment from 'moment'
 export default {
   name: 'BaseInfo',
@@ -90,7 +91,7 @@ export default {
         choseTaskName: '',
         endTime: '',
         moreDesc: null, // 简要说明
-        pubFlag: '',
+        pubFlag: '2',
         schoolId: '',
         schoolYear: '',
         termCode: '',
@@ -121,12 +122,6 @@ export default {
         ],
         selectedGrade: [
           { required: true, message: '请选择年级', trigger: 'change' }
-        ],
-        // chooseTime: [
-        //   { required: true, message: '请选择选课时间段', trigger: 'change' }
-        // ],
-        pubFlag: [
-          { required: true, message: '请选择发布状态', trigger: 'change' }
         ]
       }
     }
@@ -137,12 +132,47 @@ export default {
       schoolYear: local_curYear,
       termCode: local_curTerm
     })
-    if (this.choseRsId) {
-      this.fetchFormData()
-    }
+    this.choseRsId && this.fetchFormData()
     this.fetchGrade()
   },
+  mounted() {
+    this.cerateEditor()
+  },
   methods: {
+    cerateEditor() {
+      this.editor = new E(this.$refs.editor)
+      this.editor.customConfig.onchange = html => {
+        this.data.moreDesc = html
+      }
+      // 隐藏“网络图片”tab,显示上传图片tab
+      const initPrams = {
+        showLinkImg: false,
+        uploadImgShowBase64: true,
+        zIndex: 10,
+        menus: [
+          'head', // 标题
+          'bold', // 粗体
+          'fontSize', // 字号
+          'fontName', // 字体
+          'italic', // 斜体
+          'underline', // 下划线
+          'strikeThrough', // 删除线
+          'foreColor', // 文字颜色
+          'backColor', // 背景颜色
+          'link', // 插入链接
+          'list', // 列表
+          'justify', // 对齐方式
+          'quote', // 引用
+          'emoticon', // 表情
+          'image', // 插入图片
+          'table', // 表格
+          'undo', // 撤销s
+          'redo' // 重复
+        ]
+      }
+      Object.assign(this.editor.customConfig, initPrams)
+      this.editor.create()
+    },
     // 年级下拉列表
     async fetchGrade() {
       const { local_curYear, local_curTerm } = sessionStorage
@@ -162,12 +192,13 @@ export default {
     async fetchFormData() {
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       setDatas(this.data, res.DATA)
-      const { segId, gradeId } = this.data
+      const { segId, gradeId, moreDesc } = this.data
       this.data.selectedGrade = [segId, gradeId]
       const timeArr = ['beginTime', 'endTime']
       timeArr.forEach((key, index) => {
         this.$set(this.chooseTime, index, res.DATA[key])
       })
+      this.editor.txt.html(moreDesc)
     },
     // 保存按钮
     saveBtn() {
@@ -193,12 +224,24 @@ export default {
           return false
         }
       })
+    },
+    nextStep() {
+      this.$emit('tonext', 'two')
     }
   }
 }
 </script>
+<style>
+.w-e-text-container {
+  height: 800px !important;
+}
+</style>
+
 <style rel="stylesheet/scss" lang="scss" scoped>
-.saveBtn {
+.btns-right {
   float: right;
+  button.el-button {
+    width: 70px !important;
+  }
 }
 </style>

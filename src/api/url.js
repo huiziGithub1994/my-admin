@@ -55,6 +55,7 @@ export default {
   // 选课列表（选课任务）
   qryChoseCourseList: `/zxx/chose/qryChoseCourseList`, // 获取选课列表
   delChooseCourse: `/zxx/chose/dSjsChoseCourseDef`, // 获取选课列表 删除
+  pubChoseTask: `/zxx/chose/pubChoseTask`, // 获取选课列表 发布
 
   // 选课设置 -》 基础信息
   qrySjsChoseTaskByChoseId: `/zxx/chose/qrySjsChoseTaskByChoseId`, // 查寻
@@ -64,11 +65,11 @@ export default {
   qrySGKCourseList: `/zxx/chose/qrySGKCourseList`, // 选课模式查询
   saveSGKCourseList: `/zxx/chose/saveSGKCourseList`, // 包含学科下拉列表数据
 
-  // 班次参选学生tab
-  qryClassesOptions: `/base/qryClassesOptions`, // 班级下拉列表
-  qryJoinedStudents: `/base/qryJoinedStudents`, // 参与学生信息
+  // 选课设置 -》参选学生tab
+  qryClassesOptions: `/zxx/chose/qryDistinctClassList`, // 班级下拉列表
+  qryJoinedStudents: `/zxx/chose/qryStuAttendList`, // 参与学生信息
   // 选课结果
-  qrySingleSubjectAnalysis: `/base/qrySingleSubjectAnalysis`, //  单科分析
+  qrySingleSubjectAnalysis: `/zxx/chose/qryStuChoseResultInfo`, //  单科分析
   qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
 
   /* 课程计划 */
@@ -94,5 +95,6 @@ export default {
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls
   coursePlainExcelTemplate: `/static/template/coursePlain.xls`, // 课程计划
   subjectLayerExcelTemplate: `/static/template/subjectLayer.xls`, // 走班排课-教学计划-学科分层及课时-走班学科课程分层定义
-  chooseCourseExcelTemplate: `/static/template/chooseCourse.xls` // 走班排课-教学计划-导入学生选课 分层教学学生选课结果
+  chooseCourseExcelTemplate: `/static/template/chooseCourse.xls`, // 走班排课-教学计划-导入学生选课 分层教学学生选课结果
+  joinedStudentExcelTemplate: `/static/template/joinedStudent.xls` // 选课平台-选课设置 - 参选学生tab
 }
