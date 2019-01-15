@@ -82,7 +82,7 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         'a.school_year01': '',
         'a.term_code01': '',

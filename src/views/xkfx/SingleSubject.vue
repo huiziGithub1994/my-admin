@@ -33,15 +33,15 @@
                 共
                 <span class="text-green">{{ data.allClasses }}</span>个班级
               </li>
-              <li>
+              <!-- <li>
                 共完成选课班级
                 <span class="text-green">{{ data.completeClass }}</span>个
-              </li>
+              </li>-->
             </ul>
           </div>
         </div>
         <div class="table-outer">
-          <el-table ref="multipleTable" :data="data.tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="325">
+          <el-table ref="multipleTable" :data="data.tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="343">
             <el-table-column label="科目" property="courseName"></el-table-column>
             <el-table-column label="选课人数" property="tmpCount"></el-table-column>
           </el-table>

@@ -29,9 +29,11 @@ export default {
   qryZbClassroom: `zxx/teachingRoom/qryClassRoomDetail`, // 走班排课详情查询接口
 
   // 排课规则
+  qryArrangeGroupInfo: `/zxx/coursePlan/qryArrangeGroupInfo`, // 课时预排 预排课信息查询
+  saveGroupArrInfo: `/zxx/coursePlan/saveTeaGroupArrInfo`, // 课时预排 预排课信息保存
+  saveCoursePlanInfo: `/zxx/coursePlan/saveCoursePlanInfo`, // 课时预排  新增课时组
   qrySourceAssessment: `/zxx/computeResoure`, // 资源评估 运算走班排课资源按钮
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
-  qryTeachHoursTree: `/base/qryTeachHoursTree`, // 课时预排 treedata
 
   /**  普通排课 */
   // 教学计划
@@ -63,7 +65,8 @@ export default {
 
   // 选课设置 -》 可选学科tab
   qrySGKCourseList: `/zxx/chose/qrySGKCourseList`, // 选课模式查询
-  saveSGKCourseList: `/zxx/chose/saveSGKCourseList`, // 包含学科下拉列表数据
+  saveSGKCourseList: `/zxx/chose/saveSGKCourseList`, // 选课模式查询保存
+  qryGradeCourseList: '/zxx/chose/qryGradeCourseList', // 学科查询课程名称列表
 
   // 选课设置 -》参选学生tab
   qryClassesOptions: `/zxx/chose/qryDistinctClassList`, // 班级下拉列表
@@ -71,6 +74,9 @@ export default {
   // 选课结果
   qrySingleSubjectAnalysis: `/zxx/chose/qryStuChoseResultInfo`, //  单科分析
   qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
+
+  // 学生选课
+  qryStuChooseCourseList: `/zxx/chose/qryStuChooseCourseList`, // 列表查询
 
   /* 课程计划 */
   uploadCoursePlain: `/zxx/uploadSeg`, // 上传模板

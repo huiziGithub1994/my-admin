@@ -51,6 +51,13 @@ export function qrySGKCourseList(listQuery) {
     params: listQuery
   })
 }
+// 选课设置-》可选学科tab  学科查询课程名称列表
+export function qryGradeCourseList(listQuery) {
+  return request({
+    url: URL.qryGradeCourseList,
+    params: listQuery
+  })
+}
 
 // 选课设置-》可选学科tab  保存
 export function saveSGKCourseList(params) {

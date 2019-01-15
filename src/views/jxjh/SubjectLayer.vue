@@ -64,7 +64,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="拖拽" width="80">
-          <template>
+          <template slot-scope="scope">
             <svg-icon class="drag-handler" icon-class="drag"/>
           </template>
         </el-table-column>
@@ -271,7 +271,12 @@ export default {
             this.dialogFormVisible = false
           } else {
             if (res.SUCCESS) {
-              resetForm(this.formData)
+              Object.assign(this.formData, {
+                courseId: '',
+                courseLayerName: '',
+                allName: '',
+                weekHours: undefined
+              })
             }
           }
         } else {

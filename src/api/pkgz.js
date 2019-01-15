@@ -20,10 +20,26 @@ export function qryTeachGroupsTree(listQuery) {
   })
 }
 
-// 排课规则 课时预排 treedata
-export function qryTeachHours(listQuery) {
+// 排课规则 课时预排查询
+export function qryArrangeGroupInfo(listQuery) {
   return request({
-    url: URL.qryTeachHoursTree,
+    url: URL.qryArrangeGroupInfo,
+    params: listQuery
+  })
+}
+// 排课规则 新增课时组
+export function saveCoursePlanInfo(listQuery) {
+  return request({
+    url: URL.saveCoursePlanInfo,
+    method: 'post',
+    params: listQuery
+  })
+}
+// 排课规则 课时预排保存
+export function saveGroupArrInfo(listQuery) {
+  return request({
+    url: URL.saveGroupArrInfo,
+    method: 'post',
     params: listQuery
   })
 }

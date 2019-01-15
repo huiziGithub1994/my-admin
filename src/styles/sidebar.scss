@@ -3,7 +3,7 @@
   .main-container {
     // height: calc(100% - 60px);
     transition: margin-left 0.28s;
-    margin-left: 220px;
+    margin-left: 200px;
     position: relative;
   }
   // 侧边栏
@@ -11,7 +11,7 @@
   }
   .sidebar-container {
     transition: width 0.28s;
-    width: 220px !important;
+    width: 200px !important;
     height: 100%;
     position: fixed;
     font-size: 0px;

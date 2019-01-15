@@ -78,6 +78,11 @@ export default {
   }
 }
 </script>
+<style>
+.scroll-container div.el-scrollbar__wrap {
+  margin-right: 0 !important;
+}
+</style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .scroll-container {
@@ -90,7 +95,7 @@ export default {
       bottom: 0px;
     }
     .el-scrollbar__wrap {
-      height: 49px;
+      // height: 49px;
     }
   }
 }

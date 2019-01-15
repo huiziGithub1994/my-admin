@@ -5,7 +5,10 @@
       <p class="tip">
         <label>温馨提示：</label>先选中左边的课时组,再点击右边的表格进行课时预排。
       </p>
-      <el-button type="primary" @click="saveBtn">保存</el-button>
+      <div>
+        <el-button type="primary" @click="saveBtn">保存</el-button>
+        <el-button type="primary" @click="addBtn" :disabled="addBtnDisabled">新增课时组</el-button>
+      </div>
     </div>
     <div class="area-data">
       <div class="left" :style="{height:treeHeight+'px'}">
@@ -43,14 +46,20 @@
 
 <script>
 import { qryCalendar } from '@/api/base'
-import { qryTeachHours } from '@/api/pkgz'
+import {
+  qryArrangeGroupInfo,
+  saveCoursePlanInfo,
+  saveGroupArrInfo
+} from '@/api/pkgz'
 import { initTableData } from '@/utils/inlineEditTable'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
+      addBtnDisabled: true, // 新增课时组
       arrangeId: sessionStorage.getItem('local_arrangeId'),
-      treeHeight: document.body.clientHeight - 250,
+      treeHeight: document.body.clientHeight - 255,
       completeData: [
         {
           teaGroupId: '001',
@@ -61,11 +70,13 @@ export default {
           arrangeName: '回龙中学2018-2019第一学期高一走班排课',
           teachingClasses: [
             {
-              classId: 'w23132923keo',
-              className: '数A-1班',
-              roomId: 'asdiwerk',
-              roomFullName: '第一教学楼101',
-              teaName: '张清纯'
+              classId: 'fcd8914bc50f4b4e96f2cd00a1e6ec55',
+              className: '英语A-1班',
+              roomId: '9ea6381f7fd246db8b271c34b9d3b88d',
+              rsId: 'a213277528804d3593023f5313c6cd44',
+              teaGroupId: '673f20a5300f443bbf5fbbd6e0cd5eff',
+              teaId: 'f272b814c4c448deb83c6e47d3a3a842',
+              teaName: 'ewrt'
             },
             {
               classId: 'DKkdiekei2230',
@@ -111,6 +122,9 @@ export default {
       choosedTreeNode: {}
     }
   },
+  computed: {
+    ...mapGetters(['calenderId'])
+  },
   async created() {
     // 获取校历表格数据并初始化表格
     await this.fetchEditTableData()
@@ -118,15 +132,30 @@ export default {
   },
   methods: {
     // 获取详情信息
-    getArrangeData() {
-      this.completeData.forEach((item, index) => {
-        this.$set(this.iconArrowMap, index, true)
-        this.$set(this.hoursGroup, index, item) // 课时组数据
-        // 已排课时数据的回填
-        item.cellKey.forEach(cell => {
-          const [row, col] = cell.split(',').map(x => Number(x))
-          this.tableData[row][col].value = item.teaGroupName
+    async getArrangeData() {
+      const res = await qryArrangeGroupInfo({ arrangeId: this.arrangeId })
+      if (!res.SUCCESS) return
+      // 有课时组数据
+      if (res.DATA.length) {
+        this.completeData = res.DATA
+        this.completeData.forEach((item, index) => {
+          this.$set(this.iconArrowMap, index, true)
+          this.$set(this.hoursGroup, index, item) // 课时组数据
+          // 已排课时数据的回填
+          item.cellKey.forEach(cell => {
+            const [row, col] = cell.split(',').map(x => Number(x))
+            this.tableData[row][col].value = item.teaGroupName
+          })
         })
+        return
+      }
+      // 新增课时组数据
+      this.addBtnDisabled = false
+      const h = this.$createElement
+      this.$notify({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '请先点击“新增课时组”按钮'),
+        duration: 8 * 1000
       })
     },
     currentGroupClick(index) {
@@ -143,7 +172,7 @@ export default {
         return
       }
       // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.arrangeId })
+      const res = await qryCalendar({ calenderId: this.calenderId })
       this.calendarData = res.DATA
       this.initEditTableData()
       // 数据填充表格
@@ -205,12 +234,18 @@ export default {
         `${row.lessionSeq.match(reg)[0] - 1},${column.property}`
       )
     },
-    // 获取教学组信息
-    async getTreeData() {
-      const res = await qryTeachHours()
-      this.treeData = res.DATA
+    async saveBtn() {
+      const modelString = []
+      this.completeData.forEach(item => {
+        const { teaGroupId, cellKey } = item
+        modelString.push({ teaGroupId, cellKeyStr: cellKey.join('#') })
+      })
+      await saveGroupArrInfo({
+        arrangeId: this.arrangeId,
+        modelString: JSON.stringify(modelString)
+      })
+      this.$message.success('保存成功')
     },
-    saveBtn() {},
     // 表格单元添加样式
     cellClassName({ row, column, rowIndex, columnIndex }) {
       if (row[columnIndex - 1] && row[columnIndex - 1].isCalendar === true) {
@@ -233,6 +268,13 @@ export default {
         }
       })
       row[index - 1].value = ''
+    },
+    // 新增课时组
+    async addBtn() {
+      await saveCoursePlanInfo({ arrangeId: this.arrangeId })
+      this.$message.success('已成功新增课时组')
+      this.addBtnDisabled = true
+      this.getArrangeData()
     }
   }
 }
@@ -256,7 +298,7 @@ export default {
   display: flex;
   > .left {
     border: 1px solid #dddddd;
-    width: 28%;
+    width: 25%;
     margin-right: 0.5%;
     overflow: auto;
     padding: 0 10px;
@@ -306,7 +348,7 @@ export default {
     top: 17px;
     display: inline-block;
   }
-  > button {
+  > div {
     float: right;
   }
 }

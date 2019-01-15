@@ -33,7 +33,7 @@ import { qryTeachGroupsTree } from '@/api/pkgz'
 export default {
   data() {
     return {
-      treeHeight: document.body.clientHeight - 250,
+      treeHeight: document.body.clientHeight - 260,
       treeData: [],
       defaultProps: {
         children: 'children',

@@ -16,14 +16,8 @@
         {{ tag.title }}
         <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
-      <span class="arrangeName">{{ arrangeName }}</span>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li @click="closeSelectedTag(selectedTag)">关闭</li>
-      <li @click="closeOthersTags">关闭其它</li>
-      <li @click="closeAllTags">关闭所有</li>
-    </ul>
+    <span class="arrangeName">{{ arrangeName }}</span>
   </div>
 </template>
 
@@ -72,6 +66,7 @@ export default {
       return route.path === this.$route.path
     },
     addViewTags() {
+      if (this.$route.name === 'Qxk') return
       this.$store.dispatch('addView', this.$route)
       // const { name } = this.$route
       // if (name) {
@@ -147,6 +142,14 @@ export default {
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" >
+.tags-view-container .tags-view-wrapper {
+  .el-scrollbar__wrap {
+    margin: 0 !important;
+    overflow: unset !important;
+  }
+}
+</style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .arrangeName {
@@ -162,12 +165,13 @@ export default {
   border-bottom: 1px solid #d8dce5;
   // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .hamburger-container {
-    line-height: 43px;
-    height: 34px;
+    overflow: hidden;
     float: left;
-    padding: 0 0 0 10px;
+    margin-left: 10px;
+    margin-top: 7px;
   }
   .tags-view-wrapper {
+    float: left;
     .tags-view-item {
       display: inline-block;
       position: relative;

@@ -120,9 +120,6 @@ export default {
     height: 60px;
   }
 }
-.my-table {
-  margin-top: 5px;
-}
 .saveWapper {
   width: 600px;
   overflow: hidden;

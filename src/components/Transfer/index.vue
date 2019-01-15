@@ -139,7 +139,7 @@ export default {
       // 必选课程
       mustChoseStr &&
         mustChoseStr.split(',').forEach(item => {
-          this.canSelect[item.split('^^')[0]] = true
+          this.canSelect[item.split('*')[0]] = true
         })
       this.transfer('can', 'must')
     },
@@ -169,7 +169,7 @@ export default {
       })
       const mustChoseStr = []
       this.mustData.forEach(item => {
-        mustChoseStr.push(item.key1 + '^^' + item.label)
+        mustChoseStr.push(item.key1 + '*' + item.label)
       })
       return {
         choseValue: choseValue.join(','),

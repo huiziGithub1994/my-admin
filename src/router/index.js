@@ -180,6 +180,19 @@ export const xkRouterMap = [
         name: 'Xkfx',
         component: () => import('@/views/xkfx/index'),
         meta: { title: '选课分析', icon: 'result' }
+      },
+      {
+        path: 'xsxk',
+        name: 'Xsxk',
+        component: () => import('@/views/xsxk/index'),
+        meta: { title: '学生选课', icon: 'result' }
+      },
+      {
+        path: '/qxk',
+        name: 'Qxk',
+        component: () => import('@/views/xsxk/chooseCourse.vue'),
+        meta: { title: '选课', icon: 'result' },
+        hidden: true
       }
     ]
   }
