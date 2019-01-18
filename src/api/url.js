@@ -76,7 +76,9 @@ export default {
   qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
 
   // 学生选课
-  qryStuChooseCourseList: `/zxx/chose/qryStuChooseCourseList`, // 列表查询
+  qryStuChooseCourseList: `/zxx/chose/qryStuChooseTaskList`, // 列表查询
+  qryStuChooseTaskDef: `/zxx/chose/qryStuChooseTaskDef`, // 选课详情
+  doStuChose: `/zxx/chose/doStuChose`, // 选课详情
 
   /* 课程计划 */
   uploadCoursePlain: `/zxx/uploadSeg`, // 上传模板

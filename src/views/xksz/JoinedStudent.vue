@@ -72,7 +72,8 @@ export default {
     return {
       search: {
         'a.class_name01': '',
-        'a.stu_name06': ''
+        'a.stu_name06': '',
+        'a.chose_rs_id01': sessionStorage.getItem('local_arrangeId')
       },
       // 班级下拉选项数据
       classesOptions: [],
@@ -111,6 +112,7 @@ export default {
     },
     // 查询按钮
     queryBtn() {
+      this.pageTot.currentPage = 1
       this.fetchJoinedStudents()
     },
     // 获取表格信息
@@ -143,7 +145,6 @@ export default {
           'a.class_name01': '',
           'a.stu_name06': ''
         })
-        this.pageTot.currentPage = 1
         this.queryBtn()
       } else {
         this.$message({

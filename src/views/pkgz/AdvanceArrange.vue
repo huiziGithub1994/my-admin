@@ -142,9 +142,11 @@ export default {
           this.$set(this.iconArrowMap, index, true)
           this.$set(this.hoursGroup, index, item) // 课时组数据
           // 已排课时数据的回填
+          item.cellKey = item.cellKey.filter(key => key)
           item.cellKey.forEach(cell => {
             const [row, col] = cell.split(',').map(x => Number(x))
-            this.tableData[row][col].value = item.teaGroupName
+            const tableCel = this.tableData[row][col]
+            tableCel && (tableCel.value = item.teaGroupName)
           })
         })
         return

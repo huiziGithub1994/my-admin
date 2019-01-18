@@ -37,7 +37,7 @@
         </el-table-column>
         <el-table-column property="schoolYear" label="学年" width="130px">
           <template slot-scope="scope">
-            <span>{{ `${scope.row.schoolYear} - ${parseInt(scope.row.schoolYear)+1} 学年` }}</span>
+            <span>{{ `${scope.row.schoolYear}-${parseInt(scope.row.schoolYear)+1}学年` }}</span>
           </template>
         </el-table-column>
         <el-table-column property="termCode" label="学期" width="100px">

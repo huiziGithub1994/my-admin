@@ -11,6 +11,7 @@
         </div>
       </condition>
       <operation>
+        <el-button type="primary">保存顺序</el-button>
         <el-button type="primary" @click="addBtn">增加</el-button>
         <el-button type="primary" @click="editBtn">修改</el-button>
         <el-button type="primary" @click="deleteBtn">删除</el-button>

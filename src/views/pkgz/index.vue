@@ -10,12 +10,12 @@
     </div>
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
-        <el-tab-pane label="资源评估" name="one">
+        <!-- <el-tab-pane label="资源评估" name="one">
           <resource-assessment v-if="activeTabName === 'one'"/>
         </el-tab-pane>
         <el-tab-pane label="教学分组" name="two">
           <teach-group v-if="activeTabName === 'two'"/>
-        </el-tab-pane>
+        </el-tab-pane>-->
         <el-tab-pane label="学生分班" name="three">
           <split-student v-if="activeTabName === 'three'"/>
         </el-tab-pane>
@@ -43,7 +43,7 @@ export default {
     return {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       tabsHeight: document.body.clientHeight - 180,
-      activeTabName: 'one' // tab页高亮
+      activeTabName: 'three' // tab页高亮
     }
   },
   computed: {
