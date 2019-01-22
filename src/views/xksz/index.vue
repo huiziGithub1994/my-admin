@@ -3,7 +3,7 @@
   <div class="conent">
     <el-tabs v-model="activeTabName">
       <el-tab-pane label="基础信息" name="one">
-        <base-info v-if="activeTabName == 'one'" @tonext="nextStep"></base-info>
+        <base-info v-if="activeTabName == 'one'" @tonext="nextStep" :visible.sync="tabDisabled"></base-info>
       </el-tab-pane>
       <el-tab-pane label="可选学科" name="two" :disabled="tabDisabled">
         <optional-subject v-if="activeTabName == 'two'" @tonext="nextStep"></optional-subject>
@@ -51,7 +51,17 @@ export default {
   data() {
     return {
       activeTabName: 'one', // tab页高亮
-      tabDisabled: !sessionStorage.getItem('local_arrangeId')
+      tabDisabled: false
+    }
+  },
+  created() {
+    if (
+      sessionStorage.getItem('local_arrangeId') === null ||
+      sessionStorage.getItem('local_arrangeId') === undefined
+    ) {
+      this.tabDisabled = true
+    } else {
+      this.tabDisabled = false
     }
   },
   methods: {

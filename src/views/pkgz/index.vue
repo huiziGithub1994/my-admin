@@ -62,7 +62,6 @@ export default {
             '请在“教学计划”页面，执行完新增“教学计划”流程，再进入“排课规则”页面。或者在“排课任务”页面，点击排课进入“教学计划”页面，点击“下一步”执行完教学计划流程，再进入“排课规则”页面'
           )
         })
-
         this.$router.push({
           name: 'Jxjh',
           query: { curYear: this.curYear, curTerm: this.curTerm }

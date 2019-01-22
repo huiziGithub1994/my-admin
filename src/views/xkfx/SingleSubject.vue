@@ -43,7 +43,7 @@
         <div class="table-outer">
           <el-table ref="multipleTable" :data="data.tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" :height="343">
             <el-table-column label="科目" property="courseName"></el-table-column>
-            <el-table-column label="选课人数" property="tmpCount"></el-table-column>
+            <el-table-column label="选课人数" property="tmpCount" width="80px"></el-table-column>
           </el-table>
         </div>
       </div>
@@ -68,6 +68,12 @@ import { setDatas } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 
 export default {
+  props: {
+    choosed: {
+      type: String,
+      default: '1'
+    }
+  },
   data() {
     return {
       choseRsId: sessionStorage.getItem('local_arrangeId'),
@@ -96,10 +102,14 @@ export default {
           value: item.tmpCount
         })
       })
-      console.log(newData)
       return newData
     },
     ...mapGetters(['arrangeName'])
+  },
+  watch: {
+    choosed() {
+      this.fetchData()
+    }
   },
   created() {},
   mounted() {
@@ -108,7 +118,10 @@ export default {
   },
   methods: {
     async fetchData() {
-      const res = await getSingleSubjectAnalysis({ choseRsId: this.choseRsId })
+      const res = await getSingleSubjectAnalysis({
+        choseRsId: this.choseRsId,
+        groupType: this.choosed
+      })
       setDatas(this.data, res.DATA)
       this.selectedClassChange()
     },
@@ -187,7 +200,7 @@ export default {
   height: 450px;
 }
 .left {
-  width: 250px;
+  width: 290px;
   margin-right: 10px;
   padding: 5px;
   .desc {

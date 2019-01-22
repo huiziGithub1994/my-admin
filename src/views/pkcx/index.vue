@@ -137,7 +137,11 @@ export default {
     // 获取表格数据
     fetchData() {
       this.listLoading = true
-      const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
+      const params = Object.assign(
+        {},
+        this.listQuery,
+        paramsToString(this.pageTot)
+      )
       getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTotal = res.NUM
         this.tableData = res.DATA

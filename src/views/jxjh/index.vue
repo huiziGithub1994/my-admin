@@ -11,7 +11,7 @@
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
         <el-tab-pane label="基础信息" name="1">
-          <base-info v-if="activeTabName == 1"/>
+          <base-info :visible.sync="tabDisabled" v-if="activeTabName == 1"/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
           <subject-layer v-if="activeTabName == 2"/>
@@ -74,12 +74,18 @@ export default {
   data() {
     return {
       tabsHeight: document.body.clientHeight - 190,
-      activeTabName: '1' // tab页高亮
+      activeTabName: '1', // tab页高亮
+      tabDisabled: true
     }
   },
-  computed: {
-    tabDisabled() {
-      return sessionStorage.getItem('local_arrangeId') === undefined
+  created() {
+    if (
+      sessionStorage.getItem('local_arrangeId') === null ||
+      sessionStorage.getItem('local_arrangeId') === undefined
+    ) {
+      this.tabDisabled = true
+    } else {
+      this.tabDisabled = false
     }
   },
   methods: {

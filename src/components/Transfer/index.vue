@@ -153,12 +153,8 @@ export default {
   },
   methods: {
     getData() {
-      if (this.ismust === '1' && this.mustData.length !== 1) {
-        this.$message.warning('必选课程不能为空')
-        return false
-      }
-      if (this.ismust === '2' && this.mustData.length !== 2) {
-        this.$message.warning('必须选择两门必选课程')
+      if (this.mustData.length < +this.ismust) {
+        this.$message.warning('必选课程必须大于等于' + this.ismust + '门')
         return false
       }
       const choseValue = []
@@ -228,13 +224,6 @@ export default {
     },
     // 选择按钮 》已选课程->必选课程
     twoToThree() {
-      const selectedKeys = Object.keys(this.alreadySelect).filter(key => {
-        if (this.alreadySelect[key]) return key
-      })
-      if (selectedKeys.length + this.mustData.length > +this.ismust) {
-        this.$message.warning('必选课程不能超过' + this.ismust + '科')
-        return
-      }
       this.transfer('already', 'must')
     },
     // 选择按钮 》必选课程->已选课程

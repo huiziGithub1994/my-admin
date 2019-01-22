@@ -4,13 +4,13 @@
       <condition>
         <div class="condition">
           <label>课程名称</label>
-          <el-select v-model="search['courseId']" clearable>
+          <el-select v-model="search['a.course_id01']" clearable>
             <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </div>
         <div class="condition">
           <label>教师名称</label>
-          <el-input v-model.trim="search['teaName']" clearable></el-input>
+          <el-input v-model.trim="search['a.tea_name06']" clearable></el-input>
         </div>
       </condition>
       <operation>
@@ -20,111 +20,74 @@
             <el-checkbox label="2">显示时间</el-checkbox>
           </el-checkbox-group>
         </div>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="queryBtn">查询</el-button>
         <el-button type="primary">下载</el-button>
       </operation>
     </div>
-    <div class="pageBottom schedule-table">
-      <el-table ref="singleTable" :data="tableData" style="width:80%" border :cell-class-name="cellClassName">
-        <el-table-column
-          :property="index === 0 ? 'lessionSeq' : index-1+''"
-          :label="item"
-          v-for="(item,index) in colHeaders"
-          :key="index"
-          :width="index === 0 ? '100px':'auto'"
-          :align="index === 0 ? 'center':'left'"
-          header-align="center"
-        >
-          <template slot-scope="scope">
-            <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
-            <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
-              <div>{{ scope.row[index-1].cellValue }}</div>
-              <div>{{ scope.row[index-1].cellPosition }}</div>
-              <div>{{ scope.row[index-1].beginTime }}-{{ scope.row[index-1].endTime }}</div>
-            </div>
-            <template v-else>
-              <div class="scheduleCell"></div>
+    <div v-loading="loading">
+      <div class="pageBottom schedule-table" v-for="(tableData,index) in tableDatas" :key="index">
+        <div class="teaTableName">
+          <span>{{ tableData.teaName }}</span>老师的课表
+        </div>
+        <el-table ref="singleTable" :data="tableData.data" style="width:80%" border :cell-class-name="cellClassName">
+          <el-table-column
+            :property="index === 0 ? 'lessionSeq' : index-1+''"
+            :label="item"
+            v-for="(item,index) in colHeaders"
+            :key="index"
+            :width="index === 0 ? '100px':'auto'"
+            :align="index === 0 ? 'center':'left'"
+            header-align="center"
+          >
+            <template slot-scope="scope">
+              <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
+              <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
+                <div>{{ scope.row[index-1].cellValue }}</div>
+                <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1].cellPosition }}</div>
+                <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].beginTime }}-{{ scope.row[index-1].endTime }}</div>
+              </div>
+              <template v-else>
+                <div class="scheduleCell"></div>
+              </template>
             </template>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { getlayerCourseName } from '@/api/pkcx'
+import { teaTableInfoList } from '@/api/kbcx'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
     return {
+      loading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 课程名称下拉菜单数据
       courseOptions: [],
       showType: [],
       search: {
-        arrangeId: sessionStorage.getItem('local_arrangeId'),
-        teaName: '',
-        courseId: ''
+        'a.course_id01': '',
+        'a.tea_name06': '',
+        currentPage: '1',
+        pageSize: '1000'
       },
-      tableData: [],
-      schedule: {
-        countAfternoon: 4,
-        workDays: 5,
-        countInMorning: 0,
-        countNight: 0,
-        countMorning: 4,
-        schoolId: '001',
-        schoolYear: '2018',
-        calenderId: '001',
-        termCode: '1',
-        teaList: [
-          {
-            teaName: '王清平',
-            calFixList: [
-              {
-                cellKey: '4,0',
-                cellValue: '物理A-1班',
-                cellPosition: '第一教学楼 101室',
-                beginTime: '13:20',
-                endTime: '14:00'
-              },
-              {
-                cellKey: '6,0',
-                cellValue: '物理A-2班',
-                cellPosition: '第一教学楼 201室',
-                beginTime: '15:20',
-                endTime: '16:00'
-              }
-            ]
-          },
-          {
-            teaName: '李好靖',
-            calFixList: [
-              {
-                cellKey: '4,0',
-                cellValue: '物理B-1班',
-                cellPosition: '第三教学楼 101室',
-                beginTime: '13:20',
-                endTime: '14:00'
-              },
-              {
-                cellKey: '5,0',
-                cellValue: '物理B-2班',
-                cellPosition: '第三教学楼 201室',
-                beginTime: '14:20',
-                endTime: '15:00'
-              }
-            ]
-          }
-        ]
-      }
+      tableDatas: [],
+      schedule: {},
+      colHeaders: []
     }
   },
   created() {
     this.getCourseName()
-    this.initTableData()
+    this.getTeaSchedule()
   },
   methods: {
+    queryBtn() {
+      this.tableDatas = []
+      this.getTeaSchedule()
+    },
     // 课程名称下拉列表数据
     async getCourseName() {
       const res = await getlayerCourseName({
@@ -132,8 +95,18 @@ export default {
       })
       this.courseOptions = res.DATA
     },
+    async getTeaSchedule() {
+      this.loading = true
+      const res = await teaTableInfoList({
+        arrangeId: this.arrangeId,
+        dataStr: JSON.stringify(this.search)
+      })
+      this.schedule = res.DATA
+      this.renderTable()
+      this.loading = false
+    },
     // 初始化表格的头部、行列、数据为空
-    initTableData() {
+    renderTable() {
       const baseHeader = ['节次/星期']
       const { colHeaders, defaultData } = initTableData(
         this.schedule,
@@ -143,12 +116,16 @@ export default {
       this.colHeaders = colHeaders
       const { teaList } = this.schedule
       teaList.forEach(item => {
+        const theData = JSON.parse(JSON.stringify(defaultData))
         item.calFixList.forEach(cell => {
           const [row, col] = cell.cellKey.split(',').map(x => Number(x))
-          defaultData[row][col] = cell
+          theData[row][col] = cell
+        })
+        this.tableDatas.push({
+          teaName: item.teaName,
+          data: theData
         })
       })
-      this.tableData = defaultData
     },
     // 表格单元添加样式
     cellClassName({ row, column, rowIndex, columnIndex }) {
@@ -173,7 +150,14 @@ export default {
 .pageBottom {
   margin-top: 15px;
   div.scheduleCell {
-    min-height: 60px;
+    // min-height: 60px;
+  }
+}
+.teaTableName {
+  margin-bottom: 5px;
+  span {
+    margin-right: 5px;
+    color: #3887fe;
   }
 }
 </style>

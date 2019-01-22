@@ -60,58 +60,7 @@ export default {
       addBtnDisabled: true, // 新增课时组
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       treeHeight: document.body.clientHeight - 255,
-      completeData: [
-        {
-          teaGroupId: '001',
-          teaGroupName: '数学课时组1',
-          weekHours: 5,
-          cellKey: ['0,1', '1,1'],
-          arrangeId: '001',
-          arrangeName: '回龙中学2018-2019第一学期高一走班排课',
-          teachingClasses: [
-            {
-              classId: 'fcd8914bc50f4b4e96f2cd00a1e6ec55',
-              className: '英语A-1班',
-              roomId: '9ea6381f7fd246db8b271c34b9d3b88d',
-              rsId: 'a213277528804d3593023f5313c6cd44',
-              teaGroupId: '673f20a5300f443bbf5fbbd6e0cd5eff',
-              teaId: 'f272b814c4c448deb83c6e47d3a3a842',
-              teaName: 'ewrt'
-            },
-            {
-              classId: 'DKkdiekei2230',
-              className: '数B-1班',
-              roomId: '1234123',
-              roomFullName: '第一教学楼102',
-              teaName: '王春红'
-            }
-          ]
-        },
-        {
-          teaGroupId: '002',
-          teaGroupName: '数学课时组2',
-          weekHours: 5,
-          cellKey: ['2,2', '3,2', '4,2'],
-          arrangeId: '001',
-          arrangeName: '回龙中学2018-2019第一学期高一走班排课',
-          teachingClasses: [
-            {
-              classId: 'askkasdkl',
-              className: '数A-2班',
-              roomId: '299393',
-              roomFullName: '第一教学楼101',
-              teaName: '张清纯'
-            },
-            {
-              classId: 'dskksldklf',
-              className: '数B-2班',
-              roomId: '1234123',
-              roomFullName: '第一教学楼102',
-              teaName: '王春红'
-            }
-          ]
-        }
-      ],
+      completeData: [],
       calendarData: {},
       calendaCell: [], // 记录校历数据
       currentGroup: undefined, // 当前选中的group

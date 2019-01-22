@@ -1,34 +1,51 @@
 <template>
   <div>
+    <!-- 学校信息-->
     <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
       <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="学年" prop="schoolYear">
-            <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect"/>
+        <el-col :span="12">
+          <el-form-item label="学校名称" prop="schoolName">
+            <el-input placeholder="请输入内容" v-model.trim="data.schoolName" clearable maxlength="60"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="6">
           <el-button type="primary" class="float-right" @click="saveBtn">保存</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="学期" prop="termCode">
-            <selectChild v-model="data.termCode" :clearable="false" tp="termSelect"/>
+          <el-form-item label="办学类型" prop="dicId">
+            <el-select v-model="data.dicId" placeholder="请选择">
+              <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="年级" prop="selectedGrade">
-            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
+          <el-form-item label="联系人" prop="contact" clearable>
+            <el-input placeholder="请输入内容" v-model.trim="data.contact" clearable maxlength="16"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="arrangeName" label="排课任务名称">
-            <el-input placeholder="请输入内容" v-model="data.arrangeName" clearable></el-input>
+        <el-col :span="8">
+          <el-form-item label="手机号码" prop="contackPhone" clearable>
+            <el-input placeholder="请输入内容" v-model.number="data.contackPhone" clearable></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-form-item label="登陆账号" prop="loginid" clearable>
+            <el-input placeholder="请输入内容" v-model.trim="data.loginid" clearable></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-form-item label="登陆密码" prop="loginpwd" clearable>
+            <el-input placeholder="请输入内容" v-model.trim="data.loginpwd" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -38,7 +55,6 @@
 
 <script>
 import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
-import { getSegGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
 
 export default {
@@ -47,34 +63,32 @@ export default {
     return {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       data: {
-        gradeId: undefined,
-        gradeName: undefined,
-        arrangeName: undefined,
-        schoolYear: undefined,
-        termCode: undefined,
-        segId: undefined,
-        selectedGrade: []
+        schoolId: undefined,
+        schoolName: undefined,
+        dicId: undefined,
+        contact: undefined,
+        contackPhone: undefined,
+        loginid: undefined,
+        loginpwd: undefined
       },
-      selectProps: {
-        value: 'gradeId',
-        label: 'gradeName',
-        children: 'gradesList'
-      },
-      gradeOptions: [], // 学段/专业/年级
-      // arrangeId: undefined,
-      // 基础信息表单规则
+      schoolOptions: [], // 办学类型
+      // 表单规则
       baseInfoRules: {
-        schoolYear: [
-          { required: true, message: '请选择学年', trigger: 'change' }
+        schoolName: [
+          { required: true, message: '请输入学校名称', trigger: 'blur' }
         ],
-        termCode: [
-          { required: true, message: '请选择学期', trigger: 'change' }
+        dicId: [
+          { required: true, message: '请选择办学类型', trigger: 'change' }
         ],
-        selectedGrade: [
-          { required: true, message: '请选择年级', trigger: 'change' }
+        contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+        contackPhone: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { type: 'number', message: '手机号码必须为数字', trigger: 'blur' }
         ],
-        arrangeName: [
-          { required: true, message: '请输入排课任务名称', trigger: 'blur' }
+        loginid: [{ required: true, message: '登陆账号', trigger: 'blur' }],
+        loginpwd: [
+          { required: true, message: '登陆密码', trigger: 'blur' },
+          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
         ]
       }
     }
@@ -85,27 +99,11 @@ export default {
       schoolYear: local_curYear,
       termCode: local_curTerm
     })
-    await this.fetchGrade()
     if (this.arrangeId) {
-      this.fetchFormData()
+      // this.fetchFormData()
     }
   },
   methods: {
-    // 年级下拉列表
-    async fetchGrade() {
-      const { local_curYear, local_curTerm } = sessionStorage
-      const res = await getSegGrade({
-        schoolYear: local_curYear,
-        termCode: local_curTerm
-      })
-      res.DATA.forEach(item => {
-        Object.assign(item, {
-          gradeId: item.segId,
-          gradeName: item.segName
-        })
-      })
-      this.gradeOptions = res.DATA
-    },
     // 获取表单数据
     async fetchFormData() {
       const res = await qryArrangeDetail({

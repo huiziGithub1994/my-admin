@@ -157,6 +157,20 @@ export const ptRouterMap = [
 // 选课平台路由
 export const xkRouterMap = [
   {
+    path: '/XxxxLayout',
+    component: Layout,
+    redirect: '/XxxxLayout/xxxx',
+    name: 'XxxxLayout',
+    children: [
+      {
+        path: '/xxxx',
+        name: 'Xxxx',
+        component: () => import('@/views/Xxxx/index'),
+        meta: { title: '学校信息', icon: 'school' }
+      }
+    ]
+  },
+  {
     path: '/xkpt',
     component: Layout,
     redirect: '/xkpt/xkrw',
@@ -179,7 +193,7 @@ export const xkRouterMap = [
         path: 'xkfx',
         name: 'Xkfx',
         component: () => import('@/views/xkfx/index'),
-        meta: { title: '选课分析', icon: 'result' }
+        meta: { title: '选课分析', icon: 'pie' }
       },
       {
         path: 'xsxk',

@@ -77,7 +77,10 @@ export default {
       const res = await getSplitClassManage({ arrangeId: this.arrangeId })
       const { dataList, minSize, maxSize } = res.DATA
       this.tableData = dataList
-      Object.assign(this.search, { minSize, maxSize })
+      if (minSize && maxSize) {
+        Object.assign(this.search, { minSize, maxSize })
+      }
+
       Object.assign(this.currentSplitNum, { minSize, maxSize })
     },
     // 试分班按钮

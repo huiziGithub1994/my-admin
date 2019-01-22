@@ -218,8 +218,29 @@ export default {
           if (this.choseRsId) {
             params.choseRsId = this.choseRsId
           }
-          await saveSjsChoseCourseDef(params)
+          const res = await saveSjsChoseCourseDef(params)
           this.$message.success('保存成功')
+          // 存储数据
+          setDatas(this.data, res.DATA)
+          const { segId, gradeId, moreDesc } = this.data
+          this.data.selectedGrade = [segId, gradeId]
+          const timeArr = ['beginTime', 'endTime']
+          timeArr.forEach((key, index) => {
+            this.$set(this.chooseTime, index, res.DATA[key])
+          })
+          this.editor.txt.html(moreDesc)
+          const { schoolYear, termCode, choseTaskName, choseRsId } = res.DATA
+          if (sessionStorage) {
+            sessionStorage.setItem('local_curYear', schoolYear)
+            sessionStorage.setItem('local_curTerm', termCode)
+            sessionStorage.setItem('local_arrangeId', choseRsId) // choseRsId
+            const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
+              +termCode === 1 ? '一' : '二'
+            } 学期 , ${choseTaskName}`
+            sessionStorage.setItem('arrangeName', nameStr) // choseTaskName
+            this.$store.commit('SET_ARRANGENAME', nameStr)
+          }
+          this.$emit('update:visible', false)
         } else {
           return false
         }

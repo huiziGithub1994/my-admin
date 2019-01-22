@@ -29,11 +29,16 @@ export default {
   qryZbClassroom: `zxx/teachingRoom/qryClassRoomDetail`, // 走班排课详情查询接口
 
   // 排课规则
+  qryTeachingClassInfoDetails: `/zxx/coursePlan/qryTeachingClassInfoDetails`, // 学生分班列表
+  saveTeaClassRelyStu: `/zxx/coursePlan/saveTeaClassRelyStu`, // 自动分班
   qryArrangeGroupInfo: `/zxx/coursePlan/qryArrangeGroupInfo`, // 课时预排 预排课信息查询
   saveGroupArrInfo: `/zxx/coursePlan/saveTeaGroupArrInfo`, // 课时预排 预排课信息保存
   saveCoursePlanInfo: `/zxx/coursePlan/saveCoursePlanInfo`, // 课时预排  新增课时组
   qrySourceAssessment: `/zxx/computeResoure`, // 资源评估 运算走班排课资源按钮
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
+
+  // 课表查询
+  teaTableInfoList: `zxx/courseTable/teaTableInfoList`, // 教师课表
 
   /**  普通排课 */
   // 教学计划
