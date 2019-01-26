@@ -9,7 +9,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="2">
-          <el-button type="primary" class="saveBtn">保存</el-button>
+          <el-button type="primary" plain class="saveBtn">保存</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="10">

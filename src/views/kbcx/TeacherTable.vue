@@ -20,8 +20,8 @@
             <el-checkbox label="2">显示时间</el-checkbox>
           </el-checkbox-group>
         </div>
-        <el-button type="primary" @click="queryBtn">查询</el-button>
-        <el-button type="primary">下载</el-button>
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <el-button type="primary" plain>下载</el-button>
       </operation>
     </div>
     <div v-loading="loading">
@@ -81,7 +81,6 @@ export default {
   },
   created() {
     this.getCourseName()
-    this.getTeaSchedule()
   },
   methods: {
     queryBtn() {
@@ -96,6 +95,13 @@ export default {
       this.courseOptions = res.DATA
     },
     async getTeaSchedule() {
+      if (
+        this.search['a.course_id01'] === '' ||
+        this.search['a.tea_name06'] === ''
+      ) {
+        this.$message.warning('请先输入查询条件')
+        return
+      }
       this.loading = true
       const res = await teaTableInfoList({
         arrangeId: this.arrangeId,

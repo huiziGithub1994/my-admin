@@ -17,9 +17,9 @@
         </div>
       </condition>
       <operation class="operation">
-        <el-button type="primary" @click="fetchData">查询</el-button>
+        <el-button type="primary" plain @click="fetchData">查询</el-button>
         <a :href="downloadUrl" download="蓝墨水-学段专业-年级-课程.xls">
-          <el-button type="primary">模板下载</el-button>
+          <el-button type="primary" plain>模板下载</el-button>
         </a>
         <el-upload
           action="http://47.107.255.128:8089/zxx/uploadSeg"
@@ -30,7 +30,7 @@
           :on-success="uploadSuccess"
           ref="upload"
         >
-          <el-button type="primary">导入</el-button>
+          <el-button type="primary" plain>导入</el-button>
         </el-upload>
       </operation>
     </div>

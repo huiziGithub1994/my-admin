@@ -4,7 +4,7 @@
       <div class="operation-btn">
         <div>
           <el-upload action="http://localhost:9999/base/qryCoursePlain" :show-file-list="false" :before-upload="beforeUpload" :on-success="uploadSuccess">
-            <el-button type="primary">导入成绩</el-button>
+            <el-button type="primary" plain>导入成绩</el-button>
           </el-upload>
         </div>
       </div>
@@ -20,7 +20,7 @@
     </div>
     <div class="right">
       <div class="operation-btn">
-        <el-button type="primary" @click="saveSplitStandard">保存分班标准</el-button>
+        <el-button type="primary" plain @click="saveSplitStandard">保存分班标准</el-button>
       </div>
       <div class="table-wapper" :style="{'min-height':tableMinHeight+'px'}">
         <el-table ref="multipleTable" :data="splitClassData" tooltip-effect="dark" highlight-current-row style="width: 100%">

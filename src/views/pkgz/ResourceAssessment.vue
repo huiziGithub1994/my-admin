@@ -1,7 +1,7 @@
 <template>
   <!-- 资源评估-->
   <div>
-    <el-button type="primary" @click="computeResoureBtn">运算走班所需资源</el-button>
+    <el-button type="primary" plain @click="computeResoureBtn">运算走班所需资源</el-button>
     <div class="desc">
       <table>
         <tr>
@@ -27,7 +27,7 @@
       </el-table>
     </div>
     <div class="saveWapper">
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" plain>保存</el-button>
     </div>
   </div>
 </template>

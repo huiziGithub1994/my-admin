@@ -10,9 +10,9 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="splitClassesBtn">试分班</el-button>
-        <el-button type="primary" @click="saveBtn">保存教学任务</el-button>
-        <el-button type="primary">任课统计</el-button>
+        <el-button type="primary" plain @click="splitClassesBtn">试分班</el-button>
+        <el-button type="primary" plain @click="saveBtn">保存教学任务</el-button>
+        <el-button type="primary" plain>任课统计</el-button>
       </operation>
     </div>
     <div class="table-wapper">

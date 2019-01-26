@@ -15,10 +15,10 @@
         </div>
       </condition>
       <operation class="operation">
-        <el-button type="primary" @click="queryBtn">查询</el-button>
-        <!-- <el-button type="primary">参选课表</el-button> -->
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <!-- <el-button type="primary" plain>参选课表</el-button> -->
         <a :href="downloadUrl" download="蓝墨水-选课参选学生.xls">
-          <el-button type="primary">模板下载</el-button>
+          <el-button type="primary" plain>模板下载</el-button>
         </a>
         <el-upload
           action="http://47.107.255.128:8089/zxx/chose/upStuAttendSel"
@@ -30,7 +30,7 @@
           :on-success="uploadSuccess"
           ref="upload"
         >
-          <el-button type="primary">导入学生</el-button>
+          <el-button type="primary" plain>导入学生</el-button>
         </el-upload>
       </operation>
     </div>
@@ -66,7 +66,7 @@ import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
   data() {
-    const h = 270
+    const h = 240
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {

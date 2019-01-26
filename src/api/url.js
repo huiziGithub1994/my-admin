@@ -29,11 +29,14 @@ export default {
   qryZbClassroom: `zxx/teachingRoom/qryClassRoomDetail`, // 走班排课详情查询接口
 
   // 排课规则
-  qryTeachingClassInfoDetails: `/zxx/coursePlan/qryTeachingClassInfoDetails`, // 学生分班列表
-  saveTeaClassRelyStu: `/zxx/coursePlan/saveTeaClassRelyStu`, // 自动分班
-  qryArrangeGroupInfo: `/zxx/coursePlan/qryArrangeGroupInfo`, // 课时预排 预排课信息查询
-  saveGroupArrInfo: `/zxx/coursePlan/saveTeaGroupArrInfo`, // 课时预排 预排课信息保存
-  saveCoursePlanInfo: `/zxx/coursePlan/saveCoursePlanInfo`, // 课时预排  新增课时组
+  qryTeachingClassInfoDetails: `/zxx/coursePlan/qryTeachingClassInfoDetails`, // 学生分班tab 按选课结果将学生分班 表格列表
+  saveTeaClassRelyStu: `/zxx/coursePlan/saveTeaClassRelyStu`, // 学生分班tab 按选课结果将学生分班 学生自动分到教学班
+  qryTeachingClassList: `/zxx/coursePlan/qryTeachingClassList`, // 学生分班tab 按选课结果将学生分班 教学班下拉列表
+  arrangeStuChange: `/zxx/coursePlan/arrangeStuChange`, // 学生分班tab 按选课结果将学生分班 调整分班
+
+  qryArrangeGroupInfo: `/zxx/coursePlan/qryArrangeGroupInfo`, // 课时预排tab 预排课信息查询
+  saveGroupArrInfo: `/zxx/coursePlan/saveTeaGroupArrInfo`, // 课时预排tab 预排课信息保存
+  saveCoursePlanInfo: `/zxx/coursePlan/saveCoursePlanInfo`, // 课时预排tab  新增课时组
   qrySourceAssessment: `/zxx/computeResoure`, // 资源评估 运算走班排课资源按钮
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
 

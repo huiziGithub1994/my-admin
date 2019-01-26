@@ -6,8 +6,8 @@
         <label>温馨提示：</label>先选中左边的课时组,再点击右边的表格进行课时预排。
       </p>
       <div>
-        <el-button type="primary" @click="saveBtn">保存</el-button>
-        <el-button type="primary" @click="addBtn" :disabled="addBtnDisabled">新增课时组</el-button>
+        <el-button type="primary" @click="saveBtn" plain>保存</el-button>
+        <el-button type="primary" @click="addBtn" :disabled="addBtnDisabled" plain>新增课时组</el-button>
       </div>
     </div>
     <div class="area-data">
@@ -32,8 +32,8 @@
           <el-table-column :property="index === 0 ? 'lessionSeq' : index-1+''" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
               <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
-              <div v-else>
-                {{ scope.row[index-1+''].value }}
+              <div v-else class="cell-arrange">
+                <span>{{ scope.row[index-1+''].value }}</span>
                 <i class="el-icon-error" v-if="scope.row[index-1+''].value && !scope.row[index-1+''].isCalendar" @click.stop="removeArrange(scope.row,index)"></i>
               </div>
             </template>
@@ -303,11 +303,24 @@ export default {
     float: right;
   }
 }
-.advanceArrange .el-icon-error {
-  float: right;
-  margin-top: 5px;
-  font-size: 1.2rem;
-  display: none;
+.cell-arrange {
+  position: relative;
+  width: 100%;
+  .el-icon-error {
+    position: absolute;
+    right: -5px;
+    top: 4px;
+    z-index: 10;
+    font-size: 1.2rem;
+    display: none;
+  }
+}
+.cell-arrange > span {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
 }
 </style>
 

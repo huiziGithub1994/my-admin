@@ -12,7 +12,7 @@
       </condition>
       <operation>
         <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
-          <el-button type="primary">模板下载</el-button>
+          <el-button type="primary" plain>模板下载</el-button>
         </a>
         <el-upload
           class="uploadBtn"
@@ -25,13 +25,13 @@
           :data="uploadParams"
           ref="upload"
         >
-          <el-button type="primary">导入</el-button>
+          <el-button type="primary" plain>导入</el-button>
         </el-upload>
         <!-- <el-button type="primary" @click="exportBtn">导出</el-button>
         <el-button type="primary">设置课程计划</el-button>-->
-        <el-button type="primary" @click="addBtn">增加</el-button>
-        <el-button type="primary" @click="editBtn">修改</el-button>
-        <el-button type="primary" @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain @click="addBtn">增加</el-button>
+        <el-button type="primary" plain @click="editBtn">修改</el-button>
+        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -85,8 +85,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveBtn">保 存</el-button>
+        <el-button plain @click="dialogFormVisible = false">取 消</el-button>
+        <el-button plain type="primary" @click="saveBtn">保 存</el-button>
       </div>
     </el-dialog>
   </div>

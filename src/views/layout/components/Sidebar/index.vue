@@ -33,11 +33,11 @@ export default {
       if (this.menutype === 'zb') {
         return allRoutes.slice(0, 6)
       } else if (this.menutype === 'pt') {
-        return [...allRoutes.slice(0, 5), ...allRoutes.slice(6, 7)]
+        return [...allRoutes.slice(0, 4), ...allRoutes.slice(6, 9)]
       } else {
         return [
-          ...allRoutes.slice(0, 5),
-          ...allRoutes.slice(7, allRoutes.length)
+          ...allRoutes.slice(0, 4),
+          ...allRoutes.slice(9, allRoutes.length)
         ]
       }
     },

@@ -13,10 +13,10 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="fetchData">查询</el-button>
-        <el-button type="primary" @click="addBtn">增加</el-button>
-        <el-button type="primary" @click="editBtn">修改</el-button>
-        <el-button type="primary" @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain @click="fetchData">查询</el-button>
+        <el-button type="primary" plain @click="addBtn">增加</el-button>
+        <el-button type="primary" plain @click="editBtn">修改</el-button>
+        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -60,8 +60,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEditDialog">保存</el-button>
+        <el-button plain @click="editDialogFormVisible = false">取 消</el-button>
+        <el-button plain type="primary" @click="saveEditDialog">保存</el-button>
       </div>
     </el-dialog>
   </div>

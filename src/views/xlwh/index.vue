@@ -5,7 +5,7 @@
       <p class="tip">
         <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态，上课时间格式(16:20)。
       </p>
-      <el-button type="primary" @click="saveBtn">保存</el-button>
+      <el-button type="primary" @click="saveBtn" plain>保存</el-button>
     </div>
     <div class="area-data">
       <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="100px">

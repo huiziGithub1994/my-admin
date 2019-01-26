@@ -19,9 +19,9 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="queryBtn">查询</el-button>
-        <el-button type="primary" @click="addBtn">新增</el-button>
-        <el-button type="primary">合并课表</el-button>
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <el-button type="primary" plain @click="addBtn">新增</el-button>
+        <el-button type="primary" plain>合并课表</el-button>
       </operation>
     </div>
     <div>
@@ -73,8 +73,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveBtn">保 存</el-button>
+        <el-button plain @click="dialogFormVisible = false">取 消</el-button>
+        <el-button plain type="primary" @click="saveBtn">保 存</el-button>
       </div>
     </el-dialog>
   </div>

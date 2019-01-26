@@ -19,9 +19,9 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="publicBtn">发布</el-button>
-        <el-button type="primary" @click="queryBtn">查询</el-button>
-        <el-button type="primary" @click="addBtn">新增</el-button>
+        <el-button type="primary" plain @click="publicBtn">发布</el-button>
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <el-button type="primary" plain @click="addBtn">新增</el-button>
       </operation>
     </div>
     <div>
@@ -153,6 +153,7 @@ export default {
     },
     // 查询按钮
     queryBtn() {
+      this.pageTot.currentPage = 1
       this.fetchData()
     },
     // 删除按钮

@@ -27,7 +27,11 @@
     }
   }
 }
-
+// button
+.el-button--primary.is-plain {
+  border-color: #489df7;
+  color: #0b82fd;
+}
 // 表格
 .el-table {
   font-size: 1rem;
@@ -104,4 +108,8 @@
 // 时间组件
 .el-date-editor .el-range-separator {
   width: auto;
+}
+
+.el-dialog .el-dialog__body {
+  padding: 20px !important;
 }

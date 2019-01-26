@@ -11,14 +11,21 @@ export function qrySourceAssessment(listQuery) {
     params: listQuery
   })
 }
-// 学生分班 按选课结果将学生分班 列表
+// 学生分班 按选课结果将学生分班 教学班下拉列表
+export function qryTeachingClassList(listQuery) {
+  return request({
+    url: URL.qryTeachingClassList,
+    params: listQuery
+  })
+}
+// 学生分班 按选课结果将学生分班 表格列表
 export function qryTeachingClassInfoDetails(listQuery) {
   return request({
     url: URL.qryTeachingClassInfoDetails,
     params: listQuery
   })
 }
-// 学生自动分到教学班
+// 学生分班 按选课结果将学生分班 学生自动分到教学班
 export function saveTeaClassRelyStu(listQuery) {
   return request({
     url: URL.saveTeaClassRelyStu,
@@ -26,6 +33,14 @@ export function saveTeaClassRelyStu(listQuery) {
     params: listQuery
   })
 }
+// 学生分班 按选课结果将学生分班 调整分班
+export function arrangeStuChange(listQuery) {
+  return request({
+    url: URL.arrangeStuChange,
+    params: listQuery
+  })
+}
+
 // 排课规则 教学分组
 export function qryTeachGroupsTree(listQuery) {
   return request({

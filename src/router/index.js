@@ -43,6 +43,10 @@ export const baseRouterMap = [
       }
     ]
   },
+  { path: '*', redirect: '/404', hidden: true }
+]
+// 走班排课路由
+export const zbRouterMap = [
   {
     path: '/kcjhLayout',
     component: Layout,
@@ -57,10 +61,6 @@ export const baseRouterMap = [
       }
     ]
   },
-  { path: '*', redirect: '/404', hidden: true }
-]
-// 走班排课路由
-export const zbRouterMap = [
   {
     path: '/zbpk',
     component: Layout,
@@ -126,6 +126,34 @@ export const zbRouterMap = [
 // 普通排课路由
 export const ptRouterMap = [
   {
+    path: '/njkcLayout',
+    component: Layout,
+    redirect: '/njkcLayout/njkc',
+    name: 'njkcLayout',
+    children: [
+      {
+        path: 'njkc',
+        name: 'Njkc',
+        component: () => import('@/views/njkc/index'),
+        meta: { title: '年级课程', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/njbjLayout',
+    component: Layout,
+    redirect: '/njbjLayout/njbj',
+    name: 'njbjLayout',
+    children: [
+      {
+        path: 'njbj',
+        name: 'Njbj',
+        component: () => import('@/views/njbj/index'),
+        meta: { title: '年级班级', icon: 'class' }
+      }
+    ]
+  },
+  {
     path: '/ptpk',
     component: Layout,
     redirect: '/ptpk/pkcxPt',
@@ -156,6 +184,20 @@ export const ptRouterMap = [
 
 // 选课平台路由
 export const xkRouterMap = [
+  {
+    path: '/kcjhLayout1',
+    component: Layout,
+    redirect: '/kcjhLayout/kcjh1',
+    name: 'kcjhLayout1',
+    children: [
+      {
+        path: '/kcjh1',
+        name: 'Kcjh1',
+        component: () => import('@/views/kcjh/index'),
+        meta: { title: '课程计划', icon: 'nested' }
+      }
+    ]
+  },
   {
     path: '/XxxxLayout',
     component: Layout,

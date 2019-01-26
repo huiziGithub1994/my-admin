@@ -7,8 +7,8 @@
         </el-col>
         <el-col :span="12">
           <div class="btns-right">
-            <el-button type="primary" @click="submitBtn" :disabled="disabledSubmit">确认提交</el-button>
-            <el-button type="primary" @click="backBtn">返&nbsp;&nbsp;&nbsp;回</el-button>
+            <el-button type="primary" plain @click="submitBtn" :disabled="disabledSubmit">确认提交</el-button>
+            <el-button type="primary" plain @click="backBtn">返&nbsp;&nbsp;&nbsp;回</el-button>
           </div>
         </el-col>
         <el-col :span="12">

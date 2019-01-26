@@ -1,7 +1,7 @@
 <template>
   <!-- 教学分组 -->
   <div>
-    <el-button type="primary">运算教学分组</el-button>
+    <el-button type="primary" plain>运算教学分组</el-button>
     <div class="wapper">
       <div class="treeLeft" :style="{height:treeHeight+'px'}">
         <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>

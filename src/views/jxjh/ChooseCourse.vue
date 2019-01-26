@@ -13,8 +13,8 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" @click="queryBtn">查询</el-button>
-        <el-button type="primary" @click="downTemplate">下载导入模板</el-button>
+        <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <el-button type="primary" plain @click="downTemplate">下载导入模板</el-button>
         <el-upload
           class="uploadBtn"
           action="http://47.107.255.128:8089/zxx/upChoseLayer"
@@ -26,14 +26,14 @@
           :data="uploadParams"
           ref="upload"
         >
-          <el-button type="primary">导入</el-button>
+          <el-button type="primary" plain>导入</el-button>
         </el-upload>
-        <el-button type="primary">导出</el-button>
-        <el-button type="primary" @click="addBtn">增加</el-button>
-        <!-- <el-button type="primary">引入</el-button> -->
-        <!-- <el-button type="primary">分析</el-button> -->
-        <el-button type="primary" @click="editBtn">修改</el-button>
-        <el-button type="primary" @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain>导出</el-button>
+        <el-button type="primary" @click="addBtn" plain>增加</el-button>
+        <!-- <el-button type="primary" plain>引入</el-button> -->
+        <!-- <el-button type="primary" plain>分析</el-button> -->
+        <el-button type="primary" @click="editBtn" plain>修改</el-button>
+        <el-button type="primary" @click="deleteBtn" plain>删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -106,8 +106,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEditDialog">保存</el-button>
+        <el-button @click="editDialogFormVisible = false" plain>取 消</el-button>
+        <el-button type="primary" @click="saveEditDialog" plain>保存</el-button>
       </div>
     </el-dialog>
   </div>

@@ -13,8 +13,8 @@
         </el-col>
         <el-col :span="12">
           <div class="btns-right">
-            <el-button type="primary" @click="saveBtn">保 存</el-button>
-            <el-button type="success" @click="nextStep">下一步</el-button>
+            <el-button type="primary" plain @click="saveBtn">保 存</el-button>
+            <el-button type="success" plain @click="nextStep">下一步</el-button>
           </div>
         </el-col>
       </el-row>
