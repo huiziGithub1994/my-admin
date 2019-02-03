@@ -111,9 +111,9 @@ export default {
   data() {
     return {
       loading: false,
-      downloadUrl: apUrl.subjectLayerExcelTemplate,
-      httpHeaders: {},
-      uploadParams: {},
+      downloadUrl: apUrl.subjectLayerExcelTemplate, // 下载模板地址
+      httpHeaders: {}, // 导入 请求header
+      uploadParams: {}, // 导入 参数
       // 表格数据
       tableData: [],
       sortable: null,

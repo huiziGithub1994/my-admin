@@ -44,10 +44,22 @@ export default {
   teaTableInfoList: `zxx/courseTable/teaTableInfoList`, // 教师课表
 
   /**  普通排课 */
-  // 教学计划
+  // 年级课程
+  qrySegGradeTree: `/zxx/qrySegGradeTree`, // 学段专业年级查询树
+  handleSeg: `/zxx/saveSeg`, // 学段/专业增删改
+  saveSegGrade: `/zxx/saveSegGrade`, // 学段年级增删改
+  qryCourseByGradeId: `/zxx/qryCourseByGradeId`, //  根据年级查询课程列表
+  saveCourseList: `/zxx/saveCourseList`, //  保存课程列表
+  // 年级班级
+  qryClassesByGradeId: `/zxx/qryClassesByGradeId`, // 根据年级查询班级列表
+  saveClassesList: `/zxx/saveClassesList`, // 保存班级列表
+  // 排课任务
   qryTeachTask: `/base/qryTeachingTask`, // 教学任务详情
   qryClassList: `/base/qryClassList`, // 班级列表
   qryTeacherList: `/base/qryTeacherList`, // 班级列表
+  // 授课任务-》授课录入
+  qryCourseTaskList: `/zxx/qryCourseTaskList`, // 根据年级串获取班级授课列表
+  saveCourseTaskList: `/zxx/saveCourseTaskList`, // 保存班级授课列表
 
   // 排课规则 -》固排禁排
   qryGradeClassTree: `/base/qryGradeClassTree`, // 年级/班级禁排固排 treeData
@@ -61,6 +73,8 @@ export default {
   getCourse: `/base/getCourse`, // 获取课程信息
 
   /** 选课平台  */
+  // 学校信息
+  qrySchoolInfo: `/zxx/schoolInfo`, // 学校信息查询
 
   // 选课列表（选课任务）
   qryChoseCourseList: `/zxx/chose/qryChoseCourseList`, // 获取选课列表

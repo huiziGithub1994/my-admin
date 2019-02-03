@@ -5,15 +5,15 @@
       <condition>
         <div class="condition">
           <label>学年</label>
-          <selectChild v-model="listQuery['schoolYear']" :clearable="false" tp="yearSelect"/>
+          <selectChild v-model="listQuery['a.school_year01']" :clearable="false" tp="yearSelect"/>
         </div>
         <div class="condition">
           <label>学期</label>
-          <selectChild v-model="listQuery['termCode']" :clearable="false" tp="termSelect"/>
+          <selectChild v-model="listQuery['a.term_code01']" :clearable="false" tp="termSelect"/>
         </div>
         <div class="condition">
           <label>排课状态</label>
-          <el-select v-model="listQuery['curStatus']" clearable placeholder="请选择">
+          <el-select v-model="listQuery['a.cur_status01']" clearable placeholder="请选择">
             <el-option v-for="item in ztOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </div>
@@ -27,26 +27,35 @@
     <div>
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
-        <el-table-column property="arrangName" show-overflow-tooltip min-width="160px" label="排课名称"/>
-        <el-table-column property="name" label="状态" width="80px">
+        <el-table-column property="arrangeName" show-overflow-tooltip min-width="160px" label="排课名称"/>
+        <el-table-column property="curStatus" label="状态" width="80px">
           <template slot-scope="scope">
-            <span :class="{'success': scope.row.name === '完成','primary':scope.row.name === '进行中','danger':scope.row.name === '冲突'}">{{ scope.row.name }}</span>
+            <span v-if="scope.row.curStatus === '1'" class="success">完成</span>
+            <span v-else-if="scope.row.curStatus === '2'" class="danger">冲突</span>
+            <span v-else class="primary">进行中</span>
           </template>
         </el-table-column>
-        <el-table-column property="schoolYear" width="120px" label="学年">
+        <el-table-column property="schoolYear" label="学年" width="130px">
           <template slot-scope="scope">
-            <span>{{ `${scope.row.schoolYear} 学年` }}</span>
+            <span>{{ `${scope.row.schoolYear}-${parseInt(scope.row.schoolYear)+1}学年` }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="termCode" label="学期" width="80px"></el-table-column>
-        <el-table-column property="gradeCode" label="年级"/>
-        <el-table-column property="createTime" show-overflow-tooltip label="创建时间"/>
-        <el-table-column fixed="right" width="155px" label="操作">
+        <el-table-column property="termCode" label="学期" width="100px">
+          <template slot-scope="scope">
+            <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="150px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createDate | filterTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" width="120px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
-              <el-button type="primary" size="mini" @click="arrangeClass(scope.row.arrangeId)" plain>排课</el-button>
+              <el-button type="primary" size="mini" @click="arrangeClass(scope.row)" plain>排课</el-button>
               <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
-              <el-button type="primary" size="mini" plain>复制</el-button>
+              <!-- <el-button type="primary" size="mini" plain>复制</el-button> -->
             </div>
           </template>
         </el-table-column>
@@ -63,13 +72,13 @@
         <slot/>
       </el-pagination>
     </div>
-    <el-dialog title="新增排课任务" :visible.sync="dialogFormVisible" width="450px">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px">
         <el-form-item label="学年/学期">
-          <div class="text-red">{{ listQuery.schoolYear }}-{{ Number(listQuery.schoolYear)+1 }}学年第{{ listQuery.termCode==='1' ? '一' : '二' }}学期</div>
+          <div class="text-red">{{ ruleForm.schoolYear }}-{{ Number(ruleForm.schoolYear)+1 }}学年 第{{ ruleForm.termCode==='1' ? '一' : '二' }}学期</div>
         </el-form-item>
-        <el-form-item label="排课任务名称" prop="arrangName">
-          <el-input v-model="ruleForm.arrangName"></el-input>
+        <el-form-item label="排课任务名称" prop="arrangeName">
+          <el-input v-model="ruleForm.arrangeName"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -81,30 +90,27 @@
 </template>
 
 <script>
-import { getPKCXListInfo, qryArrangeDetail } from '@/api/pkcx'
-import { getTableBestRows, getCurSchoolYearTerm } from '@/utils/businessUtil'
+import { getPKCXListInfo, saveArrange, delArrange } from '@/api/pkcx'
+import { getTableBestRows } from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
+    filterTime(val) {
+      return moment(val).format('YYYY-MM-DD  HH:mm')
     }
   },
   data() {
-    const h = 175
+    const h = 185
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
-    const yearAndTerm = getCurSchoolYearTerm()
     return {
       listLoading: true,
       listQuery: {
-        schoolYear: yearAndTerm.currentYear,
-        termCode: yearAndTerm.termCode,
-        curStatus: '1'
+        'a.arrange_type01': '1',
+        'a.school_year01': '',
+        'a.term_code01': '',
+        'a.cur_status01': ''
       },
       // 排课状态
       ztOptions: [
@@ -115,15 +121,20 @@ export default {
       pageSizes: pageSizes,
       tableH: tableH,
       pageTot: {
-        curPage: 1,
-        pageSize: pageSizes[0],
-        pageTotal: 0
+        currentPage: 1,
+        pageSize: pageSizes[0]
       },
+      pageTotal: 0,
       tableData: [],
       // 表单
-      ruleForm: {},
+      dialogTitle: '新增排课任务',
+      ruleForm: {
+        arrangeName: '',
+        schoolYear: '',
+        termCode: ''
+      },
       rules: {
-        arrangName: {
+        arrangeName: {
           required: true,
           message: '请输入排课任务名称',
           trigger: 'blur'
@@ -132,34 +143,69 @@ export default {
       dialogFormVisible: false
     }
   },
+  computed: {
+    ...mapGetters(['curYear', 'curTerm'])
+  },
   created() {
-    this.fetchData()
+    if (this.curTerm === '' || this.curYear === '') {
+      this.$store.dispatch('GetInfo').then(() => {
+        this.getInitData()
+      })
+      return
+    }
+    this.getInitData()
   },
   methods: {
+    getInitData() {
+      Object.assign(this.listQuery, {
+        'a.school_year01': this.curYear,
+        'a.term_code01': this.curTerm
+      })
+      this.fetchData()
+    },
     // 获取表格数据
     fetchData() {
       this.listLoading = true
       const params = Object.assign(this.listQuery, this.pageTot)
       getPKCXListInfo(params).then(res => {
-        this.pageTot.pageTotal = res.SUM
+        this.pageTot.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false
-      })
-    },
-    // 保存按钮
-    saveBtn() {
-      this.$refs['ruleForm'].validate(valid => {
-        if (valid) {
-          const queryParams = { arrangeId: '100' }
-          this.$router.push({ name: 'JxjhPt', query: queryParams })
-        } else {
-          return false
-        }
       })
     },
     // 新增按钮
     addBtn() {
       this.dialogFormVisible = true
+      Object.assign(this.ruleForm, {
+        schoolYear: this.curYear,
+        termCode: this.curTerm,
+        arrangeName: ''
+      })
+    },
+    // 保存按钮
+    saveBtn() {
+      this.$refs['ruleForm'].validate(async valid => {
+        if (valid) {
+          const params = Object.assign({ arrangeType: '1' }, this.ruleForm)
+          await saveArrange(params)
+          this.$message.success('保存成功')
+          this.queryBtn()
+          this.dialogFormVisible = false
+          if (this.dialogTitle === '新增排课任务') {
+            this.clearStorage()
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    clearStorage() {
+      sessionStorage.removeItem('local_curYear')
+      sessionStorage.removeItem('local_curTerm')
+      sessionStorage.removeItem('local_arrangeId')
+      sessionStorage.removeItem('gradeStr')
+      sessionStorage.removeItem('arrangeName')
+      this.$store.commit('SET_ARRANGENAME', '')
     },
     // 查询按钮
     queryBtn() {
@@ -174,13 +220,18 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          const res = await qryArrangeDetail({ arrangeId: arrangeId, a: '2' })
+          const res = await delArrange({ arrangeId: arrangeId })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
             message: res.SUCCESS ? '删除成功!' : '删除失败'
           })
           // 重新加载数据
-          if (res.SUCCESS) this.queryBtn()
+          if (res.SUCCESS) {
+            this.queryBtn()
+            if (arrangeId === sessionStorage.getItem('local_arrangeId')) {
+              this.clearStorage()
+            }
+          }
         })
         .catch(() => {
           this.$message({
@@ -190,9 +241,20 @@ export default {
         })
     },
     // 排课按钮
-    arrangeClass(arrangeId) {
-      const queryParams = { arrangeId }
-      this.$router.push({ name: 'JxjhPt', query: queryParams })
+    arrangeClass(row) {
+      const { schoolYear, termCode, arrangeId, arrangeName, gradeStr } = row
+      if (sessionStorage) {
+        sessionStorage.setItem('local_curYear', schoolYear)
+        sessionStorage.setItem('local_curTerm', termCode)
+        sessionStorage.setItem('local_arrangeId', arrangeId)
+        gradeStr && sessionStorage.setItem('gradeStr', gradeStr)
+        const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
+          +termCode === 1 ? '一' : '二'
+        } 学期 , ${arrangeName}`
+        sessionStorage.setItem('arrangeName', nameStr)
+        this.$store.commit('SET_ARRANGENAME', nameStr)
+      }
+      this.$router.push({ name: 'SkrwPt' })
     },
     handleSizeChange(val) {
       this.pageTot.curPage = 1

@@ -42,7 +42,7 @@ import moment from 'moment'
 export default {
   filters: {
     filterTime(val) {
-      return moment(val).format('YYYY-MM-DD  hh:mm')
+      return moment(val).format('YYYY-MM-DD  HH:mm')
     }
   },
   data() {

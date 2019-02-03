@@ -113,3 +113,7 @@
 .el-dialog .el-dialog__body {
   padding: 20px !important;
 }
+
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #cde4ff; //#d2e7ff
+}

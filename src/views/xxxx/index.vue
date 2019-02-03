@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
+import { saveArrange } from '@/api/pkcx'
+import { qrySchoolInfo } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
 
 export default {
@@ -99,19 +100,13 @@ export default {
       schoolYear: local_curYear,
       termCode: local_curTerm
     })
-    if (this.arrangeId) {
-      // this.fetchFormData()
-    }
+    this.fetchFormData()
   },
   methods: {
     // 获取表单数据
     async fetchFormData() {
-      const res = await qryArrangeDetail({
-        arrangeId: this.arrangeId
-      })
+      const res = await qrySchoolInfo()
       setDatas(this.data, res.DATA)
-      const { segId, gradeId } = this.data
-      this.data.selectedGrade = [segId, gradeId]
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })

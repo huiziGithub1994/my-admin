@@ -202,3 +202,12 @@ export function paramsToString(data) {
   })
   return params
 }
+
+// 表格列宽度
+export function columnsWidth(width, wapperWidth) {
+  const columnsWidth = [...width]
+  columnsWidth.forEach((item, index) => {
+    columnsWidth[index] = (Number(item.replace(/%/, '')) / 100) * wapperWidth
+  })
+  return columnsWidth
+}

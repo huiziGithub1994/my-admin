@@ -65,3 +65,10 @@ export function uploadCoursePlain(data) {
     params: data
   })
 }
+
+// 选课平台-》学校信息
+export function qrySchoolInfo() {
+  return request({
+    url: URL.qrySchoolInfo
+  })
+}

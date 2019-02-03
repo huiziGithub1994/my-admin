@@ -77,7 +77,7 @@ export default function service(settings) {
             resolve(res)
           } else {
             Message({
-              message: res.DATA || res.MSG || '请求处理异常,请稍后再试',
+              message: res.MSG || res.DATA || '请求处理异常,请稍后再试',
               type: 'error'
             })
             reject(res)
