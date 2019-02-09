@@ -91,7 +91,7 @@
 
 <script>
 import { getPKCXListInfo, saveArrange, delArrange } from '@/api/pkcx'
-import { getTableBestRows } from '@/utils/businessUtil'
+import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
@@ -166,8 +166,8 @@ export default {
     // 获取表格数据
     fetchData() {
       this.listLoading = true
-      const params = Object.assign(this.listQuery, this.pageTot)
-      getPKCXListInfo(params).then(res => {
+      const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
+      getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTot.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false

@@ -3,7 +3,7 @@
   <div class="conent">
     <div class="nav-block">
       <el-steps :active="2" finish-status="success" simple>
-        <el-step title="教学计划"></el-step>
+        <el-step title="授课任务"></el-step>
         <el-step title="排课规则"></el-step>
         <el-step title="排课过程"></el-step>
         <el-step title="课表查询"></el-step>
@@ -11,6 +11,7 @@
     </div>
     <div>
       <el-tabs v-model="activeTabName">
+        <!-- 固排禁排 -->
         <el-tab-pane label="固排禁排" name="one" :disabled="tabDisabled.one">
           <el-tabs type="card" class="pkgzPt" v-model="gpjpTabActive">
             <el-tab-pane label="年级/班级禁排固排" name="1"></el-tab-pane>
@@ -21,20 +22,24 @@
         </el-tab-pane>
         <div class="my-tabs" v-show="activeTabName==='one'">
           <grade-class v-if="gpjpTabActive === '1'"></grade-class>
+          <!-- 年级/班级禁排固排 -->
           <teacher v-else-if="gpjpTabActive === '2'"></teacher>
+          <!-- 教师禁排固排 -->
           <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
+          <!-- 教研组禁排 -->
         </div>
+        <!-- end  固排禁排 -->
         <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two">
           <merge-class></merge-class>
         </el-tab-pane>
         <el-tab-pane label="其他规则" name="three" :disabled="tabDisabled.three"></el-tab-pane>
       </el-tabs>
-      <div class="next-wapper">
+      <!-- <div class="next-wapper">
         <div>
           <el-button type="success" plain @click="baseInfoPre" v-show="activeTabName !== 'one'">上一步</el-button>
           <el-button type="success" plain @click="baseInfoNext" v-show="activeTabName !== 'three'">下一步</el-button>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -45,10 +50,28 @@ import TeachGroup from './TeachGroup' // 固排禁排tab页：教研组禁排tab
 import MergeClass from './MergeClass' // 合班设置
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$notify.close()
+      if (!sessionStorage.getItem('local_arrangeId')) {
+        const h = vm.$createElement
+        vm.$notify({
+          title: '提示',
+          message: h(
+            'i',
+            { style: 'color: teal' },
+            '请先在“排课任务”页面，点击“新增”或者“排课”按钮，执行完“授课任务”流程再进入“排课规则”页面'
+          ),
+          duration: 8 * 1000
+        })
+        vm.$router.push({ name: 'PkcxPt' })
+      }
+    })
+  },
   components: { GradeClass, Teacher, TeachGroup, MergeClass },
   data() {
     return {
-      activeTabName: 'two', // tab页高亮
+      activeTabName: 'one', // tab页高亮
       gpjpTabActive: '1' // 固排禁排
     }
   },

@@ -45,11 +45,14 @@
         <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
       </div>
     </div>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="300px">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="330px">
       <div>
-        <el-form :model="addForm" :rules="formRules" ref="ruleForm" label-width="50px">
+        <el-form :model="addForm" :rules="formRules" ref="ruleForm" label-width="80px">
           <el-form-item label="名称" prop="name">
             <el-input v-model.trim="addForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="显示顺序">
+            <el-input v-model.trim="addForm.dispOrder"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -130,7 +133,8 @@ export default {
       },
       // 表单数据
       addForm: {
-        name: ''
+        name: '',
+        dispOrder: undefined
       },
       // 表单规则
       formRules: {
@@ -203,12 +207,13 @@ export default {
     },
     // 年级
     async handleGrade(action, data) {
-      const { name, segId, segName } = this.addForm
+      const { name, segId, segName, dispOrder } = this.addForm
       const params = {
         action,
         segId: segId,
         segName,
-        gradeName: name
+        gradeName: name,
+        dispOrder
       }
       // 修改、删除
       if (data) {
@@ -223,10 +228,11 @@ export default {
     },
     // 学段
     async learningSection(action, data) {
-      const { name } = this.addForm
+      const { name, dispOrder } = this.addForm
       const params = {
         action,
-        segName: name
+        segName: name,
+        dispOrder
       }
       // 修改、删除
       if (data) {
@@ -244,16 +250,17 @@ export default {
       this.dialogTitle = title
       this.dialogVisible = true
       if (data) {
-        const { segName, gradeName, segId, gradeId } = data
+        const { segName, gradeName, segId, gradeId, dispOrder } = data
         Object.assign(this.addForm, {
           name: title.indexOf('学段') > -1 ? segName : gradeName,
           segName,
           segId,
-          gradeId
+          gradeId,
+          dispOrder
         })
       } else {
         // 新增
-        this.addForm.name = ''
+        Object.assign(this.addForm, { name: '', dispOrder: undefined })
       }
     },
     // 树 删除

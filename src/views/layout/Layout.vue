@@ -107,7 +107,8 @@ export default {
         'local_arrangeId',
         'arrangeName',
         'local_curYear',
-        'local_curTerm'
+        'local_curTerm',
+        'gradeStr'
       ]
       sessions.forEach(key => {
         sessionStorage.removeItem(key)

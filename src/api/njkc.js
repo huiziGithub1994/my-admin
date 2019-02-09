@@ -2,9 +2,10 @@ import request from '@/utils/request'
 import URL from '@/api/url'
 
 // 学段(专业)/年级
-export function qrySegGradeTree() {
+export function qrySegGradeTree(params) {
   return request({
-    url: URL.qrySegGradeTree
+    url: URL.qrySegGradeTree,
+    params
   })
 }
 

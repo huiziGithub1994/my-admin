@@ -1,25 +1,15 @@
 <!-- 年级/班级固排禁排Tab页-->
 <template>
   <div>
-    <div>
-      <condition>
-        <div class="condition">
-          <label>学段/专业</label>
-          <el-select v-model="search.value" placeholder="请选择" @change="selectChange">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </div>
-      </condition>
-      <operation>
-        <el-button type="primary" plain>保存</el-button>
-      </operation>
+    <div class="operation-area">
+      <el-button type="primary" plain>保存</el-button>
     </div>
     <div class="content">
       <p class="tip">
         <label>操作提示：</label>如选择年级是对整个以下的班级进行批量设置禁排或固排
       </p>
       <div class="left" :style="{height:treeHeight}">
-        <el-tree ref="tree2" :data="treeData" :props="defaultProps" class="filter-tree" default-expand-all highlight-current @current-change="treeCurrentChange"/>
+        <el-tree ref="treeRef" :data="treeData" node-key="id" default-expand-all :expand-on-click-node="false" highlight-current @node-click="treeNodeClick"></el-tree>
       </div>
       <div class="right">
         <hot-table :settings="settings" ref="gradeClassHotTable"></hot-table>
@@ -28,10 +18,11 @@
   </div>
 </template>
 <script>
-import { getGradeClassTreeData } from '@/api/pkgzPt'
+import { qrySegGradeTree } from '@/api/njkc'
 import { HotTable } from '@handsontable/vue'
 import { qryCalendar } from '@/api/base'
 import { initTableData } from '@/utils/inlineEditTable'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -41,7 +32,7 @@ export default {
     const h = 380
     const treeH = document.body.clientHeight - h
     return {
-      search: { value: '03' },
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 学段/专业
       options: [
         { value: '01', label: '小学' },
@@ -50,11 +41,6 @@ export default {
       ],
       // tree 高度
       treeHeight: treeH + 'px',
-      // tree 的prop
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
       // tree 的数据s
       treeData: [],
       // 校历数据
@@ -71,6 +57,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['calenderId'])
+  },
   created() {
     this.getTreeData()
     this.fetchTableData()
@@ -81,17 +70,13 @@ export default {
   methods: {
     // 获取树节点的数据
     async getTreeData() {
-      const res = await getGradeClassTreeData()
-      this.treeData = res.DATA
-    },
-    // 学段/专业 改变时
-    selectChange() {
-      this.getTreeData()
+      const res = await qrySegGradeTree({ arrangeId: this.arrangeId })
+      this.treeData = [res.DATA]
     },
     // 获取表格数据
     async fetchTableData() {
       // 获取校历信息
-      const res = await qryCalendar({ schoolId: '111' })
+      const res = await qryCalendar({ calenderId: this.calenderId })
       this.calendarData = res.DATA
       this.initEditTableData()
       // 将校历信息填充表格 并 修改表格配置，校历信息中的内容为不可修改
@@ -114,11 +99,13 @@ export default {
     fillCalendarData() {
       const { calFixList } = this.calendarData
       const readOnlyCell = []
+      console.log(calFixList)
       calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
         readOnlyCell.push(`${row},${col + 1}`)
         this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
       })
+      // console.log(readOnlyCell)
       this.hotInstance.updateSettings({
         cells: function(row, col) {
           var cellProperties = {}
@@ -129,7 +116,7 @@ export default {
         }
       })
     },
-    treeCurrentChange(data) {
+    treeNodeClick(data) {
       console.log(data)
     }
   }
@@ -149,11 +136,10 @@ export default {
   }
   > .right {
     margin-left: 260px;
-    > div {
-      border: 1px solid #dddddd;
-      width: 720px;
-    }
   }
+}
+.operation-area {
+  float: right;
 }
 </style>
 
