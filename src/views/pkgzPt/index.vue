@@ -21,16 +21,16 @@
           </el-tabs>
         </el-tab-pane>
         <div class="my-tabs" v-show="activeTabName==='one'">
-          <grade-class v-if="gpjpTabActive === '1'"></grade-class>
           <!-- 年级/班级禁排固排 -->
-          <teacher v-else-if="gpjpTabActive === '2'"></teacher>
+          <grade-class v-if="gpjpTabActive === '1'"></grade-class>
           <!-- 教师禁排固排 -->
-          <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
+          <teacher v-else-if="gpjpTabActive === '2'"></teacher>
           <!-- 教研组禁排 -->
+          <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
         </div>
         <!-- end  固排禁排 -->
         <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two">
-          <merge-class></merge-class>
+          <merge-class v-if="activeTabName === 'two'"></merge-class>
         </el-tab-pane>
         <el-tab-pane label="其他规则" name="three" :disabled="tabDisabled.three"></el-tab-pane>
       </el-tabs>

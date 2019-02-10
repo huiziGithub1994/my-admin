@@ -1,25 +1,37 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
 
-// 禁排固排Tab页 年级/班级禁排固排 treeData
-export function getGradeClassTreeData(listQuery) {
+// 禁排固排Tab页 教师禁排固排 查询或创建年级班级禁固排列表
+export function qryPreArrangeCell(params) {
   return request({
-    url: URL.qryGradeClassTree,
-    params: listQuery
+    url: URL.qryPreArrangeCell,
+    params
+  })
+}
+
+// 禁排固排Tab页 教师禁排固排 保存年级班级禁固排列表
+export function saveCommPreArrangeList(params) {
+  return request({
+    url: URL.saveCommPreArrangeList,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    params
   })
 }
 
 // 禁排固排Tab页 教师禁排固排 treeData
-export function getTeacherTreeData(listQuery) {
+export function qryCourseListByArrangeId(params) {
   return request({
-    url: URL.getTeacherTree,
-    params: listQuery
+    url: URL.qryCourseListByArrangeId,
+    params
   })
 }
-// 禁排固排Tab页 教师禁排固排 教学任务
-export function getTeacherTeachTask(listQuery) {
+// 禁排固排Tab页 教师禁排固排 根据排课教师id查询教师授课列表
+export function qryTeaTaskListByTeaId(listQuery) {
   return request({
-    url: URL.getTeacherTeachTask,
+    url: URL.qryTeaTaskListByTeaId,
     params: listQuery
   })
 }

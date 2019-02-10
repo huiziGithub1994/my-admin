@@ -54,7 +54,7 @@ export function initTableData(
       } else if (j === 2) {
         columns.push({ data: 'lessionSeq', readOnly: true })
       } else {
-        columns.push({ data: j - baseHeaderLength })
+        columns.push({ data: j - baseHeaderLength, trimWhitespace: true })
       }
     }
   } else {
@@ -63,7 +63,7 @@ export function initTableData(
       if (j === 0) {
         columns.push({ data: 'lessionSeq', readOnly: true })
       } else {
-        columns.push({ data: j - baseHeaderLength })
+        columns.push({ data: j - baseHeaderLength, trimWhitespace: true })
       }
     }
   }

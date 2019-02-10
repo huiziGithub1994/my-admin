@@ -231,7 +231,7 @@ export default {
           data.forEach((item, index) => {
             if (!isContinue) return
             for (const [key, val] of Object.entries(item)) {
-              if (flag.includes(key)) {
+              if (flag.includes(key) || !val) {
                 continue
               }
               newData.push({

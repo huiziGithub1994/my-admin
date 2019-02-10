@@ -62,9 +62,11 @@ export default {
   saveCourseTaskList: `/zxx/saveCourseTaskList`, // 保存班级授课列表
 
   // 排课规则 -》固排禁排
-  qryGradeClassTree: `/base/qryGradeClassTree`, // 年级/班级禁排固排 treeData
-  getTeacherTree: `/base/getTeacherTree`, // 教师禁排固排 treeData
-  getTeacherTeachTask: `/base/getTeacherTeachTask`, // 教师禁排固排 教学任务
+  // 年级/班级禁排固排
+  qryPreArrangeCell: `/zxx/qryPreArrangeCell`, // 查询或创建年级班级禁固排列表
+  saveCommPreArrangeList: `/zxx/saveCommPreArrangeList`, // 保存年级班级禁固排列表
+  qryCourseListByArrangeId: `/zxx/qryCourseListByArrangeId`, // 教师禁排固排 treeData
+  qryTeaTaskListByTeaId: `/zxx/qryTeaTaskListByTeaId`, // 教师禁排固排 根据排课教师id查询教师授课列表
   getTeacherTimetable: `/base/getTeacherTimetable`, // 教师禁排固排 教学任课表
   getTeachGroupTree: `/base/getTeachGroupTree`, // 教研组禁排
 
