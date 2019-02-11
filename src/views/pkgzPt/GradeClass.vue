@@ -18,13 +18,13 @@
         <p class="tip">
           <label>操作提示：</label>如选择年级是对整个以下的班级进行批量设置禁排或固排
         </p>
-        <el-table ref="singleTable" :data="tableData" style="width: 80%;max-width:900px;" border @cell-click="cellClick" :cell-class-name="cellClassName">
-          <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index" :label="item" v-for="(item,index) in colHeaders" :key="index">
+        <el-table ref="singleTable" :data="arrangeTableData" style="width: 80%;max-width:900px;" border @cell-click="cellClick" :cell-class-name="cellClassName">
+          <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index+'M'" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
               <div v-if="index === 0">第{{ scope.row.rowOrder }}节</div>
-              <div v-else class="cell-arrange">
-                {{ scope.row['col'+index] }}
-                <i class="el-icon-error" v-if="scope.row['col'+index]" @click.stop="removeArrange(scope.row,index)"></i>
+              <div v-else-if="scope.row['col'+index+'M']" class="cell-arrange">
+                {{ scope.row['col'+index+'M'].cellMeaning }}
+                <i class="el-icon-error" v-if="scope.row['col'+index+'M']" @click.stop="removeArrange(scope.row,index)"></i>
               </div>
             </template>
           </el-table-column>
@@ -35,11 +35,11 @@
 </template>
 <script>
 import { qrySegGradeTree } from '@/api/njkc'
-import { qryPreArrangeCell, saveCommPreArrangeList } from '@/api/pkgzPt'
-import { qryCalendar } from '@/api/base'
+import { saveCommPreArrangeList } from '@/api/pkgzPt'
 import { mapGetters } from 'vuex'
-
+import mixin from './handle'
 export default {
+  mixins: [mixin],
   data() {
     const h = 340
     const treeH = document.body.clientHeight - h
@@ -60,7 +60,7 @@ export default {
       calendarData: [],
       calendarCell: [], // 记录校历数据
       // 表格数据
-      tableData: [],
+      arrangeTableData: [],
       // 表格表头
       colHeaders: [],
       count: undefined // 表格的行
@@ -71,7 +71,7 @@ export default {
   },
   created() {
     this.getTreeData()
-    this.fetchTableData()
+    this.fetchCalendarData()
   },
   mounted() {},
   methods: {
@@ -80,74 +80,19 @@ export default {
       const res = await qrySegGradeTree({ arrangeId: this.arrangeId })
       this.treeData = [res.DATA]
     },
-    // 获取表格数据
-    async fetchTableData() {
-      // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.calenderId })
-      this.calendarData = res.DATA
-      const {
-        countInMorning,
-        countMorning,
-        countAfternoon,
-        countNight
-      } = res.DATA
-      this.count =
-        Number(countInMorning) +
-        Number(countMorning) +
-        Number(countAfternoon) +
-        Number(countNight)
-      // 将校历信息填充表格 并 修改表格配置，校历信息中的内容为不可修改
-      this.initEditTableData()
-    },
-    // 初始化表格的头部、行列、数据为空
-    initEditTableData() {
-      const baseHeader = ['节次/星期']
-      if (!this.calendarData) {
-        return
-      }
-      const weeks = [
-        '星期一',
-        '星期二',
-        '星期三',
-        '星期四',
-        '星期五',
-        '星期六',
-        '星期日'
-      ]
-      const { workDays } = this.calendarData
-      // 生成表头
-      this.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)]
-    },
-    // 表格的点击
-    cellClick(row, column, cell, event) {
-      if (column.property === 'rowOrder') return
-      const pos = `${row.rowOrder - 1},${column.property.substr(3) - 1}`
-      if (this.calendarCell.includes(pos)) {
-        this.$message.warning('校历维护中的数据不可以进行排课')
-        return
-      }
+    // 排课表格的点击
+    cellClick(row, column) {
+      const valid = this.cellClickValid(row, column)
+      if (!valid) return
       // 表格填值
-      row[column.property] = '禁排'
-    },
-    // 表格单元添加样式
-    cellClassName({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) return ''
-      if (this.calendarCell.includes(`${rowIndex},${columnIndex - 1}`)) {
-        return 'isCalendar'
+      row[column.property] = {
+        cellMeaning: '禁排',
+        cellType: '1'
       }
-      const posCol = `col${columnIndex}`
-      if (row[posCol] && row[posCol].length) {
-        return 'canRemove'
-      }
-      return ''
-    },
-    // 删除课时预排
-    removeArrange(row, index) {
-      row['col' + index] = ''
     },
     // 树节点的点击事件
-    async treeNodeClick(data) {
-      this.tableData = []
+    treeNodeClick(data) {
+      this.arrangeTableData = []
       if (data.level <= 1) return
       const { gradeId, classId } = data
       const params = { arrangeId: this.arrangeId, rows: this.count }
@@ -158,18 +103,8 @@ export default {
         params.gradeClassId = gradeId
         params.arrangeType = '1'
       }
-      const res = await qryPreArrangeCell(params)
-      // 将校历数据填入表格
-      const { calFixList } = this.calendarData
-      this.calendarCell = []
-      const tempCell = []
-      calFixList.forEach(item => {
-        const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        res.DATA[row][`col${col + 1}`] = item.cellValue
-        tempCell.push(`${row},${col}`)
-      })
-      this.calendarCell.push(...tempCell)
-      this.tableData = res.DATA
+      // 获取排课表格数据，并填入校历数据
+      this.queryArrangeTableData(params)
     },
     // 保存按钮
     async saveBtn() {
@@ -181,7 +116,7 @@ export default {
       const { gradeId, classId } = currentNode
       const params = {
         arrangeId: this.arrangeId,
-        sjsCommPreArrangeList: this.tableData
+        sjsCommPreArrangeList: this.arrangeTableData
       }
       if (classId) {
         params.gradeClassId = classId
@@ -190,7 +125,6 @@ export default {
         params.gradeClassId = gradeId
         params.arrangeType = '1'
       }
-      console.log(params)
       await saveCommPreArrangeList(params)
       this.$message.success('保存成功')
     }

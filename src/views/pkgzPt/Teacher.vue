@@ -11,7 +11,13 @@
         <span>
           <label>{{ teacher.label }}</label>老师的教学任务
         </span>
-        <el-button type="primary" plain>保存</el-button>
+        <div>
+          <el-radio-group v-model="arrangeType">
+            <el-radio :label="1">禁排</el-radio>
+            <el-radio :label="2">固排</el-radio>
+          </el-radio-group>
+          <el-button type="primary" plain @click="saveBtn">保存</el-button>
+        </div>
       </div>
       <div class="taskTable">
         <el-table ref="table" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" @current-change="tableCurrentChange">
@@ -24,16 +30,16 @@
         </el-table>
       </div>
       <p class="tip">
-        <label>操作说明：</label>选择上面班级单击固排；双击下面列表可安排禁排
+        <label>操作说明：</label>1.选择“禁排”单选框，再点击下面的表格可设置禁排。2.选择“固排”单选框，先选中上面表格的，再点击下面的表格可设置固排。
       </p>
       <div class="my-table advanceArrange">
         <el-table ref="singleTable" :data="arrangeTableData" style="width: 100%" border @cell-click="cellClick" :cell-class-name="cellClassName">
-          <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index" :label="item" v-for="(item,index) in colHeaders" :key="index">
+          <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index+'M'" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
               <div v-if="index === 0">第{{ scope.row.rowOrder }}节</div>
-              <div v-else class="cell-arrange">
-                {{ scope.row['col'+index] }}
-                <i class="el-icon-error" v-if="scope.row['col'+index]" @click.stop="removeArrange(scope.row,index)"></i>
+              <div v-else-if="scope.row['col'+index+'M']" class="cell-arrange">
+                {{ scope.row['col'+index+'M'].cellMeaning }}
+                <i class="el-icon-error" v-if="scope.row['col'+index+'M']" @click.stop="removeArrange(scope.row,index)"></i>
               </div>
             </template>
           </el-table-column>
@@ -44,18 +50,19 @@
 </template>
 <script>
 import {
+  saveCommPreArrangeList,
   qryCourseListByArrangeId,
-  qryTeaTaskListByTeaId,
-  getTeacherTimetable
+  qryTeaTaskListByTeaId
 } from '@/api/pkgzPt'
-import { qryCalendar } from '@/api/base'
 import { mapGetters } from 'vuex'
-
+import mixin from './handle'
 export default {
+  mixins: [mixin],
   data() {
     const h = 360
     const treeH = document.body.clientHeight - h
     return {
+      arrangeType: 1, // 禁排、固排
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       teacher: {},
       // tree 高度
@@ -64,12 +71,14 @@ export default {
       treeData: [],
       // 教学任务表格数据
       tableData: [],
+      currentRow: null, // 教学任务表格选中行
       // 校历数据
       calendarData: [],
       // 排课任务表格数据
       arrangeTableData: [],
       // 表格表头
-      colHeaders: []
+      colHeaders: [],
+      count: undefined // 表格的行
     }
   },
   computed: {
@@ -84,9 +93,7 @@ export default {
     this.getTreeData()
     this.fetchCalendarData()
   },
-  mounted() {
-    this.hotInstance = this.$refs.hotTable.hotInstance
-  },
+  mounted() {},
   methods: {
     // 获取树节点的数据
     async getTreeData() {
@@ -96,73 +103,76 @@ export default {
     // 树节点选中项改变时
     async treeCurrentChange(data) {
       if (data.children) return
+      this.arrangeTableData = []
       this.teacher = data
+      // 获取任教表格数据
       const res = await qryTeaTaskListByTeaId({
         arrangeId: this.arrangeId,
         teaId: data.id
       })
       this.tableData = res.DATA
+      // 获取排课表格数据，并填入校历数据
+      const params = {
+        arrangeId: this.arrangeId,
+        rows: this.count,
+        gradeClassId: data.id,
+        arrangeType: '3'
+      }
+      this.queryArrangeTableData(params)
     },
     // 教学任务表格选中行
-    async tableCurrentChange(currentRow) {
-      this.initEditTableData()
-      this.fillCalendarData()
-      // 获取教师的课表
-      const res = await getTeacherTimetable()
-      // 填充课表
-      res.DATA.calFixList.forEach(item => {
-        const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
-      })
+    tableCurrentChange(row) {
+      this.currentRow = row
     },
-    // 获取校历表格数据并初始化表格
-    async fetchCalendarData() {
-      // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.calenderId })
-      this.calendarData = res.DATA
-      this.initEditTableData()
-    },
-    // 初始化表格的头部、行列、数据为空
-    initEditTableData() {
-      const baseHeader = ['节次/星期']
-      if (!this.calendarData) {
+    // 排课表格的点击
+    cellClick(row, column) {
+      if (this.arrangeType === 2 && !this.currentRow) {
+        this.$message.warning('请先选择要固排的任教课程')
         return
       }
-      const weeks = [
-        '星期一',
-        '星期二',
-        '星期三',
-        '星期四',
-        '星期五',
-        '星期六',
-        '星期日'
-      ]
-      const { workDays } = this.calendarData
-      // 生成表头
-      this.colHeaders = [...baseHeader, ...weeks.slice(0, workDays)]
+      const valid = this.cellClickValid(row, column)
+      if (!valid) return
+      // 表格填值
+      let tempMean = '禁排'
+      if (this.arrangeType === 2) {
+        const { class_name, course_name } = this.currentRow
+        tempMean = class_name + ',' + course_name
+      }
+      row[column.property] = {
+        cellMeaning: tempMean,
+        cellType: this.arrangeType + ''
+      }
     },
-    // 数据填充表格 并 修改表格配置，校历信息中的内容为不可修改
-    fillCalendarData() {
-      const { calFixList } = this.calendarData
-      const readOnlyCell = []
-      calFixList.forEach(item => {
-        const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        readOnlyCell.push(`${row},${col + 1}`)
-        this.hotInstance.setDataAtRowProp(row, col, item.cellValue)
-      })
-      this.hotInstance.updateSettings({
-        cells: function(row, col) {
-          var cellProperties = {}
-          if (readOnlyCell.includes(`${row},${col}`)) {
-            cellProperties.readOnly = true
-          }
-          return cellProperties
-        }
-      })
+    // 保存按钮
+    async saveBtn() {
+      if (Object.keys(this.teacher).length === 0) {
+        this.$message.warning('请先选择教师')
+        return
+      }
+      const params = {
+        arrangeId: this.arrangeId,
+        sjsCommPreArrangeList: this.arrangeTableData,
+        gradeClassId: this.teacher.id,
+        arrangeType: '3'
+      }
+      await saveCommPreArrangeList(params)
+      this.$message.success('保存成功')
     }
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss">
+.advanceArrange .el-table__body tr > td.isCalendar {
+  background: #e6e6e6 !important;
+}
+.advanceArrange .el-table__body tr > td.canRemove:hover {
+  background: #e8e9fd !important;
+  .el-icon-error {
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .content {
   > .left {
@@ -188,8 +198,11 @@ export default {
       color: red;
     }
   }
-  button {
+  > div {
     float: right;
+    > button {
+      margin-left: 20px;
+    }
   }
 }
 .taskTable {
@@ -197,6 +210,25 @@ export default {
 }
 .tip {
   margin: 10px 0;
+}
+.cell-arrange {
+  position: relative;
+  width: 100%;
+  .el-icon-error {
+    position: absolute;
+    right: -5px;
+    top: 4px;
+    z-index: 10;
+    font-size: 1.2rem;
+    display: none;
+  }
+}
+.cell-arrange > span {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
 }
 </style>
 
