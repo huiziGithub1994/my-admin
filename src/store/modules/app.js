@@ -7,10 +7,11 @@ const app = {
       withoutAnimation: false
     },
     device: 'desktop',
-    menutype: 'zb'
+    menutype: Cookies.get('menutype') || 'zb'
   },
   mutations: {
     SET_MENUTYPE: (state, type) => {
+      Cookies.set('menutype', type)
       state.menutype = type
     },
     TOGGLE_SIDEBAR: state => {

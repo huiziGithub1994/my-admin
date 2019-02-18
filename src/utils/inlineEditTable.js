@@ -81,7 +81,13 @@ export function initTableData(
         // j=-1 :后台数据j=0表示周一
         defaultRow.lessionSeq = `第${i + 1}节`
       } else {
-        defaultRow[j] = valueType === '1' ? '' : {}
+        if (valueType === '1') {
+          defaultRow[j] = ''
+        } else if (valueType === '2') {
+          defaultRow[j] = {}
+        } else {
+          defaultRow[j] = { value: '' }
+        }
       }
     }
     defaultData.push(Object.assign({}, defaultRow))

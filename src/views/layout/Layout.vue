@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 // import { getCookie } from '@/utils/auth'
@@ -54,17 +55,20 @@ export default {
       choosedMenu: {
         name: '',
         command: ''
-      },
-      menus: [
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(['menutype', 'userType']),
+    menus() {
+      if (this.userType === '2') {
+        return [{ command: 'xk', name: '选课平台' }]
+      }
+      return [
         { command: 'zb', name: '走班排课' },
         { command: 'pt', name: '普通排课' },
         { command: 'xk', name: '选课平台' }
       ]
-    }
-  },
-  computed: {
-    menutype() {
-      return this.$store.state.app.menutype
     },
     sidebar() {
       return this.$store.state.app.sidebar
@@ -82,7 +86,7 @@ export default {
     }
   },
   mounted() {
-    Object.assign(this.choosedMenu, this.menus[this.menutype === 'zb' ? 0 : 1])
+    Object.assign(this.choosedMenu, this.menus[0])
   },
   methods: {
     // 退出登录
@@ -98,7 +102,7 @@ export default {
       this.$store.commit('SET_MENUTYPE', choosed.command)
       this.initLocal() // local 变量
       this.$store.dispatch('delAllViews')
-      this.$router.push({ name: 'Home' })
+      if (this.userType !== '2') this.$router.push({ name: 'Home' })
       this.$store.dispatch('addView', this.$route)
     },
     initLocal() {

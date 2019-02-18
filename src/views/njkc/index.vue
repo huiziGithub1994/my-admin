@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      downloadUrl: apUrl.subjectLayerExcelTemplate, // 下载模板地址
+      downloadUrl: apUrl.coursePlainExcelTemplate, // 下载模板地址
       httpHeaders: {}, // 导入 请求header
       uploadParams: {}, // 导入 参数
       hotInstance: null,

@@ -44,14 +44,14 @@
               </div>
             </el-form-item>
             <div class="autoLogin">
-              <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
+              <el-checkbox v-model="autoLogin">记住用户</el-checkbox>
               <span class="pwdReg">
                 <span>找回密码</span>
                 <span>注册新用户</span>
               </span>
             </div>
             <div class="loginBtn" @click="submitForm">登 录</div>
-            <div class="other">
+            <!-- <div class="other">
               <p>使用第三方账号登录</p>
               <div>
                 <img src="../../assets/ui/qq.png">
@@ -60,7 +60,7 @@
                 <img src="../../assets/ui/360.png">
                 <img src="../../assets/ui/baidu.png">
               </div>
-            </div>
+            </div>-->
           </el-form>
         </div>
         <div class="copyright">Copyright c {{ currentYear }} 湖南蓝墨水软件科技有限公司</div>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-// import { mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import { getValidCode } from '@/api/login'
 import moment from 'moment'
 export default {
@@ -78,8 +78,8 @@ export default {
     return {
       codeSrc: '',
       ruleForm: {
-        loginid: 'lmsadmin', // 用户名
-        loginpwd: '123456', // 密码
+        loginid: 'lmsadmin', // 用户名 lmsadmin 190302
+        loginpwd: '123456', // 密码 123456  190302
         validateCode: ''
       },
       rules: {
@@ -104,11 +104,13 @@ export default {
       autoLogin: false // 自动登录
     }
   },
+  computed: {
+    ...mapGetters(['userType'])
+  },
   created() {
     this.getTime()
     this.fetchValidCode()
   },
-  mounted() {},
   methods: {
     async fetchValidCode() {
       const res = await getValidCode()
@@ -120,7 +122,9 @@ export default {
         if (valid) {
           this.$store.dispatch('Login', this.ruleForm).then(
             res => {
-              this.$router.push({ name: 'Home' })
+              this.$router.push({
+                name: this.userType === '2' ? 'Xsxk' : 'Home'
+              })
             },
             errorRes => {
               this.fetchValidCode()

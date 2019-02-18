@@ -231,7 +231,7 @@ export default {
           data.forEach((item, index) => {
             if (!isContinue) return
             for (const [key, val] of Object.entries(item)) {
-              if (flag.includes(key) || !val) {
+              if (flag.includes(key)) {
                 continue
               }
               newData.push({
@@ -247,6 +247,7 @@ export default {
           })
           if (!isContinue) return
           Object.assign(this.data, { calFixList: newData })
+          console.log(newData)
           saveCalendar({
             modelString: JSON.stringify(this.data)
           }).then(res => {

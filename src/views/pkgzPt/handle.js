@@ -48,12 +48,14 @@ export default {
       this.calendarCell = []
       const tempCell = []
       calFixList.forEach(item => {
-        const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        res.DATA[row][`col${col + 1}M`] = {
-          cellMeaning: item.cellValue,
-          cellType: '1'
+        if (item.cellValue) {
+          const [row, col] = item.cellKey.split(',').map(x => Number(x))
+          res.DATA[row][`col${col + 1}M`] = {
+            cellMeaning: item.cellValue,
+            cellType: '1'
+          }
+          tempCell.push(`${row},${col}`)
         }
-        tempCell.push(`${row},${col}`)
       })
       this.calendarCell.push(...tempCell)
       this.arrangeTableData = res.DATA

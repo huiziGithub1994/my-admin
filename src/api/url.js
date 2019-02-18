@@ -8,6 +8,7 @@ export default {
   // 教学计划
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
   qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
+  saveCourseLayerListDisp: `/zxx/layer/saveCourseLayerListDisp`, // 学科分层列表保存顺序
   // qrylayerCourseName: `/zxx/layer/qryCourseNameListForArrange`, // 学科分层课程名称下拉列表查询接口
   qrylayerCourseName: `/zxx/layer/qryCourseNameListForGrade`, // 学科分层课程名称下拉列表查询接口
   savelayerInfo: `/zxx/layer/saveCourseLayerInfo`, // 学科分层详情保存接口
@@ -67,8 +68,7 @@ export default {
   saveCommPreArrangeList: `/zxx/saveCommPreArrangeList`, // 保存年级班级禁固排列表
   qryCourseListByArrangeId: `/zxx/qryCourseListByArrangeId`, // 教师禁排固排 treeData
   qryTeaTaskListByTeaId: `/zxx/qryTeaTaskListByTeaId`, // 教师禁排固排 根据排课教师id查询教师授课列表
-  getTeacherTimetable: `/base/getTeacherTimetable`, // 教师禁排固排 教学任课表
-  getTeachGroupTree: `/base/getTeachGroupTree`, // 教研组禁排
+  getTeachGroupTree: `/zxx/qryOnlyCourseLByArrangeId`, // 教研组禁排 treeData
 
   // 排课规则 -》合班设置
   getClasses: `/base/getClasses`, // 根据年级获取班级信息
@@ -76,7 +76,8 @@ export default {
 
   /** 选课平台  */
   // 学校信息
-  qrySchoolInfo: `/zxx/schoolInfo`, // 学校信息查询
+  qrySchoolInfo: `/zxx/qrySjsSchoolById`, // 学校信息查询
+  getDicList: `/zxx/getDicList`, // 学校类型查询
 
   // 选课列表（选课任务）
   qryChoseCourseList: `/zxx/chose/qryChoseCourseList`, // 获取选课列表

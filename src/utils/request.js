@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
+import router from '../router'
 import Qs from 'qs'
 import { setCookie } from '@/utils/auth'
 // 创建axios实例
@@ -80,6 +81,10 @@ export default function service(settings) {
               message: res.MSG || res.DATA || '请求处理异常,请稍后再试',
               type: 'error'
             })
+
+            if (res.type === 'invalidSession') {
+              router.push({ path: '/login' })
+            }
             reject(res)
           }
         }

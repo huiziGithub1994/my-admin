@@ -3,7 +3,7 @@
   <div class="content">
     <div class="left">
       <div :style="{height:treeHeight}" class="tree-wapper">
-        <el-tree ref="tree" :data="treeData" class="filter-tree" @current-change="treeCurrentChange"/>
+        <el-tree ref="tree" :data="treeData" class="filter-tree" highlight-current @current-change="treeCurrentChange"/>
       </div>
     </div>
     <div class="right">
@@ -93,7 +93,6 @@ export default {
     this.getTreeData()
     this.fetchCalendarData()
   },
-  mounted() {},
   methods: {
     // 获取树节点的数据
     async getTreeData() {

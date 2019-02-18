@@ -1,5 +1,5 @@
 <template>
-  <!-- 学科分层及课时 tab页-->
+  <!-- 学科分层及课时  学生自由选择分层 tab页-->
   <div>
     <div>
       <condition>
@@ -11,6 +11,7 @@
         </div>
       </condition>
       <operation>
+        <el-button type="primary" plain @click="saveOrder">保存顺序</el-button>
         <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
           <el-button type="primary" plain>模板下载</el-button>
         </a>
@@ -97,7 +98,8 @@ import {
   getlayerCourseName,
   saveLayerInfo,
   delLayerInfo,
-  getSbjestClassListInfo
+  getSbjestClassListInfo,
+  saveCourseLayerListDisp
 } from '@/api/pkcx'
 import {
   validEditBtn,
@@ -119,9 +121,11 @@ export default {
       sortable: null,
       oldList: [],
       newList: [],
+      // 检索条件
       search: {
         'a.course_id01': ''
       },
+      // 分页数据
       pageTot: {
         currentPage: 1,
         pageSize: 1000
@@ -131,6 +135,7 @@ export default {
       courseOptionsFrom: [],
       multipleSelection: [], // 表格选中项
       height: document.body.clientHeight - 365,
+      // 弹窗数据
       dialogFormVisible: false,
       dialogTitle: '新增',
       rules: {
@@ -368,6 +373,18 @@ export default {
       }
       this.loading = true
       return extension || (extension2 && isLt2M)
+    },
+    // 保存顺序
+    async saveOrder() {
+      const newData = []
+      this.tableData.forEach((item, index) => {
+        const { layerId } = item
+        newData.push({ layerId, dispSeq: index + 1 + '' })
+      })
+      await saveCourseLayerListDisp({
+        modelString: JSON.stringify(newData)
+      })
+      this.$message.success('保存成功')
     }
   }
 }

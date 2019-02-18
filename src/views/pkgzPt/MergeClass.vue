@@ -4,18 +4,13 @@
     <div class="block">
       <div class="title">选择班级</div>
       <div class="group" :style="{height:groupHeiht}">
-        <el-cascader expand-trigger="hover" :options="classOptions" v-model="selectedClass" @change="selectedClassChange"></el-cascader>
-        <ul class="classInfo">
-          <li v-for="(item,index) in classInfo" :key="item.id+index" @click="classClick(item)" :class="{active:selectedClassIds.includes(item.id)}">{{ item.text }}</li>
-        </ul>
+        <el-tree ref="classesTreeRef" :data="classesData" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
       </div>
     </div>
     <div class="block">
       <div class="title">选择课程</div>
       <div class="group" :style="{height:groupHeiht}">
-        <ul class="classInfo">
-          <li v-for="(item,index) in courseInfo" :key="item.id+index" @click="selectedCurseInfo = item" :class="{active:selectedCurseInfo.id === item.id}">{{ item.text }}</li>
-        </ul>
+        <el-tree ref="courseTreeRef" :data="courseData" node-key="id" default-expand-all highlight-current :expand-on-click-node="false"/>
       </div>
     </div>
     <div class="btns" :style="{height:groupHeiht}">
@@ -35,77 +30,62 @@
   </div>
 </template>
 <script>
-import { classCascaderSelect } from '@/components/selectChild/data'
-import { getClasses, getCourse } from '@/api/pkgzPt'
+import { qrySegGradeTree } from '@/api/njkc'
+import { getTeachGroupTreeData } from '@/api/pkgzPt'
 export default {
   data() {
     const h = 260
     const heightG = document.body.clientHeight - h
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       groupHeiht: heightG + 'px',
-      // 班级级联下拉选项
-      classOptions: [],
-      // 班级级联下拉选项选中的声音
-      selectedClass: [],
       // 班级信息
-      classInfo: [],
-      selectedClassIds: [],
-      selectedClassName: [],
+      classesData: [],
       // 课程信息
-      courseInfo: [],
-      selectedCurseInfo: {},
+      courseData: [],
       // 合班信息
       mergeInfo: [],
       selectedMergeInfo: {}
     }
   },
   created() {
-    this.classOptions = [...classCascaderSelect]
-    this.fetchCourse()
+    this.fetchClassesData()
+    this.fetchCourseData()
   },
   methods: {
+    // 获取班级信息
+    async fetchClassesData() {
+      const res = await qrySegGradeTree({ arrangeId: this.arrangeId })
+      this.classesData = res.DATA.children
+    },
     // 获取课程信息
-    async fetchCourse() {
-      const res = await getCourse()
-      this.courseInfo = res.DATA
-    },
-    // 班级级联下拉选项改变时
-    async selectedClassChange(value) {
-      const res = await getClasses()
-      this.classInfo = res.DATA
-    },
-    // 选择班级
-    classClick(val) {
-      const pos = this.selectedClassIds.indexOf(val.id)
-      if (pos === -1) {
-        this.selectedClassIds.push(val.id)
-        this.selectedClassName.push(val.text)
-      } else {
-        this.selectedClassIds.splice(pos, 1)
-        this.selectedClassName.splice(pos, 1)
-      }
+    async fetchCourseData() {
+      const res = await getTeachGroupTreeData({ arrangeId: this.arrangeId })
+      this.courseData = res.DATA
     },
     // 合班按钮的点击
     mergeClick() {
-      const classLen = this.selectedClassIds.length
-      if (classLen === 0) {
+      const selectClasses = this.$refs.classesTreeRef.getCheckedNodes()
+      if (selectClasses.length === 0) {
         this.$message.warning('请选择班级')
         return
       }
-      if (classLen === 1) {
+      if (selectClasses.length < 2) {
         this.$message.warning('班级最少为两个')
         return
       }
-      if (Object.keys(this.selectedCurseInfo).length === 0) {
+      const selectCourse = this.$refs.courseTreeRef.getCurrentNode()
+      if (!selectCourse) {
         this.$message.warning('请选择课程')
         return
       }
-      const text =
-        this.selectedClassName.join('-') + ' ' + this.selectedCurseInfo.text
-      this.mergeInfo.push({ id: Number.parseInt(Math.random() * 1000), text })
-      console.log(this.mergeInfo)
-      this.$message.success('合班成功')
-      this.clearSelectInfo()
+
+      const names = selectClasses.filter(item => item.classId)
+      const classesName = names.map(val => val.label).join('-')
+      console.log(classesName)
+      const text = classesName + ' ' + selectCourse.label
+      this.mergeInfo.push({ id: parseInt(Math.random() * 1000), text })
+      // this.$message.success('合班成功')
     },
     // 解散按钮
     cancelBtn() {
@@ -123,12 +103,6 @@ export default {
           return
         }
       }
-    },
-    // 清空选中的班级和课程信息
-    clearSelectInfo() {
-      this.selectedClassIds = []
-      this.selectedClassName = []
-      this.selectedCurseInfo = {}
     }
   }
 }

@@ -28,12 +28,12 @@
         </div>
       </div>
       <div class="right my-table advanceArrange">
-        <el-table ref="singleTable" :data="tableData" style="width: 800px" border @cell-click="cellClick" :cell-class-name="cellClassName">
+        <el-table ref="singleTable" :data="tableData" style="width:100%" border @cell-click="cellClick" :cell-class-name="cellClassName">
           <el-table-column :property="index === 0 ? 'lessionSeq' : index-1+''" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
               <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
               <div v-else class="cell-arrange">
-                <span>{{ scope.row[index-1+''].value }}</span>
+                {{ scope.row[index-1+''].value }}
                 <i class="el-icon-error" v-if="scope.row[index-1+''].value && !scope.row[index-1+''].isCalendar" @click.stop="removeArrange(scope.row,index)"></i>
               </div>
             </template>
@@ -151,8 +151,9 @@ export default {
       const { colHeaders, defaultData } = initTableData(
         this.calendarData,
         baseHeader,
-        '2'
+        '3'
       )
+      console.log(defaultData)
       this.colHeaders = colHeaders
       this.tableData.push(...defaultData)
     },

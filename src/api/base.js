@@ -72,3 +72,18 @@ export function qrySchoolInfo() {
     url: URL.qrySchoolInfo
   })
 }
+// 选课平台-》学校信息 办学类型
+export function getDicList(listQuery) {
+  return request({
+    url: URL.getDicList,
+    params: listQuery
+  })
+}
+// 选课平台-》学校信息 保存
+export function saveSjsSchoolById(params) {
+  return request({
+    url: URL.getDicList,
+    method: 'post',
+    params
+  })
+}

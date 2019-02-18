@@ -32,6 +32,16 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="18">
+          <el-form-item prop="splitLayerType" label="学生分层方式">
+            <el-radio-group v-model="data.splitLayerType">
+              <el-radio label="1">学生自由选择分层</el-radio>
+              <el-radio label="2">按成绩分层</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -53,7 +63,8 @@ export default {
         schoolYear: undefined,
         termCode: undefined,
         segId: undefined,
-        selectedGrade: []
+        selectedGrade: [],
+        splitLayerType: undefined
       },
       selectProps: {
         value: 'gradeId',
@@ -75,6 +86,9 @@ export default {
         ],
         arrangeName: [
           { required: true, message: '请输入排课任务名称', trigger: 'blur' }
+        ],
+        splitLayerType: [
+          { required: true, message: '请选择学生分层方式', trigger: 'change' }
         ]
       }
     }
@@ -112,11 +126,13 @@ export default {
         arrangeId: this.arrangeId
       })
       setDatas(this.data, res.DATA)
-      const { segId, gradeId } = this.data
+      const { segId, gradeId, splitLayerType } = this.data
       this.data.selectedGrade = [segId, gradeId]
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
+      console.log('splitLayerType', splitLayerType)
+      this.$emit('changeTab', '1') // 根据 ‘学生分层方式’展示不同的tab页
     },
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {
@@ -139,6 +155,7 @@ export default {
           this.$nextTick(function() {
             this.$refs['baseInfoRef'].clearValidate()
           })
+          this.$emit('changeTab', this.data.splitLayerType) // 根据 ‘学生分层方式’展示不同的tab页
           // 存储数据
           const { schoolYear, termCode, arrangeName } = this.data
           sessionStorage.setItem('local_curYear', schoolYear)
@@ -151,7 +168,7 @@ export default {
           if (!this.arrangeId) {
             sessionStorage.setItem('local_arrangeId', res.DATA)
           }
-          this.$emit('update:visible', false)
+          this.$emit('update:visible', false) // 保存后，其他tab页可用
         } else {
           return false
         }

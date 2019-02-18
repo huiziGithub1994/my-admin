@@ -12,6 +12,8 @@ const user = {
     curTerm: getCookie('curTerm'),
     schoolId: getCookie('schoolId'),
     calenderId: getCookie('calenderId'),
+    userType: getCookie('userType'),
+    userName: getCookie('userName'),
     arrangeName: sessionStorage.getItem('arrangeName')
   },
 
@@ -30,6 +32,12 @@ const user = {
     },
     SET_ARRANGENAME: (state, arrangeName) => {
       state.arrangeName = arrangeName
+    },
+    SET_USERTYPE: (state, userType) => {
+      state.userType = userType
+    },
+    SET_USERNAME: (state, userName) => {
+      state.userName = userName
     },
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -78,40 +86,11 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({ commit, dispatch, state }) {
       return new Promise((resolve, reject) => {
         logout()
           .then(() => {
-            const commits = [
-              'SET_TOKEN',
-              'SET_SCHOOLID',
-              'SET_CALENDERID',
-              'SET_CURYEAR',
-              'SET_CURTERM',
-              'SET_ARRANGENAME'
-            ]
-            commits.forEach(key => {
-              commit(key, '')
-            })
-            const removeCookies = [
-              'Admin-Token',
-              'schoolId',
-              'calenderId',
-              'calenderId',
-              'curTerm'
-            ]
-            removeCookies.forEach(key => {
-              removeCookie(key)
-            })
-            const sessions = [
-              'local_arrangeId',
-              'local_curYear',
-              'local_curTerm',
-              'arrangeName'
-            ]
-            sessions.forEach(key => {
-              sessionStorage.removeItem(key)
-            })
+            removeBaseInfo(commit, dispatch)
             resolve()
           })
           .catch(error => {
@@ -124,14 +103,63 @@ const user = {
 
 function commitBaseInfo(commit, res) {
   const { curXq, calendarId, curXn } = res.DATA
-  const { schoolId } = res.DATA.userInfo
+  const { schoolId, userType, userName } = res.DATA.userInfo
   commit('SET_SCHOOLID', schoolId)
   commit('SET_CALENDERID', calendarId)
   commit('SET_CURYEAR', curXn)
   commit('SET_CURTERM', curXq)
+  commit('SET_USERTYPE', userType)
+  commit('SET_USERNAME', userName)
   setCookie('schoolId', schoolId)
   setCookie('calenderId', calendarId)
   setCookie('curYear', curXn)
   setCookie('curTerm', curXq)
+  setCookie('userType', userType)
+  setCookie('userName', userName)
+  if (userType === '2') {
+    commit('SET_MENUTYPE', 'xk')
+  } else {
+    commit('SET_MENUTYPE', 'zb')
+  }
+}
+
+function removeBaseInfo(commit, dispatch) {
+  const commits = [
+    'SET_TOKEN',
+    'SET_SCHOOLID',
+    'SET_CALENDERID',
+    'SET_CURYEAR',
+    'SET_CURTERM',
+    'SET_ARRANGENAME',
+    'SET_USERTYPE',
+    'SET_USERNAME'
+  ]
+  commits.forEach(key => {
+    commit(key, '')
+  })
+  dispatch('delAllViews')
+  const removeCookies = [
+    'Admin-Token',
+    'schoolId',
+    'calenderId',
+    'calenderId',
+    'curTerm',
+    'curYear',
+    'userType',
+    'menutype',
+    'userName'
+  ]
+  removeCookies.forEach(key => {
+    removeCookie(key)
+  })
+  const sessions = [
+    'local_arrangeId',
+    'local_curYear',
+    'local_curTerm',
+    'arrangeName'
+  ]
+  sessions.forEach(key => {
+    sessionStorage.removeItem(key)
+  })
 }
 export default user

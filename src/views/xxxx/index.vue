@@ -16,7 +16,7 @@
         <el-col :span="8">
           <el-form-item label="办学类型" prop="dicId">
             <el-select v-model="data.dicId" placeholder="请选择">
-              <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in schoolOptions" :key="item.dicId" :label="item.dicLabel" :value="item.dicId"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -30,15 +30,15 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="手机号码" prop="contackPhone" clearable>
-            <el-input placeholder="请输入内容" v-model.number="data.contackPhone" clearable></el-input>
+          <el-form-item label="手机号码" prop="tontackPhone" clearable>
+            <el-input placeholder="请输入内容" v-model.number="data.tontackPhone" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="登陆账号" prop="loginid" clearable>
-            <el-input placeholder="请输入内容" v-model.trim="data.loginid" clearable></el-input>
+          <el-form-item label="登陆账号" prop="adminCode" clearable>
+            <div>{{ data.adminCode }}</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -54,8 +54,7 @@
 </template>
 
 <script>
-import { saveArrange } from '@/api/pkcx'
-import { qrySchoolInfo } from '@/api/base'
+import { qrySchoolInfo, getDicList, saveSjsSchoolById } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
 
 export default {
@@ -67,10 +66,13 @@ export default {
         schoolId: undefined,
         schoolName: undefined,
         dicId: undefined,
+        adminCode: undefined,
+        useFlag: undefined,
         contact: undefined,
-        contackPhone: undefined,
-        loginid: undefined,
-        loginpwd: undefined
+        tontackPhone: undefined,
+        provinceId: undefined,
+        cityId: undefined,
+        countryId: undefined
       },
       schoolOptions: [], // 办学类型
       // 表单规则
@@ -82,11 +84,11 @@ export default {
           { required: true, message: '请选择办学类型', trigger: 'change' }
         ],
         contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
-        contackPhone: [
+        tontackPhone: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { type: 'number', message: '手机号码必须为数字', trigger: 'blur' }
         ],
-        loginid: [{ required: true, message: '登陆账号', trigger: 'blur' }],
+        adminCode: [{ required: true, message: '登陆账号', trigger: 'blur' }],
         loginpwd: [
           { required: true, message: '登陆密码', trigger: 'blur' },
           { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
@@ -100,9 +102,15 @@ export default {
       schoolYear: local_curYear,
       termCode: local_curTerm
     })
+    this.getSchoolType()
     this.fetchFormData()
   },
   methods: {
+    // 获取办学类型
+    async getSchoolType() {
+      const res = await getDicList({ dicGroup: 'bxlx' })
+      this.schoolOptions = res.DATA
+    },
     // 获取表单数据
     async fetchFormData() {
       const res = await qrySchoolInfo()
@@ -114,37 +122,7 @@ export default {
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
-          if (this.arrangeId) {
-            Object.assign(this.data, { arrangeId: this.arrangeId })
-          }
-          const [segId, gradeId] = this.data.selectedGrade
-          Object.assign(this.data, { segId, gradeId })
-          // 获取年级名称
-          const seg = this.gradeOptions.filter(
-            item => item.segId === this.data.segId
-          )[0]
-          const grade = seg.gradesList.filter(
-            grade => grade.gradeId === this.data.gradeId
-          )
-          Object.assign(this.data, { gradeName: grade[0].gradeName })
-          const res = await saveArrange(this.data)
-          this.$message.success('保存成功')
-          this.$nextTick(function() {
-            this.$refs['baseInfoRef'].clearValidate()
-          })
-          // 存储数据
-          const { schoolYear, termCode, arrangeName } = this.data
-          sessionStorage.setItem('local_curYear', schoolYear)
-          sessionStorage.setItem('local_curTerm', termCode)
-          const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
-            +termCode === 1 ? '一' : '二'
-          } 学期 , ${arrangeName}`
-          sessionStorage.setItem('arrangeName', nameStr)
-          this.$store.commit('SET_ARRANGENAME', nameStr)
-          if (!this.arrangeId) {
-            sessionStorage.setItem('local_arrangeId', res.DATA)
-          }
-          this.$emit('update:visible', false)
+          await saveSjsSchoolById(this.data)
         } else {
           return false
         }

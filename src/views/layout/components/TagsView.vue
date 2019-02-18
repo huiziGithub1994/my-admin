@@ -101,7 +101,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
-      if (view.name === 'Home') {
+      if (view.name === 'Home' || view.name === 'Xsxk') {
         this.$message({
           message: '首页不可以关闭！',
           type: 'warning'

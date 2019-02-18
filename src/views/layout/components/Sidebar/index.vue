@@ -2,7 +2,7 @@
   <div>
     <div class="userInfo">
       <img src="../../../../assets/ui/Avatar.png">
-      <div>系统管理员</div>
+      <div>{{ userName }}</div>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
@@ -27,18 +27,19 @@ import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
   computed: {
-    ...mapGetters(['sidebar', 'menutype']),
+    ...mapGetters(['sidebar', 'menutype', 'userName', 'userType']),
     routes() {
       const allRoutes = this.$router.options.routes
+      const { length } = allRoutes
+      if (this.userType === '2') {
+        return allRoutes.slice(length - 1, length)
+      }
       if (this.menutype === 'zb') {
-        return allRoutes.slice(0, 6)
+        return allRoutes.slice(0, 8)
       } else if (this.menutype === 'pt') {
-        return [...allRoutes.slice(0, 4), ...allRoutes.slice(6, 9)]
+        return [...allRoutes.slice(0, 7), ...allRoutes.slice(8, 9)]
       } else {
-        return [
-          ...allRoutes.slice(0, 4),
-          ...allRoutes.slice(9, allRoutes.length)
-        ]
+        return [...allRoutes.slice(0, 7), ...allRoutes.slice(9, length - 1)]
       }
     },
     isCollapse() {

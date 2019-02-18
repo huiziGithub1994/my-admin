@@ -5,7 +5,11 @@ import URL from '@/api/url'
 export function getPKCXListInfo(listQuery) {
   return request({
     url: URL.qryArrangeList,
-    params: listQuery
+    params: listQuery,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    }
   })
 }
 
@@ -38,7 +42,15 @@ export function saveArrange(params) {
 export function getSbjestClassListInfo(params) {
   return request({
     url: URL.qrylayerList,
-    params: params
+    params
+  })
+}
+// 学科分层保存列表顺序接口
+export function saveCourseLayerListDisp(params) {
+  return request({
+    url: URL.saveCourseLayerListDisp,
+    method: 'post',
+    params
   })
 }
 

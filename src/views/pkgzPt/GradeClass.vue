@@ -18,7 +18,7 @@
         <p class="tip">
           <label>操作提示：</label>如选择年级是对整个以下的班级进行批量设置禁排或固排
         </p>
-        <el-table ref="singleTable" :data="arrangeTableData" style="width: 80%;max-width:900px;" border @cell-click="cellClick" :cell-class-name="cellClassName">
+        <el-table ref="singleTable" :data="arrangeTableData" style="width: 80%;max-width:900px;min-width:750px" border @cell-click="cellClick" :cell-class-name="cellClassName">
           <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index+'M'" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
               <div v-if="index === 0">第{{ scope.row.rowOrder }}节</div>
@@ -109,7 +109,7 @@ export default {
     // 保存按钮
     async saveBtn() {
       const currentNode = this.$refs.treeRef.getCurrentNode()
-      if (!currentNode) {
+      if (!currentNode || currentNode.level < 2) {
         this.$message.warning('请选择年级或班级')
         return
       }

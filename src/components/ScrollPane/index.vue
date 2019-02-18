@@ -88,8 +88,6 @@ export default {
 .scroll-container {
   white-space: nowrap;
   position: relative;
-  // overflow: hidden;
-  // width: 100%;
   /deep/ {
     .el-scrollbar__bar {
       bottom: 0px;

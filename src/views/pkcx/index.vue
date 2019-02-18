@@ -94,6 +94,7 @@ export default {
     return {
       listLoading: true,
       listQuery: {
+        'a.arrange_type01': '2',
         'a.school_year01': '',
         'a.term_code01': '',
         'a.cur_status01': ''
@@ -142,7 +143,7 @@ export default {
         this.listQuery,
         paramsToString(this.pageTot)
       )
-      getPKCXListInfo({ dataStr: JSON.stringify(params) }).then(res => {
+      getPKCXListInfo(params).then(res => {
         this.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false

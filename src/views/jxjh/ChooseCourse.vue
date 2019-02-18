@@ -1,5 +1,5 @@
 <template>
-  <!--  导入学生选课 tab页-->
+  <!--  导入学生选课 / 学生成绩 tab页-->
   <div>
     <div v-area>
       <condition>
@@ -45,7 +45,12 @@
         <el-table-column label="学号" property="stuNo" width="100" fixed></el-table-column>
         <el-table-column label="姓名" property="stuName" fixed></el-table-column>
         <el-table-column label="性别" property="stuSex" width="55" fixed></el-table-column>
-        <el-table-column label="课程组合" property="allNameGroup" min-width="300"></el-table-column>
+        <!-- 按成绩分层 -->
+        <template v-if="splitLayerType==='2'">
+          <el-table-column :label="label" :property="item.property" v-for="item in tableCourseHeaders" :key="item.property"></el-table-column>
+        </template>
+        <!-- 学生自由选择分层 -->
+        <el-table-column label="课程组合" property="allNameGroup" min-width="300" v-else></el-table-column>
       </el-table>
       <el-pagination
         :current-page="pageTot.currentPage"
@@ -159,7 +164,9 @@ export default {
         children: 'layersList'
       },
       httpHeaders: {},
-      tableData: [],
+      splitLayerType: undefined, // 学生分层方式
+      tableData: [], // 表单数据
+      tableCourseHeaders: [], // 按按成绩分层时，表格新增的课程表头
       pageSizes: pageSizes,
       tableH: tableH,
       pageTot: {
@@ -202,14 +209,14 @@ export default {
   computed: {
     ...mapGetters(['token'])
   },
-  created() {
+  async created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
     Object.assign(this.search, { 'a.arrange_id01': this.arrangeId })
     this.uploadParams.arrangeId = this.arrangeId
     this.fetchCourseOption() // 课程分类
-    this.fetchTableData() // 表格数据
     this.fetchArrangeClasses() // 行政班级数据
-    this.fetchGrade() // 获取基础信息，并初始化表单数据
+    await this.fetchBaseInfo() // 获取基础信息，并初始化表单数据
+    this.fetchTableData() // 表格数据
   },
   methods: {
     // 下载导入模板
@@ -256,7 +263,7 @@ export default {
       this.xzbOptions = res.DATA
     },
     // 获取基础信息，并初始化表单数据
-    async fetchGrade() {
+    async fetchBaseInfo() {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
@@ -266,8 +273,10 @@ export default {
         gradeName,
         schoolYear,
         termCode,
-        segId
+        segId,
+        splitLayerType
       } = res.DATA
+      this.splitLayerType = splitLayerType // 学生分层方式
       Object.assign(this.editForm, {
         arrangeId,
         segName,
@@ -288,6 +297,7 @@ export default {
       }).then(res => {
         this.pageTotal = res.NUM
         this.tableData = res.DATA
+        // tableCourseHeaders
       })
     },
     // 新增按钮
