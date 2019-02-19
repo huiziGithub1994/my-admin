@@ -42,13 +42,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="登陆密码" prop="loginpwd" clearable>
-            <el-input placeholder="请输入内容" v-model.trim="data.loginpwd" clearable></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
     </el-form>
   </div>
 </template>
@@ -85,14 +78,9 @@ export default {
         ],
         contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
         tontackPhone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
-          { type: 'number', message: '手机号码必须为数字', trigger: 'blur' }
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
         ],
-        adminCode: [{ required: true, message: '登陆账号', trigger: 'blur' }],
-        loginpwd: [
-          { required: true, message: '登陆密码', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
-        ]
+        adminCode: [{ required: true, message: '登陆账号', trigger: 'blur' }]
       }
     }
   },
@@ -123,6 +111,7 @@ export default {
       this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
           await saveSjsSchoolById(this.data)
+          this.$message.success('保存成功')
         } else {
           return false
         }

@@ -36,8 +36,8 @@
         <el-col :span="18">
           <el-form-item prop="splitLayerType" label="学生分层方式">
             <el-radio-group v-model="data.splitLayerType">
-              <el-radio label="1">学生自由选择分层</el-radio>
-              <el-radio label="2">按成绩分层</el-radio>
+              <el-radio :label="1">学生自由选择分层</el-radio>
+              <el-radio :label="2">按成绩分层</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -64,7 +64,7 @@ export default {
         termCode: undefined,
         segId: undefined,
         selectedGrade: [],
-        splitLayerType: undefined
+        splitLayerType: 0
       },
       selectProps: {
         value: 'gradeId',
@@ -131,8 +131,7 @@ export default {
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
-      console.log('splitLayerType', splitLayerType)
-      this.$emit('changeTab', '1') // 根据 ‘学生分层方式’展示不同的tab页
+      this.$emit('changeTab', splitLayerType) // 根据 ‘学生分层方式’展示不同的tab页
     },
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {

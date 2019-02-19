@@ -82,8 +82,11 @@ export function getDicList(listQuery) {
 // 选课平台-》学校信息 保存
 export function saveSjsSchoolById(params) {
   return request({
-    url: URL.getDicList,
+    url: URL.saveSjsSchoolById,
     method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
     params
   })
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="tags-view-container">
+  <div class="tags-view-container" ref="tagView">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
@@ -17,7 +17,7 @@
         <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
     </scroll-pane>
-    <span class="arrangeName">{{ arrangeName }}</span>
+    <span class="arrangeName" id="arrangeName">{{ arrangeName }}</span>
   </div>
 </template>
 
@@ -32,11 +32,12 @@ export default {
       visible: false,
       top: 0,
       left: 0,
-      selectedTag: {}
+      selectedTag: {},
+      tagsViewWidth: undefined
     }
   },
   computed: {
-    ...mapGetters(['sidebar', 'arrangeName']),
+    ...mapGetters(['sidebar', 'arrangeName', 'cachedViews']),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     }
@@ -56,6 +57,7 @@ export default {
   },
   mounted() {
     this.addViewTags()
+    this.tagsViewWidth = this.$refs.tagView.offsetWidth - 40
   },
   methods: {
     toggleSideBar() {
@@ -66,13 +68,29 @@ export default {
       return route.path === this.$route.path
     },
     addViewTags() {
-      if (this.$route.name === 'Qxk') return
+      const { name } = this.$route
+      if (name === 'Qxk') return
+      console.log()
+      if (!this.validWidth() && !this.cachedViews.includes(name)) {
+        // 宽度超出
+        const { length } = this.visitedViews
+        for (let i = 0; i < length; i++) {
+          if (this.visitedViews[i].name !== 'Home') {
+            this.closeSelectedTag(this.visitedViews[i])
+            break
+          }
+        }
+      }
       this.$store.dispatch('addView', this.$route)
-      // const { name } = this.$route
-      // if (name) {
-      //   this.$store.dispatch('addView', this.$route)
-      // }
-      // return false
+    },
+    validWidth() {
+      const arrangeNameWidth = document.getElementById('arrangeName')
+        .offsetWidth
+      const scrollPaneWidth = this.$refs.scrollPane.$el.offsetWidth || 0
+      if (arrangeNameWidth + scrollPaneWidth + 85 > this.tagsViewWidth) {
+        return false
+      }
+      return true
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag

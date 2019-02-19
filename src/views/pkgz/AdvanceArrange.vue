@@ -153,7 +153,6 @@ export default {
         baseHeader,
         '3'
       )
-      console.log(defaultData)
       this.colHeaders = colHeaders
       this.tableData.push(...defaultData)
     },

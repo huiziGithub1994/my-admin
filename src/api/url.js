@@ -75,9 +75,6 @@ export default {
   getCourse: `/base/getCourse`, // 获取课程信息
 
   /** 选课平台  */
-  // 学校信息
-  qrySchoolInfo: `/zxx/qrySjsSchoolById`, // 学校信息查询
-  getDicList: `/zxx/getDicList`, // 学校类型查询
 
   // 选课列表（选课任务）
   qryChoseCourseList: `/zxx/chose/qryChoseCourseList`, // 获取选课列表
@@ -123,6 +120,11 @@ export default {
 
   // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,
+
+  // 学校信息
+  qrySchoolInfo: `/zxx/qrySjsSchoolById`, // 学校信息查询
+  getDicList: `/zxx/getDicList`, // 学校类型查询
+  saveSjsSchoolById: `/zxx/saveSjsSchoolById`, // 学校保存
 
   // 模板下载
   teachTaskExcelTemplate: `/static/template/teachTask.xls`, // 普通排课任课表_排课班级.xls

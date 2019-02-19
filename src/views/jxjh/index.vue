@@ -14,13 +14,13 @@
           <base-info :visible.sync="tabDisabled" v-if="activeTabName == 1" @changeTab="changeTab"/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
-          <template v-if="activeTabName == 2">
-            <subject-layer v-if="splitLayerType === '1'"/>
-            <subject-layer2 v-if="splitLayerType === '2'"/>
-          </template>
+          <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane :label="splitLayerType === '1' ? '导入学生选课' : '学生成绩'" name="3" :disabled="tabDisabled">
-          <choose-course v-if="activeTabName == 3"/>
+        <el-tab-pane :label="splitLayerType === 1 ? '导入学生选课' : '学生成绩'" name="3" :disabled="tabDisabled">
+          <template v-if="activeTabName == 3">
+            <choose-course v-if="splitLayerType == 1"/>
+            <stu-grade v-if="splitLayerType === 2"/>
+          </template>
         </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
           <split-class-manage v-if="activeTabName == 4"/>
@@ -41,7 +41,7 @@
 <script>
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
-import SubjectLayer2 from './SubjectLayer2' // 学科分层及学时tab页组件（按成绩分层时）
+import StuGrade from './StuGrade' // 学科分层及学时tab页组件（按成绩分层时）
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
@@ -72,7 +72,7 @@ export default {
   components: {
     BaseInfo,
     SubjectLayer,
-    SubjectLayer2,
+    StuGrade,
     ChooseCourse,
     SplitClassManage,
     ZbClassroom
@@ -82,7 +82,7 @@ export default {
       tabsHeight: document.body.clientHeight - 190,
       activeTabName: '1', // tab页高亮
       tabDisabled: true,
-      splitLayerType: ''
+      splitLayerType: undefined
     }
   },
   created() {

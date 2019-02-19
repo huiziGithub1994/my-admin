@@ -8,9 +8,10 @@
 .el-upload__input {
   display: none;
 }
-
-.el-scrollbar {
-  overflow: initial;
+.sidebar-container {
+  .el-scrollbar {
+    overflow: initial;
+  }
 }
 
 //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461

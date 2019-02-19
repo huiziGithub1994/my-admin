@@ -37,10 +37,10 @@
     </div>
     <div class="table-wapper">
       <el-table
+        v-loading="loading"
         ref="multipleTable"
         :data="tableData"
         row-key="layerId"
-        v-loading="loading"
         fit
         tooltip-effect="dark"
         highlight-current-row
@@ -64,6 +64,19 @@
             <span>{{ scope.row.weekHours }}</span>
           </template>
         </el-table-column>
+        <!-- 如果学生分层方式为按成绩分层时显示-->
+        <template v-if="splitLayerType === 2">
+          <el-table-column label="最低分">
+            <template slot-scope="scope">
+              <span>{{ scope.row.lowScore }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="最高分">
+            <template slot-scope="scope">
+              <span>{{ scope.row.heighScore }}</span>
+            </template>
+          </el-table-column>
+        </template>
         <el-table-column align="center" label="拖拽" width="80">
           <template slot-scope="scope">
             <svg-icon class="drag-handler" icon-class="drag"/>
@@ -84,6 +97,15 @@
         <el-form-item label="课时(节/周)" prop="weekHours">
           <el-input-number v-model="formData.weekHours" :min="1" :max="20"></el-input-number>
         </el-form-item>
+        <!-- 如果学生分层方式为按成绩分层时显示-->
+        <template v-if="splitLayerType === 2">
+          <el-form-item label="最低分" prop="lowScore">
+            <el-input v-model="formData.lowScore"></el-input>
+          </el-form-item>
+          <el-form-item label="最高分" prop="heighScore">
+            <el-input v-model="formData.heighScore"></el-input>
+          </el-form-item>
+        </template>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button plain @click="dialogFormVisible = false">取 消</el-button>
@@ -99,7 +121,8 @@ import {
   saveLayerInfo,
   delLayerInfo,
   getSbjestClassListInfo,
-  saveCourseLayerListDisp
+  saveCourseLayerListDisp,
+  qryArrangeDetail
 } from '@/api/pkcx'
 import {
   validEditBtn,
@@ -109,9 +132,22 @@ import {
 } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import apUrl from '@/api/url'
+function checkIntGreaterZero(rule, value, callback) {
+  const reg = /^([0-9]\d*|[0]{1,1})$/ // 含0正整数
+  if (typeof value === 'number' || value === '' || value === undefined) {
+    callback()
+  } else {
+    if (!reg.test(value)) {
+      callback(new Error('请输入>=0的整数'))
+    } else {
+      callback()
+    }
+  }
+}
 export default {
   data() {
     return {
+      splitLayerType: undefined, // 学生分层方式
       loading: false,
       downloadUrl: apUrl.subjectLayerExcelTemplate, // 下载模板地址
       httpHeaders: {}, // 导入 请求header
@@ -159,8 +195,10 @@ export default {
         courseLayerName: '',
         allName: '',
         weekHours: 1,
-        arrangeId: ''
-        // layerId
+        arrangeId: '',
+        dispSeq: undefined, // 显示顺序
+        lowScore: undefined,
+        heighScore: undefined
       },
       query: {
         curYear: sessionStorage.getItem('local_curYear'),
@@ -172,19 +210,50 @@ export default {
   computed: {
     ...mapGetters(['token'])
   },
-  created() {
+  async created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
     const { curYear, curTerm, arrangeId } = this.query
+    // 检索条件赋初始值
     Object.assign(this.search, {
       'a.school_year01': curYear,
       'a.term_code01': curTerm,
       'a.arrange_id01': arrangeId
     })
     this.uploadParams.arrangeId = arrangeId
+    // 获取基础信息
+    await this.getBaseInfo()
     this.fetchData()
     this.getCourseName()
   },
   methods: {
+    // 获取基础信息
+    async getBaseInfo() {
+      const res = await qryArrangeDetail({
+        arrangeId: this.query.arrangeId
+      })
+      const { splitLayerType } = res.DATA
+      this.splitLayerType = splitLayerType
+      if (splitLayerType === 2) {
+        Object.assign(this.rules, {
+          lowScore: [
+            {
+              required: true,
+              message: '请输入最低分',
+              trigger: 'blur'
+            },
+            { validator: checkIntGreaterZero, trigger: 'blur' }
+          ],
+          heighScore: [
+            {
+              required: true,
+              message: '请输入最高分',
+              trigger: 'blur'
+            },
+            { validator: checkIntGreaterZero, trigger: 'blur' }
+          ]
+        })
+      }
+    },
     // 获取表格数据
     async fetchData() {
       this.loading = true
@@ -195,12 +264,12 @@ export default {
       const res = await getSbjestClassListInfo({
         dataStr: JSON.stringify(getStrParams)
       })
-      this.loading = false
       this.tableData = res.DATA
       this.oldList = this.tableData.map(v => v.courseId)
       this.newList = this.oldList.slice()
       this.$nextTick(() => {
         this.setSort()
+        this.loading = false
       })
     },
     setSort() {
