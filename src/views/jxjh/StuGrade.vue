@@ -12,6 +12,7 @@
 <script>
 import { HotTable } from '@handsontable/vue'
 import 'handsontable/languages/zh-CN'
+import { qryArrangeDetail } from '@/api/pkcx'
 // import { columnsWidth } from '@/utils/businessUtil'
 
 export default {
@@ -21,6 +22,7 @@ export default {
   data() {
     return {
       showTable: false,
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 表格数据
       settings: {
         language: 'zh-CN',
@@ -30,16 +32,18 @@ export default {
         minRows: 15,
         dataSchema: {
           segName: null,
+          gradeName: null,
           className: null,
           stuNo: null,
           stuName: null,
           stuSex: null
         },
         rowHeaders: true,
-        colHeaders: ['学段/专业', '年级', '行政班', '学号', '姓名', '性别'],
+        colHeaders: [],
         fixedColumnsLeft: 6,
         columns: [
           { data: 'segName', trimWhitespace: true },
+          { data: 'gradeName', trimWhitespace: true },
           { data: 'className', trimWhitespace: true },
           { data: 'stuNo', trimWhitespace: true },
           { data: 'stuName', trimWhitespace: true },
@@ -55,22 +59,17 @@ export default {
   },
   methods: {
     // 获取表头
-    fetchHeaders() {
-      const colHeaders = [
-        '语文',
-        '数学',
-        '英语',
-        '生物',
-        '物理',
-        '化学',
-        '化学',
-        '地理',
-        '政治'
-      ]
+    async fetchHeaders() {
+      const res = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { headerStr } = res.DATA
+      if (!headerStr) return
+      const colHeaders = headerStr.split(',')
       const dataSchema = {}
       const columns = []
       const colWidths = []
-      colHeaders.forEach((item, index) => {
+      colHeaders.slice(6).forEach((item, index) => {
         dataSchema[`col${index}`] = null
         columns.push({ data: `col${index}`, trimWhitespace: true })
         colWidths.push(100)

@@ -70,7 +70,6 @@ export default {
     addViewTags() {
       const { name } = this.$route
       if (name === 'Qxk') return
-      console.log()
       if (!this.validWidth() && !this.cachedViews.includes(name)) {
         // 宽度超出
         const { length } = this.visitedViews
