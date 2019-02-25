@@ -1,6 +1,6 @@
 <template>
   <!--  导入学生选课 / 学生成绩 tab页-->
-  <div>
+  <div v-loading="loading">
     <div v-area>
       <condition>
         <div class="condition">
@@ -148,6 +148,7 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH + 30)
     return {
+      loading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       uploadParams: {},
       search: {

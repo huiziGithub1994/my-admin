@@ -1,21 +1,17 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="学年" prop="schoolYear">
-            <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect"/>
-          </el-form-item>
+          <el-form-item label="学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary" class="float-right" @click="saveBtn" plain>保存</el-button>
+          <el-button type="primary" class="float-right" @click="saveBtn" plain :loading="saveBtnLoading">保存</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="学期" prop="termCode">
-            <selectChild v-model="data.termCode" :clearable="false" tp="termSelect"/>
-          </el-form-item>
+          <el-form-item label="学期" prop="termCode">{{ +data.termCode === '1' ? "第一学期" : "第二学期" }}</el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
@@ -55,6 +51,8 @@ export default {
   name: 'BaseInfo',
   data() {
     return {
+      loading: true,
+      saveBtnLoading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       data: {
         gradeId: undefined,
@@ -64,7 +62,8 @@ export default {
         termCode: undefined,
         segId: undefined,
         selectedGrade: [],
-        splitLayerType: 0
+        splitLayerType: 1,
+        arrangeType: '2'
       },
       selectProps: {
         value: 'gradeId',
@@ -101,8 +100,9 @@ export default {
     })
     await this.fetchGrade()
     if (this.arrangeId) {
-      this.fetchFormData()
+      await this.fetchFormData()
     }
+    this.loading = false
   },
   methods: {
     // 年级下拉列表
@@ -149,8 +149,12 @@ export default {
             grade => grade.gradeId === this.data.gradeId
           )
           Object.assign(this.data, { gradeName: grade[0].gradeName })
-          const res = await saveArrange(this.data)
+          this.saveBtnLoading = true
+          const res = await saveArrange(this.data).finally(() => {
+            this.saveBtnLoading = false
+          })
           this.$message.success('保存成功')
+          Object.assign(this.data, { arrangeId: res.DATA })
           this.$nextTick(function() {
             this.$refs['baseInfoRef'].clearValidate()
           })
@@ -166,6 +170,7 @@ export default {
           this.$store.commit('SET_ARRANGENAME', nameStr)
           if (!this.arrangeId) {
             sessionStorage.setItem('local_arrangeId', res.DATA)
+            this.arrangeId = res.DATA
           }
           this.$emit('update:visible', false) // 保存后，其他tab页可用
         } else {

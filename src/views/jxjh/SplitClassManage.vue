@@ -95,9 +95,11 @@ export default {
         ...this.search
       }
       this.loading = true
-      const res = await splitClasses(params)
+      const res = await splitClasses(params).finally(() => {
+        this.loading = false
+      })
       this.tableData = res.DATA
-      this.loading = false
+
       Object.assign(this.currentSplitNum, this.search)
       this.$notify({
         title: '提示',
@@ -111,6 +113,7 @@ export default {
     },
     // 保存教学任务
     async saveBtn() {
+      if (this.tableData.length === 0) return
       let continueFlag = true
       this.tableData.forEach(item => {
         item.classList.forEach(tempClass => {

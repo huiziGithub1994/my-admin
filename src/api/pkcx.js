@@ -149,6 +149,25 @@ export function getSplitClassManage(listQuery) {
   })
 }
 
+// 学生成绩 查询接口
+export function selectBatchStuScore(listQuery) {
+  return request({
+    url: URL.selectBatchStuScore,
+    params: listQuery
+  })
+}
+
+// 学生成绩 保存接口
+export function saveBatchStuScore(params) {
+  return request({
+    url: URL.saveBatchStuScore,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    params
+  })
+}
 // 教学分班管理 导出接口
 export function exportChooseCourse(params) {
   return request({

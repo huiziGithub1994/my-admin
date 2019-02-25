@@ -114,12 +114,12 @@ export const zbRouterMap = [
         component: () => import('@/views/pkgz/index'),
         meta: { title: '排课规则', icon: 'pkgz' }
       },
-      {
-        path: 'pkgc',
-        name: 'Pkgc',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '排课过程', icon: 'pkgc' }
-      },
+      // {
+      //   path: 'pkgc',
+      //   name: 'Pkgc',
+      //   component: () => import('@/views/tree/index'),
+      //   meta: { title: '排课过程', icon: 'pkgc' }
+      // },
       {
         path: 'kbcx',
         name: 'kbcx',
@@ -128,27 +128,6 @@ export const zbRouterMap = [
       }
     ]
   }
-  // {
-  //   path: '/xtgl',
-  //   component: Layout,
-  //   redirect: '/xtgl/sjzd',
-  //   name: 'Xtgl',
-  //   meta: { title: '系统管理', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'sjzd',
-  //       name: 'Sjzd',
-  //       component: () => import('@/views/sjzd/index'),
-  //       meta: { title: '数据字典', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'xlwh',
-  //       name: 'Xlwh',
-  //       component: () => import('@/views/Xlwh/index'),
-  //       meta: { title: '校历维护', icon: 'table' }
-  //     }
-  //   ]
-  // }
 ]
 
 // 普通排课路由

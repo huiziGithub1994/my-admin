@@ -188,11 +188,18 @@ export default {
           // 重新加载数据
           if (res.SUCCESS) this.queryBtn()
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+        .catch(error => {
+          if (error === 'cancel') {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: error.MSG
+            })
+          }
         })
     },
     // 排课按钮

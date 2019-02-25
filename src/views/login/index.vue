@@ -50,7 +50,7 @@
                 <span>注册新用户</span>
               </span>
             </div>
-            <div class="loginBtn" @click="submitForm">登 录</div>
+            <el-button class="loginBtn" type="primary" @click="submitForm" :loading="loginLoading">登 录</el-button>
             <!-- <div class="other">
               <p>使用第三方账号登录</p>
               <div>
@@ -76,6 +76,7 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      loginLoading: false,
       codeSrc: '',
       ruleForm: {
         loginid: 'lmsadmin', // 用户名 lmsadmin 190302
@@ -120,16 +121,22 @@ export default {
     submitForm() {
       this.$refs['rule'].validate(valid => {
         if (valid) {
-          this.$store.dispatch('Login', this.ruleForm).then(
-            res => {
-              this.$router.push({
-                name: this.userType === '2' ? 'Xsxk' : 'Home'
-              })
-            },
-            errorRes => {
-              this.fetchValidCode()
-            }
-          )
+          this.loginLoading = true
+          this.$store
+            .dispatch('Login', this.ruleForm)
+            .then(
+              res => {
+                this.$router.push({
+                  name: this.userType === '2' ? 'Xsxk' : 'Home'
+                })
+              },
+              errorRes => {
+                this.fetchValidCode()
+              }
+            )
+            .finally(() => {
+              this.loginLoading = false
+            })
         } else {
           return false
         }
@@ -219,8 +226,8 @@ export default {
   }
 }
 .loginBtn {
+  width: 100%;
   height: 35px;
-  line-height: 35px;
   background: #3887fe;
   text-align: center;
   color: white;

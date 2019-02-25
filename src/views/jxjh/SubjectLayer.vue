@@ -1,18 +1,18 @@
 <template>
   <!-- 学科分层及课时  学生自由选择分层 tab页-->
-  <div>
-    <div>
+  <div v-loading="loading">
+    <div style="overflow:hidden">
       <condition>
-        <div class="condition">
+        <!-- <div class="condition">
           <label>课程名称</label>
           <el-select v-model="search['a.course_id01']" clearable @change="fetchData">
             <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
-        </div>
+        </div>-->
       </condition>
       <operation>
-        <el-button type="primary" plain @click="saveOrder">保存顺序</el-button>
-        <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
+        <el-button type="primary" plain @click="saveOrder" :loading="orderLoading">保存顺序</el-button>
+        <!--<a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
           <el-button type="primary" plain>模板下载</el-button>
         </a>
         <el-upload
@@ -26,27 +26,17 @@
           :data="uploadParams"
           ref="upload"
         >
-          <el-button type="primary" plain>导入</el-button>
-        </el-upload>
+          <el-button type="primary" plain :loading="uploadLoading">导入</el-button>
+        </el-upload>-->
         <!-- <el-button type="primary" @click="exportBtn">导出</el-button>
         <el-button type="primary">设置课程计划</el-button>-->
         <el-button type="primary" plain @click="addBtn">增加</el-button>
         <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain @click="deleteBtn" :loading="deleteLoading">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table
-        v-loading="loading"
-        ref="multipleTable"
-        :data="tableData"
-        row-key="layerId"
-        fit
-        tooltip-effect="dark"
-        highlight-current-row
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table ref="multipleTable" :data="tableData" row-key="layerId" fit tooltip-effect="dark" highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column type="index" width="55" label="序号"></el-table-column>
         <el-table-column label="课程名称">
@@ -109,7 +99,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button plain @click="dialogFormVisible = false">取 消</el-button>
-        <el-button plain type="primary" @click="saveBtn">保 存</el-button>
+        <el-button plain type="primary" @click="saveBtn" :loading="saveBtnLoading">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -148,7 +138,11 @@ export default {
   data() {
     return {
       splitLayerType: undefined, // 学生分层方式
-      loading: false,
+      loading: true,
+      saveBtnLoading: false,
+      uploadLoading: false,
+      orderLoading: false,
+      deleteLoading: false,
       downloadUrl: apUrl.subjectLayerExcelTemplate, // 下载模板地址
       httpHeaders: {}, // 导入 请求header
       uploadParams: {}, // 导入 参数
@@ -263,6 +257,8 @@ export default {
       })
       const res = await getSbjestClassListInfo({
         dataStr: JSON.stringify(getStrParams)
+      }).finally(() => {
+        this.loading = false
       })
       this.tableData = res.DATA
       this.oldList = this.tableData.map(v => v.courseId)
@@ -329,11 +325,14 @@ export default {
             })
           }
           const { courseId, courseLayerName } = this.formData
+          this.saveBtnLoading = true
           const res = await saveLayerInfo(
             Object.assign(params, this.formData, {
               allName: this.matchCourseName(courseId) + courseLayerName
             })
-          )
+          ).finally(() => {
+            this.saveBtnLoading = false
+          })
           if (res.SUCCESS) {
             this.fetchData()
           }
@@ -381,8 +380,11 @@ export default {
         type: 'warning'
       })
         .then(async () => {
+          this.deleteLoading = true
           const res = await delLayerInfo({
             layerId: ids.join(',')
+          }).finally(() => {
+            this.deleteLoading = false
           })
           this.$message({
             type: res.SUCCESS ? 'success' : 'error',
@@ -445,13 +447,17 @@ export default {
     },
     // 保存顺序
     async saveOrder() {
+      if (this.tableData.length === 0) return
       const newData = []
       this.tableData.forEach((item, index) => {
         const { layerId } = item
         newData.push({ layerId, dispSeq: index + 1 + '' })
       })
+      this.orderLoading = true
       await saveCourseLayerListDisp({
         modelString: JSON.stringify(newData)
+      }).finally(() => {
+        this.orderLoading = false
       })
       this.$message.success('保存成功')
     }

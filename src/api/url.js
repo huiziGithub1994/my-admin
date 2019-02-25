@@ -21,6 +21,8 @@ export default {
   saveChooseCourseInfo: `zxx/stuCourseLayer/saveChoiceInfo`, // 导入学生选课 新增选课的保存
   updatechooseCourseInfo: `zxx/stuCourseLayer/updateChoiceInfo`, // 导入学生选课 修改选课的保存
   getChooseCourseInfo: `zxx/stuCourseLayer/qryStuCourseDetail`, // 导入学生选课 修改按钮，获取详细信息
+  selectBatchStuScore: `zxx/stuCourseLayer/selectBatchStuScore`, // 查询学生成绩列表
+  saveBatchStuScore: `zxx/stuCourseLayer/saveBatchStuScore`, // 保存学生成绩列表
   getSplitClassManage: `zxx/teach/qryTransLayer2ClassList`, // 教学分班管理-列表查询
   splitClasses: `/zxx/transLayer2Class`, // 教学分班管理 试分班
   saveTeachTask: `zxx/teach/saveTeachingTask`, // 教学分班管理 保存教学任务

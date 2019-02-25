@@ -85,6 +85,21 @@ export default {
     HotTable
   },
   data() {
+    const sumWeekValidator = (value, callback) => {
+      if (value !== '') {
+        if (typeof value !== 'number') {
+          callback(false)
+        } else {
+          if (value % 1 === 0) {
+            callback(true)
+          } else {
+            callback(false)
+          }
+        }
+      } else {
+        callback(true)
+      }
+    }
     return {
       downloadUrl: apUrl.coursePlainExcelTemplate, // 下载模板地址
       httpHeaders: {}, // 导入 请求header
@@ -112,9 +127,25 @@ export default {
         colHeaders: ['学科名称', '周课时', '是否分层', '授课方式', '显示顺序'],
         columns: [
           { data: 'courseName', trimWhitespace: true },
-          { data: 'sumWeek', type: 'numeric', trimWhitespace: true },
-          { data: 'layerFlag', trimWhitespace: true },
-          { data: 'teaType', trimWhitespace: true },
+          {
+            data: 'sumWeek',
+            type: 'numeric',
+            trimWhitespace: true,
+            validator: sumWeekValidator,
+            allowInvalid: true
+          },
+          {
+            data: 'layerFlag',
+            trimWhitespace: true,
+            type: 'dropdown',
+            source: ['是', '否']
+          },
+          {
+            data: 'teaType',
+            trimWhitespace: true,
+            type: 'dropdown',
+            source: ['理论', '实践']
+          },
           { data: 'dispOrder', type: 'numeric', trimWhitespace: true }
         ],
         height: document.body.clientHeight - 170,
