@@ -255,10 +255,9 @@ export default {
           }).then(res => {
             if (res.SUCCESS) {
               this.$message({ type: 'success', message: '保存成功' })
-              if (this.calenderId === undefined) {
-                const { calenderId } = res.DATA
-                this.$store.commit('SET_CALENDERID', calenderId)
-                setCookie('calenderId', calenderId)
+              if (!this.calenderId) {
+                this.$store.commit('SET_CALENDERID', res.DATA)
+                setCookie('calenderId', res.DATA)
               }
               this.$nextTick(function() {
                 this.$refs['baseInfoRef'].clearValidate()
