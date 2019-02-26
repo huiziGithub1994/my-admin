@@ -11,7 +11,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="学期" prop="termCode">{{ +data.termCode === '1' ? "第一学期" : "第二学期" }}</el-form-item>
+          <el-form-item label="学期" prop="termCode">{{ +data.termCode === 1 ? "第一学期" : "第二学期" }}</el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
