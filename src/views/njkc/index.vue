@@ -87,10 +87,10 @@ export default {
   data() {
     const sumWeekValidator = (value, callback) => {
       if (value !== '') {
-        if (typeof value !== 'number') {
+        if (typeof +value !== 'number') {
           callback(false)
         } else {
-          if (value % 1 === 0) {
+          if (+value % 1 === 0) {
             callback(true)
           } else {
             callback(false)
@@ -161,6 +161,16 @@ export default {
             }
           })
         }
+        // afterRemoveRow: () => {
+        //   if (this) {
+        //     this.calculateSumWeek()
+        //   }
+        // },
+        // afterChange: () => {
+        //   if (this) {
+        //     this.calculateSumWeek()
+        //   }
+        // }
       },
       // 表单数据
       addForm: {
@@ -186,6 +196,19 @@ export default {
     this.getTreeData()
   },
   methods: {
+    calculateSumWeek() {
+      if (this.hotInstance) {
+        const data = this.hotInstance.getSourceData()
+        let sum = 0
+        data.forEach(item => {
+          const { sumWeek } = item
+          if (sumWeek) {
+            sum = +sumWeek + sum
+          }
+        })
+        this.settings.colHeaders[1] = `周课时(共${sum}课时)`
+      }
+    },
     // 树节点被点击时
     treeNodeClick(data) {
       const { gradeId } = data
