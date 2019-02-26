@@ -258,7 +258,7 @@ export default {
               if (this.calenderId === undefined) {
                 const { calenderId } = res.DATA
                 this.$store.commit('SET_CALENDERID', calenderId)
-                setCookie('calenderId', calendarId)
+                setCookie('calenderId', calenderId)
               }
               this.$nextTick(function() {
                 this.$refs['baseInfoRef'].clearValidate()
