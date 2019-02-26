@@ -74,8 +74,10 @@ import { qryCalendar, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
 import { setDatas } from '@/utils/businessUtil'
+import { setCookie } from '@/utils/auth'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'BaseInfo',
   components: {
@@ -254,7 +256,9 @@ export default {
             if (res.SUCCESS) {
               this.$message({ type: 'success', message: '保存成功' })
               if (this.calenderId === undefined) {
-                this.$store.commit('SET_CALENDERID', res.DATA.calenderId)
+                const { calenderId } = res.DATA
+                this.$store.commit('SET_CALENDERID', calenderId)
+                setCookie('calenderId', calendarId)
               }
               this.$nextTick(function() {
                 this.$refs['baseInfoRef'].clearValidate()
