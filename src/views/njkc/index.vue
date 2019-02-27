@@ -5,6 +5,12 @@
         <label>温馨提示：</label>平台可根据学校的办学类型可自动生成相关学段和对应的学科，用户只需要根据结果微调即可。
       </p>
       <operation>
+        <span class="weekTip">
+          <label>
+            <svg-icon icon-class="point-down"></svg-icon>
+          </label>
+          共 {{ calculateWeeks }} 周课时
+        </span>
         <!-- <el-button type="primary" plain>自动生成</el-button> -->
         <a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
           <el-button type="primary" plain>模板下载</el-button>
@@ -110,6 +116,7 @@ export default {
       // 树数组
       treeData: [],
       // 表格数据
+      calculateWeeks: 0,
       settings: {
         language: 'zh-CN',
         contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -160,17 +167,17 @@ export default {
               delTableData.push(Object.assign({}, data[row], { action: '2' }))
             }
           })
+        },
+        afterRemoveRow: () => {
+          if (this) {
+            this.calculateSumWeek()
+          }
+        },
+        afterChange: () => {
+          if (this) {
+            this.calculateSumWeek()
+          }
         }
-        // afterRemoveRow: () => {
-        //   if (this) {
-        //     this.calculateSumWeek()
-        //   }
-        // },
-        // afterChange: () => {
-        //   if (this) {
-        //     this.calculateSumWeek()
-        //   }
-        // }
       },
       // 表单数据
       addForm: {
@@ -202,11 +209,11 @@ export default {
         let sum = 0
         data.forEach(item => {
           const { sumWeek } = item
-          if (sumWeek) {
+          if (sumWeek && !isNaN(+sumWeek)) {
             sum = +sumWeek + sum
           }
         })
-        this.settings.colHeaders[1] = `周课时(共${sum}课时)`
+        this.calculateWeeks = sum
       }
     },
     // 树节点被点击时
@@ -480,5 +487,16 @@ p.tip {
 }
 .uploadBtn {
   display: inline-block;
+}
+.weekTip {
+  margin-right: 10px;
+  color: #707070;
+  > label {
+    color: #f56c6c;
+    position: relative;
+    top: 4px;
+    font-size: 19px;
+    margin-right: 4px;
+  }
 }
 </style>

@@ -4,13 +4,15 @@
       <condition>
         <div class="condition">
           <label>课程名称</label>
-          <el-select v-model="search['a.course_id01']" clearable>
-            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
+          <el-select v-model.trim="search['a.course_id01']" clearable @change="courseSelectChange">
+            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.course_name" :value="item.course_id"></el-option>
           </el-select>
         </div>
         <div class="condition">
           <label>教师名称</label>
-          <el-input v-model.trim="search['a.tea_name06']" clearable></el-input>
+          <el-select v-model.trim="search['a.tea_id01']" clearable>
+            <el-option v-for="(item,index) in teacherOptions" :key="index" :label="item.teaName" :value="item.teaId"></el-option>
+          </el-select>
         </div>
       </condition>
       <operation>
@@ -57,8 +59,11 @@
   </div>
 </template>
 <script>
-import { getlayerCourseName } from '@/api/pkcx'
-import { teaTableInfoList } from '@/api/kbcx'
+import {
+  teaTableInfoList,
+  qryCourseNameListForDiffeLayer,
+  qryCourseForInTeacher
+} from '@/api/kbcx'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
@@ -67,10 +72,12 @@ export default {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 课程名称下拉菜单数据
       courseOptions: [],
+      // 教师名称下拉菜单数据
+      teacherOptions: [],
       showType: [],
       search: {
         'a.course_id01': '',
-        'a.tea_name06': '',
+        'a.tea_id01': '',
         currentPage: '1',
         pageSize: '1000'
       },
@@ -89,15 +96,26 @@ export default {
     },
     // 课程名称下拉列表数据
     async getCourseName() {
-      const res = await getlayerCourseName({
+      const res = await qryCourseNameListForDiffeLayer({
         arrangeId: this.arrangeId
       })
       this.courseOptions = res.DATA
     },
+    // 课程改变时
+    async courseSelectChange() {
+      this.teacherOptions = []
+      const courseId = this.search['a.course_id01']
+      if (!courseId) return
+      const res = await qryCourseForInTeacher({
+        arrangeId: this.arrangeId,
+        courseId
+      })
+      this.teacherOptions = res.DATA
+    },
     async getTeaSchedule() {
       if (
         this.search['a.course_id01'] === '' ||
-        this.search['a.tea_name06'] === ''
+        this.search['a.tea_id01'] === ''
       ) {
         this.$message.warning('请先输入查询条件')
         return

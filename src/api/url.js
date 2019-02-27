@@ -44,7 +44,9 @@ export default {
   qryTeachGroupsTree: `/base/qryTeachGroupsTree`, // 教学分组
 
   // 课表查询
-  teaTableInfoList: `zxx/courseTable/teaTableInfoList`, // 教师课表
+  teaTableInfoList: `/zxx/courseTable/teaTableInfoList`, // 教师课表
+  qryCourseNameListForDiffeLayer: `/zxx/layer/qryCourseNameListForDiffeLayer`, // 课程名称
+  qryCourseForInTeacher: `/zxx/courseTable/qryCourseForInTeacher`, // 教师名称
 
   /**  普通排课 */
   // 年级课程

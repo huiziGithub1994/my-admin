@@ -254,6 +254,7 @@ export default {
   .code-wapper {
     border: 1px solid #dcdfe6;
     width: 100px;
+    height: 40px;
     margin-left: 5px;
     border-radius: 4px;
     img {
