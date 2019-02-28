@@ -8,6 +8,13 @@ export function teaTableInfoList(params) {
     params
   })
 }
+// 学生课表
+export function stuTableInfoList(params) {
+  return request({
+    url: URL.stuTableInfoList,
+    params
+  })
+}
 
 // 课程名称
 export function qryCourseNameListForDiffeLayer(params) {

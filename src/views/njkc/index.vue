@@ -96,7 +96,8 @@ export default {
         if (typeof +value !== 'number') {
           callback(false)
         } else {
-          if (+value % 1 === 0) {
+          const valueStr = value + ''
+          if (+value % 1 === 0 && valueStr.indexOf('.') < 0) {
             callback(true)
           } else {
             callback(false)
@@ -370,7 +371,6 @@ export default {
       this.hotInstance.validateRows(validateRows, async valid => {
         if (valid) {
           await saveCourseList(ressult)
-
           this.$message.success('保存成功')
           this.getTableData(currentNode.gradeId)
         } else {

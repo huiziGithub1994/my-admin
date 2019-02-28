@@ -52,11 +52,10 @@ export default {
         fixedColumnsLeft: 4,
         data: null,
         dataSchema: {
-          courseName: null,
-          sumWeek: null,
-          layerFlag: null,
-          teaType: null,
-          dispOrder: null
+          segName: null,
+          gradeName: null,
+          className: null,
+          chargeTeaName: null
         },
         rowHeaders: true,
         colHeaders: ['学段/专业', '年级', '班级名称', '班主任'],
@@ -110,15 +109,39 @@ export default {
       this.settings.colHeaders.push(...headerArr)
       const len = headerArr.length
       const columns = []
+      const dataSchema = {}
       for (let i = 1; i <= len; i++) {
-        columns.push({ data: `col${i}`, trimWhitespace: true })
+        columns.push({
+          data: `col${i}`,
+          trimWhitespace: true,
+          validator: this.numValidator,
+          allowInvalid: true
+        })
+        dataSchema[`col${i}`] = null
       }
       this.settings.columns.push(...columns)
+      Object.assign(this.settings.dataSchema, dataSchema)
       this.showTable = true
       this.$nextTick(() => {
         this.hotInstance = this.$refs.hotTableComponent.hotInstance
         this.hotInstance.loadData(classList)
       })
+    },
+    numValidator(value, callback) {
+      if (value !== '') {
+        if (typeof +value !== 'number') {
+          callback(false)
+        } else {
+          const valueStr = value + ''
+          if (+value % 1 === 0 && valueStr.indexOf('.') < 0) {
+            callback(true)
+          } else {
+            callback(false)
+          }
+        }
+      } else {
+        callback(true)
+      }
     },
     // 选择参排年级
     chooseGrade() {
@@ -143,11 +166,42 @@ export default {
         gradeStr: this.gradeStr,
         classList: this.hotInstance.getSourceData()
       }
-      const res = await saveCourseTaskList(params)
-      sessionStorage.setItem('gradeStr', this.gradeStr)
-      const { classList } = res.DATA
-      this.hotInstance.loadData(classList)
-      this.$message.success('保存成功')
+      const len = params.classList.length
+      const validateRows = []
+      for (let i = 0; i <= len; i++) {
+        validateRows.push(i)
+      }
+      this.hotInstance.validateRows(validateRows, async valid => {
+        if (valid) {
+          if (!this.validNullLine(params.classList, len)) {
+            this.$message.warning('所有单元格都必须填写')
+            return
+          }
+          const res = await saveCourseTaskList(params)
+          sessionStorage.setItem('gradeStr', this.gradeStr)
+          const { classList } = res.DATA
+          this.hotInstance.loadData(classList)
+          this.$message.success('保存成功')
+        } else {
+          this.$message.warning('字段校验不通过')
+        }
+      })
+    },
+    validNullLine(data, len) {
+      const schemaKeys = Object.keys(this.settings.dataSchema)
+      const kLen = schemaKeys.length
+      let isContinue = true
+      for (let i = 0; i < len; i++) {
+        for (let j = 0; j < kLen; j++) {
+          const dataKey = schemaKeys[j]
+          if (!data[i][dataKey]) {
+            isContinue = false
+            break
+          }
+        }
+        if (!isContinue) break
+      }
+      return isContinue
     }
   }
 }

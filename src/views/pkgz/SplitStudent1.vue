@@ -48,7 +48,7 @@
         <slot/>
       </el-pagination>
     </div>
-    <el-dialog title="调整分班" :visible.sync="dialogTableVisible" width="75%" class="my-dialog">
+    <el-dialog title="调整分班" :visible.sync="dialogTableVisible" width="1200px" class="my-dialog">
       <el-row>
         <el-col :span="12">
           <div>

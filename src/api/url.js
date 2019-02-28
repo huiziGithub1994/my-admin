@@ -47,6 +47,7 @@ export default {
   teaTableInfoList: `/zxx/courseTable/teaTableInfoList`, // 教师课表
   qryCourseNameListForDiffeLayer: `/zxx/layer/qryCourseNameListForDiffeLayer`, // 课程名称
   qryCourseForInTeacher: `/zxx/courseTable/qryCourseForInTeacher`, // 教师名称
+  stuTableInfoList: `/zxx/courseTable/stuTableInfoList`, // 学生课表
 
   /**  普通排课 */
   // 年级课程

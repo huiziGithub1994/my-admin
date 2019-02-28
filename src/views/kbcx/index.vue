@@ -13,7 +13,9 @@
         <el-tab-pane label="教师课表" name="1">
           <teacher-table v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="学生课表" name="2"></el-tab-pane>
+        <el-tab-pane label="学生课表" name="2">
+          <stu-table v-if="activeTabName == 2"/>
+        </el-tab-pane>
         <el-tab-pane label="教室课表" name="3"></el-tab-pane>
         <el-tab-pane label="教室任务报表" name="4"></el-tab-pane>
       </el-tabs>
@@ -22,10 +24,12 @@
 </template>
 <script>
 import TeacherTable from './TeacherTable' // 基础信息tab页组件
+import StuTable from './StuTable' // 基础信息tab页组件
 
 export default {
   components: {
-    TeacherTable
+    TeacherTable,
+    StuTable
   },
   data() {
     return {
