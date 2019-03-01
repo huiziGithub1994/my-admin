@@ -2,37 +2,12 @@
   <!-- 学科分层及课时  学生自由选择分层 tab页-->
   <div v-loading="loading">
     <div style="overflow:hidden">
-      <condition>
-        <!-- <div class="condition">
-          <label>课程名称</label>
-          <el-select v-model="search['a.course_id01']" clearable @change="fetchData">
-            <el-option v-for="(item,index) in courseOptions" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
-          </el-select>
-        </div>-->
-      </condition>
+      <condition></condition>
       <operation>
-        <el-button type="primary" plain @click="saveOrder" :loading="orderLoading">保存顺序</el-button>
-        <!--<a :href="downloadUrl" download="蓝墨水-走班学科课程分层定义.xls">
-          <el-button type="primary" plain>模板下载</el-button>
-        </a>
-        <el-upload
-          class="uploadBtn"
-          action="http://47.107.255.128:8089/zxx/upCourseLayer"
-          name="filename"
-          :show-file-list="false"
-          :headers="httpHeaders"
-          :before-upload="beforeUpload"
-          :on-success="uploadSuccess"
-          :data="uploadParams"
-          ref="upload"
-        >
-          <el-button type="primary" plain :loading="uploadLoading">导入</el-button>
-        </el-upload>-->
-        <!-- <el-button type="primary" @click="exportBtn">导出</el-button>
-        <el-button type="primary">设置课程计划</el-button>-->
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn" :loading="deleteLoading">删除</el-button>
+        <el-button type="primary" plain @click="saveOrder" :loading="orderLoading" :disabled="btnDisabled">保存顺序</el-button>
+        <el-button type="primary" plain @click="addBtn" :disabled="btnDisabled">增加</el-button>
+        <el-button type="primary" plain @click="editBtn" :disabled="btnDisabled">修改</el-button>
+        <el-button type="primary" plain @click="deleteBtn" :loading="deleteLoading" :disabled="btnDisabled">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -139,6 +114,7 @@ export default {
     return {
       splitLayerType: undefined, // 学生分层方式
       loading: true,
+      btnDisabled: false, // 按钮的禁用
       saveBtnLoading: false,
       uploadLoading: false,
       orderLoading: false,
@@ -225,7 +201,8 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.query.arrangeId
       })
-      const { splitLayerType } = res.DATA
+      const { splitLayerType, stepArrangeState } = res.DATA
+      this.btnDisabled = +stepArrangeState > 2
       this.splitLayerType = splitLayerType
       if (splitLayerType === 2) {
         Object.assign(this.rules, {

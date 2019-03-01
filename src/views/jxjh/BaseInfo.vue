@@ -6,7 +6,7 @@
           <el-form-item label="学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary" class="float-right" @click="saveBtn" plain :loading="saveBtnLoading">保存</el-button>
+          <el-button type="primary" class="float-right" @click="saveBtn" plain :loading="saveBtnLoading" :disabled="btnDisabled">保存</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="10">
@@ -53,6 +53,7 @@ export default {
     return {
       loading: true,
       saveBtnLoading: false,
+      btnDisabled: false, // 保存按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       data: {
         gradeId: undefined,
@@ -63,7 +64,8 @@ export default {
         segId: undefined,
         selectedGrade: [],
         splitLayerType: 1,
-        arrangeType: '2'
+        arrangeType: '2',
+        stepArrangeState: undefined // 步骤
       },
       selectProps: {
         value: 'gradeId',
@@ -126,7 +128,8 @@ export default {
         arrangeId: this.arrangeId
       })
       setDatas(this.data, res.DATA)
-      const { segId, gradeId, splitLayerType } = this.data
+      const { segId, gradeId, splitLayerType, stepArrangeState } = this.data
+      this.btnDisabled = +stepArrangeState > 1
       this.data.selectedGrade = [segId, gradeId]
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()

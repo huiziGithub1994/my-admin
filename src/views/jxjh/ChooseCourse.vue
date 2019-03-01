@@ -26,14 +26,12 @@
           :data="uploadParams"
           ref="upload"
         >
-          <el-button type="primary" plain>导入</el-button>
+          <el-button type="primary" plain :disabled="btnDisabled">导入</el-button>
         </el-upload>
         <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" @click="addBtn" plain>增加</el-button>
-        <!-- <el-button type="primary" plain>引入</el-button> -->
-        <!-- <el-button type="primary" plain>分析</el-button> -->
-        <el-button type="primary" @click="editBtn" plain>修改</el-button>
-        <el-button type="primary" @click="deleteBtn" plain>删除</el-button>
+        <el-button type="primary" @click="addBtn" plain :disabled="btnDisabled">增加</el-button>
+        <el-button type="primary" @click="editBtn" plain :disabled="btnDisabled">修改</el-button>
+        <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -99,7 +97,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="选课">
+            <el-form-item label="选课" class="chooseCourseWapper">
               <div v-for="course in courseOptions" :key="course.courseId">
                 <div>{{ course.courseName }}</div>
                 <el-radio-group v-model="layersData[course.courseId]">
@@ -149,6 +147,7 @@ export default {
     const pageSizes = getTableBestRows(tableH + 30)
     return {
       loading: false,
+      btnDisabled: false, // 按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       uploadParams: {},
       search: {
@@ -275,9 +274,11 @@ export default {
         schoolYear,
         termCode,
         segId,
-        splitLayerType
+        splitLayerType,
+        stepArrangeState
       } = res.DATA
       this.splitLayerType = splitLayerType // 学生分层方式
+      this.btnDisabled = +stepArrangeState > 3
       Object.assign(this.editForm, {
         arrangeId,
         segName,
@@ -303,6 +304,19 @@ export default {
     },
     // 新增按钮
     addBtn() {
+      // 如果新增班为空
+      if (this.xzbOptions.length === 0) {
+        this.$notify({
+          title: '提示',
+          message: this.$createElement(
+            'i',
+            { style: 'color: teal' },
+            '未查到行政班数据,无法新增学生选课,请在“年级班级”菜单中新增该走班任务对应年级下的班级'
+          ),
+          duration: 0
+        })
+        return
+      }
       this.courseOptions = JSON.parse(
         JSON.stringify(this.completeCourseOptions)
       )
@@ -320,7 +334,7 @@ export default {
     // 修改按钮
     async editBtn() {
       if (!this.currentRow) {
-        this.$message.info('请选择要删除的数据')
+        this.$message.info('请选择要修改的数据')
         return
       }
       // 获取详情
@@ -501,6 +515,10 @@ export default {
 }
 .uploadBtn {
   display: inline-block;
+}
+.chooseCourseWapper {
+  max-height: 200px;
+  overflow: auto;
 }
 </style>
 

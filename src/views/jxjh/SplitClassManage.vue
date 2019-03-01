@@ -10,9 +10,9 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="splitClassesBtn">试分班</el-button>
-        <el-button type="primary" plain @click="saveBtn">保存教学任务</el-button>
-        <el-button type="primary" plain>任课统计</el-button>
+        <el-button type="primary" plain @click="splitClassesBtn" :disabled="btnDisabled">试分班</el-button>
+        <el-button type="primary" plain @click="saveBtn" :disabled="btnDisabled">保存教学任务</el-button>
+        <el-button type="primary" plain :disabled="btnDisabled">任课统计</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -50,10 +50,16 @@
   </div>
 </template>
 <script>
-import { getSplitClassManage, splitClasses, saveTeachTask } from '@/api/pkcx' //
+import {
+  getSplitClassManage,
+  splitClasses,
+  saveTeachTask,
+  qryArrangeDetail
+} from '@/api/pkcx' //
 export default {
   data() {
     return {
+      btnDisabled: false, // 按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       loading: false,
       // 检索字段
@@ -68,10 +74,21 @@ export default {
       height: document.body.clientHeight - 365
     }
   },
-  created() {
+  async created() {
+    if (this.arrangeId) {
+      await this.fetchFormData()
+    }
     this.fetchData()
   },
   methods: {
+    // 获取基础信息数据
+    async fetchFormData() {
+      const res = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { stepArrangeState } = res.DATA
+      this.btnDisabled = +stepArrangeState > 4
+    },
     // 获取表格数据
     async fetchData() {
       const res = await getSplitClassManage({ arrangeId: this.arrangeId })
