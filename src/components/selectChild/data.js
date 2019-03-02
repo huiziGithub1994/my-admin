@@ -8,11 +8,8 @@ export const tearmSelect = [
 
 // 学年
 export function yearSelect() {
-  const date = new Date()
-  let year = store.getters.curYear || date.getFullYear()
-  const month = date.getMonth() + 1
+  const year = store.getters.curYear
   const resultArr = []
-  if (month >= 3 && month <= 8) year--
   for (let i = year; i > year - 3; i--) {
     resultArr.push({ value: +i, label: `${i} - ${+i + 1} 学年` })
   }
