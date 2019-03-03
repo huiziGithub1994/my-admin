@@ -37,6 +37,7 @@ export function saveTeaClassRelyStu(listQuery) {
 export function arrangeStuChange(listQuery) {
   return request({
     url: URL.arrangeStuChange,
+    method: 'post',
     params: listQuery
   })
 }

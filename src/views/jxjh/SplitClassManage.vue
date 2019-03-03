@@ -91,7 +91,12 @@ export default {
     },
     // 获取表格数据
     async fetchData() {
-      const res = await getSplitClassManage({ arrangeId: this.arrangeId })
+      this.loading = true
+      const res = await getSplitClassManage({
+        arrangeId: this.arrangeId
+      }).finally(() => {
+        this.loading = false
+      })
       const { dataList, minSize, maxSize } = res.DATA
       this.tableData = dataList
       if (minSize && maxSize) {

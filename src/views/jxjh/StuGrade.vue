@@ -2,7 +2,7 @@
   <!--  学科分层及课时 tab页  按成绩分层-->
   <div v-loading="loading">
     <div class="top">
-      <el-button type="primary" plain @click="saveBtn" :loading="saveBtnLoading">保存</el-button>
+      <el-button type="primary" plain @click="saveBtn" :loading="saveBtnLoading" :disabled="btnDisabled">保存</el-button>
     </div>
     <div class="hottable-wappper" v-if="showTable">
       <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
@@ -35,6 +35,7 @@ export default {
     return {
       showTable: false,
       saveBtnLoading: false,
+      btnDisabled: false,
       loading: true,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 表格数据
@@ -86,7 +87,8 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
-      const { headerStr } = res.DATA
+      const { headerStr, stepArrangeState } = res.DATA
+      this.btnDisabled = +stepArrangeState > 3
       if (!headerStr) return
       const colHeaders = headerStr.split(',')
       const dataSchema = {}

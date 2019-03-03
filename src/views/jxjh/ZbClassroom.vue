@@ -20,7 +20,7 @@
       </operation>
     </div>
     <div class="table-wapper">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" @current-change="tableCurrentChange">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%" v-loading="loading" @current-change="tableCurrentChange">
         <el-table-column type="index" width="55" label="序号" fixed></el-table-column>
         <el-table-column label="教学楼" property="buildingName" width="130" fixed></el-table-column>
         <el-table-column label="教室名称" property="roomName" width="130" fixed></el-table-column>
@@ -85,6 +85,7 @@ const initSearch = {
 export default {
   data() {
     return {
+      loading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       search: {
         ...initSearch
@@ -131,7 +132,7 @@ export default {
   created() {
     this.editForm.arrangeId = this.arrangeId
     this.fetchCourseOption() // 课程分类
-    this.fetchData()
+    this.fetchData() // 获取表格数据
   },
   methods: {
     tableCurrentChange(val) {
@@ -187,8 +188,11 @@ export default {
           ? this.choosedCourse[1]
           : ''
       })
+      this.loading = true
       const res = await getZbClassroomListInfo({
         dataStr: JSON.stringify(this.search)
+      }).finally(() => {
+        this.loading = false
       })
       this.tableData = res.DATA
     },
