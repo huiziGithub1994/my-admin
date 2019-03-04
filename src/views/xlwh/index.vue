@@ -3,7 +3,7 @@
   <div>
     <div class="operation">
       <p class="tip">
-        <label>温馨提示：</label>节次时间表格中除“节次/星期”列不可以编辑，双击可进入编辑状态，上课时间格式(16:20)。
+        <label>温馨提示：</label>表格中灰色为不可以编辑，全校固定非课程编排请表格中设置，如每周五下午第7节为“班会”，时间格式如 08:30。
       </p>
       <el-button type="primary" @click="saveBtn" plain>保存</el-button>
     </div>
@@ -38,7 +38,7 @@
         </el-row>
         <el-row :gutter="10" class="studyArrange">
           <el-col :span="24">
-            <el-form-item label="作习安排" prop="workDays">
+            <el-form-item label="上课节次" prop="workDays">
               <el-select v-model="data.workDays" :clearable="false" placeholder @change="studyArrangeChange">
                 <el-option v-for="item in workDaysOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>天/周，早晨
@@ -145,7 +145,6 @@ export default {
   },
   watch: {
     calenderId(newVal) {
-      console.log(newVal)
       if (this.calenderId !== '') {
         this.fetchFormData()
       }
@@ -249,7 +248,6 @@ export default {
           })
           if (!isContinue) return
           Object.assign(this.data, { calFixList: newData })
-          console.log(newData)
           saveCalendar({
             modelString: JSON.stringify(this.data)
           }).then(res => {

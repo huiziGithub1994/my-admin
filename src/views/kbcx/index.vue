@@ -17,7 +17,7 @@
           <stu-table v-if="activeTabName == 2"/>
         </el-tab-pane>
         <el-tab-pane label="教室课表" name="3"></el-tab-pane>
-        <el-tab-pane label="教室任务报表" name="4"></el-tab-pane>
+        <el-tab-pane label="教师任务报表" name="4"></el-tab-pane>
       </el-tabs>
     </div>
   </div>

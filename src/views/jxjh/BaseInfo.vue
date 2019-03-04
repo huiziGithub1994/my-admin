@@ -1,44 +1,46 @@
 <template>
   <div v-loading="loading">
-    <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
-        </el-col>
-        <el-col :span="10">
-          <el-button type="primary" class="float-right" @click="saveBtn" plain :loading="saveBtnLoading" :disabled="btnDisabled">保存</el-button>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="学期" prop="termCode">{{ +data.termCode === 1 ? "第一学期" : "第二学期" }}</el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="年级" prop="selectedGrade">
-            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="arrangeName" label="排课任务名称">
-            <el-input placeholder="请输入内容" v-model="data.arrangeName" clearable></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="splitLayerType" label="学生分层方式">
-            <el-radio-group v-model="data.splitLayerType">
-              <el-radio :label="1">学生自由选择分层</el-radio>
-              <el-radio :label="2">按成绩分层</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+    <div class="operation">
+      <el-button type="primary" class="float-right" @click="saveBtn" plain :loading="saveBtnLoading">保存</el-button>
+    </div>
+    <div class="area-data" :style="{height:areaHeight+'px'}">
+      <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="学期" prop="termCode">{{ +data.termCode === 1 ? "第一学期" : "第二学期" }}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="年级" prop="selectedGrade">
+              <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps" :disabled="btnDisabled"></el-cascader>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item prop="arrangeName" label="排课任务名称">
+              <el-input placeholder="请输入内容" v-model="data.arrangeName" clearable></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item prop="splitLayerType" label="学生分层方式">
+              <el-radio-group v-model="data.splitLayerType">
+                <el-radio :label="1">学生自由选择分层</el-radio>
+                <el-radio :label="2">按成绩分层</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -55,6 +57,7 @@ export default {
       saveBtnLoading: false,
       btnDisabled: false, // 保存按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
+      areaHeight: document.body.clientHeight - 300,
       data: {
         gradeId: undefined,
         gradeName: undefined,
@@ -185,4 +188,16 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.operation {
+  overflow: hidden;
+  height: 33px;
+  > button {
+    float: right;
+  }
+}
+.area-data {
+  border: 1px solid #dddddd;
+  margin-top: 10px;
+  padding: 10px 10px 0 0;
+}
 </style>

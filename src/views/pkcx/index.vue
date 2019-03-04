@@ -21,13 +21,18 @@
       <operation class="btns">
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
         <el-button type="primary" plain @click="addBtn">新增</el-button>
-        <el-button type="primary" plain>合并课表</el-button>
+        <!-- <el-button type="primary" plain>合并课表</el-button> -->
       </operation>
     </div>
     <div>
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
         <el-table-column property="arrangeName" show-overflow-tooltip min-width="160px" label="排课名称"/>
+        <el-table-column property="splitLayerType" label="分层类型" width="150px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.splitLayerType == 1 ? '学生自由选择分层' : '按成绩分层' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column property="curStatus" label="状态" width="80px">
           <template slot-scope="scope">
             <span v-if="scope.row.curStatus === '1'" class="success">完成</span>
@@ -45,18 +50,18 @@
             <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="gradeName" label="年级"/>
-        <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="150px">
+        <el-table-column property="gradeName" label="年级" width="100px"/>
+        <el-table-column property="createDate" show-overflow-tooltip label="创建时间" width="140px">
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | filterTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" width="155px" label="操作">
+        <el-table-column fixed="right" width="115px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">
               <el-button type="primary" size="mini" @click="arrangeClass(scope.row)" plain>排课</el-button>
               <el-button type="danger" size="mini" @click="deleteClass(scope.row.arrangeId)" plain>删除</el-button>
-              <el-button type="primary" size="mini" plain>复制</el-button>
+              <!-- <el-button type="primary" size="mini" plain>复制</el-button> -->
             </div>
           </template>
         </el-table-column>

@@ -1,7 +1,10 @@
 <template>
   <!--  学科分层及课时 tab页  按成绩分层-->
   <div v-loading="loading">
-    <div class="top">
+    <div class="operation">
+      <p class="tip">
+        <label>温馨提示：</label>年级不能混排。
+      </p>
       <el-button type="primary" plain @click="saveBtn" :loading="saveBtnLoading" :disabled="btnDisabled">保存</el-button>
     </div>
     <div class="hottable-wappper" v-if="showTable">
@@ -186,9 +189,14 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.top {
-  margin-bottom: 10px;
+.operation {
   overflow: hidden;
+  height: 33px;
+  > p {
+    position: relative;
+    top: 5px;
+    display: inline-block;
+  }
   > button {
     float: right;
   }

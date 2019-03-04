@@ -37,6 +37,9 @@
   border-color: #489df7;
   color: #0b82fd;
 }
+.el-button--primary.el-button--small {
+  min-width: 70px;
+}
 // 表格
 .el-table {
   font-size: 1rem;
