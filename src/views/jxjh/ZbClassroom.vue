@@ -14,9 +14,9 @@
       </condition>
       <operation>
         <el-button type="primary" plain @click="fetchData">查询</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain @click="addBtn" :disabled="btnDisabled">增加</el-button>
+        <el-button type="primary" plain @click="editBtn" :disabled="btnDisabled">修改</el-button>
+        <el-button type="primary" plain @click="deleteBtn" :disabled="btnDisabled">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -72,7 +72,8 @@ import {
   getZbClassroomListInfo,
   getZbClassroomInfo,
   delClassRoomById,
-  saveArrangeClassRoom
+  saveArrangeClassRoom,
+  qryArrangeDetail
 } from '@/api/pkcx'
 import { setDatas } from '@/utils/businessUtil'
 const initSearch = {
@@ -86,6 +87,7 @@ export default {
   data() {
     return {
       loading: false,
+      btnDisabled: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       search: {
         ...initSearch
@@ -131,12 +133,21 @@ export default {
   },
   created() {
     this.editForm.arrangeId = this.arrangeId
+    this.getBaseInfo()
     this.fetchCourseOption() // 课程分类
     this.fetchData() // 获取表格数据
   },
   methods: {
     tableCurrentChange(val) {
       this.currentRow = val
+    },
+    // 获取基础信息数据
+    async getBaseInfo() {
+      const res = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { stepArrangeState } = res.DATA
+      this.btnDisabled = +stepArrangeState > 5
     },
     // 全选点击
     checkbokAllChange(val) {
