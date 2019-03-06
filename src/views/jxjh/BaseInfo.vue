@@ -32,7 +32,7 @@
         <el-row :gutter="10">
           <el-col :span="18">
             <el-form-item prop="splitLayerType" label="学生分层方式">
-              <el-radio-group v-model="data.splitLayerType">
+              <el-radio-group v-model="data.splitLayerType" :disabled="btnDisabled">
                 <el-radio :label="1">学生自由选择分层</el-radio>
                 <el-radio :label="2">按成绩分层</el-radio>
               </el-radio-group>
