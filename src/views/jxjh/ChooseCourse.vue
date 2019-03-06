@@ -29,9 +29,9 @@
           <el-button type="primary" plain :disabled="btnDisabled">导入</el-button>
         </el-upload>
         <el-button type="primary" plain>导出</el-button>
-        <el-button type="primary" @click="addBtn" plain :disabled="btnDisabled">增加</el-button>
+        <!-- <el-button type="primary" @click="addBtn" plain :disabled="btnDisabled">增加</el-button>
         <el-button type="primary" @click="editBtn" plain :disabled="btnDisabled">修改</el-button>
-        <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button>
+        <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button> -->
       </operation>
     </div>
     <div class="table-wapper">

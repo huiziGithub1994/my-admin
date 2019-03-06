@@ -80,7 +80,7 @@ export default {
     this.getArrangeData()
   },
   methods: {
-    // 获取详情信息
+    // 获取课时预排信息
     async getArrangeData() {
       const res = await qryArrangeGroupInfo({ arrangeId: this.arrangeId })
       if (!res.SUCCESS) return
@@ -129,16 +129,16 @@ export default {
       // 数据填充表格
       this.fillTableData()
     },
-    // 数据填充表格
+    // 校历数据填充表格
     fillTableData() {
       const { calFixList } = this.calendarData
       calFixList.forEach(item => {
         const [row, col] = item.cellKey.split(',').map(x => Number(x))
-        // 将每个cell的数据变成对象
         if (item.cellValue) {
-          this.tableData[row][col] = { value: item.cellValue, isCalendar: true }
-        } else {
-          this.tableData[row][col] = { value: item.cellValue }
+          Object.assign(this.tableData[row][col], {
+            value: item.cellValue,
+            isCalendar: true
+          })
         }
       })
     },
@@ -185,6 +185,15 @@ export default {
         `${row.lessionSeq.match(reg)[0] - 1},${column.property}`
       )
     },
+    // 表格单元添加样式
+    cellClassName({ row, column, rowIndex, columnIndex }) {
+      if (row[columnIndex - 1] && row[columnIndex - 1].isCalendar === true) {
+        return 'isCalendar'
+      } else if (row[columnIndex - 1] && row[columnIndex - 1].value.length) {
+        return 'canRemove'
+      }
+      return ''
+    },
     async saveBtn() {
       const modelString = []
       this.completeData.forEach(item => {
@@ -197,25 +206,16 @@ export default {
       })
       this.$message.success('保存成功')
     },
-    // 表格单元添加样式
-    cellClassName({ row, column, rowIndex, columnIndex }) {
-      if (row[columnIndex - 1] && row[columnIndex - 1].isCalendar === true) {
-        return 'isCalendar'
-      } else if (row[columnIndex - 1] && row[columnIndex - 1].value.length) {
-        return 'canRemove'
-      }
-      return ''
-    },
     // 删除课时预排
     removeArrange(row, index) {
       const oldValue = row[index - 1].value
       const reg = /[1-9][0-9]*/g
       this.hoursGroup.forEach(item => {
         if (item.teaGroupName === oldValue) {
-          const pos = item.cellKey.findIndex(key => {
-            key === `${row.lessionSeq.match(reg)[0]},${index - 1}`
-          })
-          item.cellKey.splice(pos, 1)
+          const pos = item.cellKey.findIndex(
+            key => key === `${row.lessionSeq.match(reg)[0] - 1},${index - 1}`
+          )
+          pos > -1 && item.cellKey.splice(pos, 1)
         }
       })
       row[index - 1].value = ''
