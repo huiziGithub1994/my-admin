@@ -4,6 +4,7 @@
     <div style="overflow:hidden">
       <condition></condition>
       <operation>
+        <el-button type="primary" plain @click="importTask" v-if="splitLayerType==1" :disabled="btnDisabled">导入选课任务</el-button>
         <el-button type="primary" plain @click="saveOrder" :loading="orderLoading" :disabled="btnDisabled">保存顺序</el-button>
         <el-button type="primary" plain @click="addBtn" :disabled="btnDisabled">增加</el-button>
         <el-button type="primary" plain @click="editBtn" :disabled="btnDisabled">修改</el-button>
@@ -77,9 +78,17 @@
         <el-button plain type="primary" @click="saveBtn" :loading="saveBtnLoading">保 存</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="导入选课任务" :visible.sync="dialogTableVisible" width="80%" class="dialog-padding">
+      <import-task v-if="dialogTableVisible"></import-task>
+      <div slot="footer" class="dialog-footer">
+        <el-button plain @click="dialogTableVisible = false">取 消</el-button>
+        <el-button plain type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
+import ImportTask from './ImportTask'
 import Sortable from 'sortablejs'
 import {
   getlayerCourseName,
@@ -110,8 +119,12 @@ function checkIntGreaterZero(rule, value, callback) {
   }
 }
 export default {
+  components: {
+    ImportTask
+  },
   data() {
     return {
+      dialogTableVisible: false, // 弹窗
       splitLayerType: undefined, // 学生分层方式
       loading: true,
       btnDisabled: false, // 按钮的禁用
@@ -196,6 +209,10 @@ export default {
     this.getCourseName()
   },
   methods: {
+    // 导入教学任务
+    importTask() {
+      this.dialogTableVisible = true
+    },
     // 获取基础信息
     async getBaseInfo() {
       const res = await qryArrangeDetail({
@@ -441,7 +458,7 @@ export default {
   }
 }
 </script>
-<style>
+<style  rel="stylesheet/scss" lang="scss">
 .sortable-ghost {
   opacity: 0.8;
   color: #fff !important;

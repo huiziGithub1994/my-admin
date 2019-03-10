@@ -21,7 +21,15 @@
   position: relative;
   margin: 0 auto;
 }
-
+.el-dialog .el-dialog__body {
+  padding: 20px !important;
+}
+.dialog-padding {
+  .el-dialog__body {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
 //element ui upload
 .upload-container {
   .el-upload {
@@ -116,10 +124,6 @@
 // 时间组件
 .el-date-editor .el-range-separator {
   width: auto;
-}
-
-.el-dialog .el-dialog__body {
-  padding: 20px !important;
 }
 
 .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {

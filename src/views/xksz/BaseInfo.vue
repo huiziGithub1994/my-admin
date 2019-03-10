@@ -1,74 +1,72 @@
 <template>
   <!-- 选课设置 -》 基础信息-->
   <div>
-    <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="当前学年" prop="schoolYear">
-            <selectChild v-model="data.schoolYear" clearable tp="yearSelect"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <div class="btns-right">
-            <el-button type="primary" plain @click="saveBtn">保 存</el-button>
-            <el-button type="success" @click="nextStep">下一步</el-button>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="当前学期" prop="termCode">
-            <selectChild v-model="data.termCode" clearable tp="termSelect"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="年级" prop="selectedGrade">
-            <el-cascader style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="chooseName" label="选课任务名称">
-            <el-input placeholder="请输入内容" v-model="data.choseTaskName" clearable></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item prop="chooseType" label="任务类型">
-            <el-radio-group v-model="data.choseType">
-              <el-radio label="1">新高考选考</el-radio>
-              <el-radio label="2">分层教学</el-radio>
-              <el-radio label="3">校本课</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="12">
-          <el-form-item label="选课时间段">
-            <el-date-picker v-model="chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :format="formatTime" :value-format="formatTime"></el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="18">
-          <el-form-item label="发布状态">
-            <span>{{ data.pubFlag == '1' ? '发布':'未发布' }}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="24">
-          <el-form-item prop="desc" label="选课说明">
-            <div ref="editor"></div>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+    <div class="operation">
+      <div class="btns-right">
+        <el-button type="primary" plain @click="saveBtn">保 存</el-button>
+        <el-button type="success" @click="nextStep">下一步</el-button>
+      </div>
+    </div>
+    <div class="area-data">
+      <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="当前学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="当前学期" prop="termCode">{{ +data.termCode === 1 ? "第一学期" : "第二学期" }}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="年级" prop="selectedGrade">
+              <el-cascader :disabled="optionDisabed" style="width:100%" expand-trigger="hover" :options="gradeOptions" placeholder="请选择" clearable v-model="data.selectedGrade" :props="selectProps"></el-cascader>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item prop="chooseName" label="选课任务名称">
+              <el-input placeholder="请输入内容" v-model="data.choseTaskName" clearable></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item prop="chooseType" label="任务类型">
+              <el-radio-group v-model="data.choseType" :disabled="optionDisabed">
+                <el-radio label="1">新高考选考</el-radio>
+                <el-radio label="2">分层教学</el-radio>
+                <el-radio label="3">校本课</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="选课时间段">
+              <el-date-picker v-model="chooseTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :format="formatTime" :value-format="formatTime"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item label="发布状态">
+              <span>{{ data.pubFlag == '1' ? '发布':'未发布' }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="24">
+            <el-form-item prop="desc" label="选课说明">
+              <div ref="editor"></div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -82,6 +80,7 @@ export default {
   name: 'BaseInfo',
   data() {
     return {
+      optionDisabed: false,
       choseRsId: sessionStorage.getItem('local_arrangeId'),
       formatTime: 'yyyy-MM-dd HH:mm',
       // 表单数据
@@ -190,6 +189,7 @@ export default {
     },
     // 获取表单数据
     async fetchFormData() {
+      this.optionDisabed = true
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       setDatas(this.data, res.DATA)
       const { segId, gradeId, moreDesc } = this.data
@@ -217,34 +217,54 @@ export default {
           }
           if (this.choseRsId) {
             params.choseRsId = this.choseRsId
+            this.saveInfo(params)
+          } else {
+            this.$confirm('任务类型保存后不可修改,确定保存吗？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+              .then(async () => {
+                await this.saveInfo(params)
+                this.choseRsId = sessionStorage.getItem('local_arrangeId')
+              })
+              .catch(error => {
+                console.log(error)
+                this.$message({
+                  type: 'info',
+                  message: error.MSG ? error.MSG : '已取消保存'
+                })
+              })
           }
-          const res = await saveSjsChoseCourseDef(params)
-          this.$message.success('保存成功')
-          // 存储数据
-          setDatas(this.data, res.DATA)
-          const { segId, gradeId, moreDesc } = this.data
-          this.data.selectedGrade = [segId, gradeId]
-          const timeArr = ['beginTime', 'endTime']
-          timeArr.forEach((key, index) => {
-            this.$set(this.chooseTime, index, res.DATA[key])
-          })
-          this.editor.txt.html(moreDesc)
-          const { schoolYear, termCode, choseTaskName, choseRsId } = res.DATA
-          if (sessionStorage) {
-            sessionStorage.setItem('local_curYear', schoolYear)
-            sessionStorage.setItem('local_curTerm', termCode)
-            sessionStorage.setItem('local_arrangeId', choseRsId) // choseRsId
-            const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
-              +termCode === 1 ? '一' : '二'
-            } 学期 , ${choseTaskName}`
-            sessionStorage.setItem('arrangeName', nameStr) // choseTaskName
-            this.$store.commit('SET_ARRANGENAME', nameStr)
-          }
-          this.$emit('update:visible', false)
         } else {
           return false
         }
       })
+    },
+    async saveInfo(params) {
+      const res = await saveSjsChoseCourseDef(params)
+      this.$message.success('保存成功')
+      // 存储数据
+      setDatas(this.data, res.DATA)
+      const { segId, gradeId, moreDesc } = this.data
+      this.data.selectedGrade = [segId, gradeId]
+      const timeArr = ['beginTime', 'endTime']
+      timeArr.forEach((key, index) => {
+        this.$set(this.chooseTime, index, res.DATA[key])
+      })
+      this.editor.txt.html(moreDesc)
+      const { schoolYear, termCode, choseTaskName, choseRsId } = res.DATA
+      if (sessionStorage) {
+        sessionStorage.setItem('local_curYear', schoolYear)
+        sessionStorage.setItem('local_curTerm', termCode)
+        sessionStorage.setItem('local_arrangeId', choseRsId) // choseRsId
+        const nameStr = `${schoolYear} - ${+schoolYear + 1} 学年,第 ${
+          +termCode === 1 ? '一' : '二'
+        } 学期 , ${choseTaskName}`
+        sessionStorage.setItem('arrangeName', nameStr) // choseTaskName
+        this.$store.commit('SET_ARRANGENAME', nameStr)
+      }
+      this.$emit('update:visible', false)
     },
     nextStep() {
       this.$emit('tonext', 'two')
@@ -254,15 +274,21 @@ export default {
 </script>
 <style>
 .w-e-text-container {
-  height: 800px !important;
+  height: 150px !important;
 }
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.btns-right {
-  float: right;
-  button.el-button {
-    width: 70px !important;
+.operation {
+  overflow: hidden;
+  height: 33px;
+  > div {
+    float: right;
   }
+}
+.area-data {
+  border: 1px solid #dddddd;
+  margin-top: 10px;
+  padding: 10px 10px 0 0;
 }
 </style>

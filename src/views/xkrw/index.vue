@@ -27,20 +27,15 @@
     <div>
       <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" @current-change="tableCurrentChange" v-loading="listLoading">
         <el-table-column type="index" width="50"/>
-        <el-table-column property="choseTaskName" show-overflow-tooltip min-width="160px" label="选课任务名称"/>
+        <el-table-column property="choseTaskName" show-overflow-tooltip min-width="260px" label="选课任务名称"/>
         <el-table-column property="choseTypeName" label="任务类型"></el-table-column>
         <el-table-column property="pubFlag" label="任务状态" width="80px">
           <template slot-scope="scope">
             <span :class="scope.row.pubFlag === '已发布' ? 'success' : 'danger'">{{ scope.row.pubFlag }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="beginTime" label="开始时间" width="170px"></el-table-column>
-        <el-table-column property="endTime" label="结束时间" width="170px"></el-table-column>
-        <el-table-column property="createDate" label="创建时间" width="170px">
-          <template slot-scope="scope">
-            <span>{{ scope.row.createDate | filterTime }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column property="beginTime" label="开始时间" width="150px"></el-table-column>
+        <el-table-column property="endTime" label="结束时间" width="150px"></el-table-column>
         <el-table-column fixed="right" width="155px" label="操作">
           <template slot-scope="scope">
             <div class="table-btns">

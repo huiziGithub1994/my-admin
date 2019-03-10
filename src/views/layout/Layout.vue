@@ -11,7 +11,7 @@
         <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
         <span>
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
-            <img src="../../assets/ui/icon_suo.png">
+            <img src="../../assets/ui/icon_suo.png" @click="dialogUpdatePwd = true">
           </el-tooltip>
         </span>
         <span>
@@ -28,19 +28,32 @@
     </div>
     <sidebar class="sidebar-container"/>
     <div class="main-container">
-      <!-- <navbar/> -->
       <tags-view/>
       <app-main/>
     </div>
+    <el-dialog title="修改密码" :visible.sync="dialogUpdatePwd" width="400px">
+      <el-form :model="pwdForm" label-width="80px">
+        <el-form-item label="原密码">
+          <el-input v-model="pwdForm.name" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input v-model="pwdForm.name" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码">
+          <el-input v-model="pwdForm.name" type="password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdatePwd = false">取 消</el-button>
+        <el-button type="primary" @click="dialogUpdatePwd = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-// import { getCookie } from '@/utils/auth'
-
 export default {
   name: 'Layout',
   components: {
@@ -52,6 +65,9 @@ export default {
   mixins: [ResizeMixin],
   data() {
     return {
+      dialogUpdatePwd: false,
+      // 密码
+      pwdForm: {},
       choosedMenu: {
         name: '',
         command: ''
@@ -89,6 +105,8 @@ export default {
     Object.assign(this.choosedMenu, this.menus[0])
   },
   methods: {
+    // 修改密码
+    updatePwd() {},
     // 退出登录
     logoutBtn() {
       this.$store.dispatch('LogOut').then(() => {

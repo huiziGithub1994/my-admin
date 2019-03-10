@@ -11,7 +11,7 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>保存顺序</el-button>
+        <el-button type="primary" plain @click="saveOrder" :loading="orderLoading">保存顺序</el-button>
         <el-button type="primary" plain @click="addBtn">增加</el-button>
         <el-button type="primary" plain @click="editBtn">修改</el-button>
         <el-button type="primary" plain @click="deleteBtn">删除</el-button>
@@ -76,7 +76,12 @@
 </template>
 <script>
 import Sortable from 'sortablejs'
-import { saveLayerInfo, delLayerInfo, getSbjestClassListInfo } from '@/api/pkcx'
+import {
+  saveLayerInfo,
+  delLayerInfo,
+  getSbjestClassListInfo,
+  saveCourseLayerListDisp
+} from '@/api/pkcx'
 import { qryGradeCourseList } from '@/api/xkrw'
 import {
   validEditBtn,
@@ -87,6 +92,7 @@ import {
 export default {
   data() {
     return {
+      orderLoading: false,
       loading: false,
       // 表格数据
       tableData: [],
@@ -149,6 +155,22 @@ export default {
     this.getCourseName()
   },
   methods: {
+    // 保存顺序
+    async saveOrder() {
+      if (this.tableData.length === 0) return
+      const newData = []
+      this.tableData.forEach((item, index) => {
+        const { layerId } = item
+        newData.push({ layerId, dispSeq: index + 1 + '' })
+      })
+      this.orderLoading = true
+      await saveCourseLayerListDisp({
+        modelString: JSON.stringify(newData)
+      }).finally(() => {
+        this.orderLoading = false
+      })
+      this.$message.success('保存成功')
+    },
     // 获取表格数据
     async fetchData() {
       this.loading = true
