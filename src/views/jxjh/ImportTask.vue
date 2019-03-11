@@ -1,31 +1,16 @@
 <template>
   <div>
-    <el-table ref="singleTable" :data="tableData" :height="360" highlight-current-row style="width: 100%" v-loading="listLoading">
+    <el-table ref="singleTable" :data="tableData" :height="360" highlight-current-row style="width: 100%" v-loading="listLoading" @current-change="tableCurrentChange">
       <el-table-column type="index" width="50"/>
-      <el-table-column property="arrangeName" show-overflow-tooltip min-width="160px" label="排课名称"/>
-      <el-table-column property="splitLayerType" label="分层类型" width="150px">
+      <el-table-column property="choseTaskName" show-overflow-tooltip min-width="260px" label="选课任务名称"/>
+      <el-table-column property="choseTypeName" label="任务类型"></el-table-column>
+      <el-table-column property="pubFlag" label="任务状态" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.splitLayerType == 1 ? '学生自由选择分层' : '按成绩分层' }}</span>
+          <span :class="scope.row.pubFlag === '已发布' ? 'success' : 'danger'">{{ scope.row.pubFlag }}</span>
         </template>
       </el-table-column>
-      <el-table-column property="curStatus" label="状态" width="80px">
-        <template slot-scope="scope">
-          <span v-if="scope.row.curStatus === '1'" class="success">完成</span>
-          <span v-else-if="scope.row.curStatus === '2'" class="danger">冲突</span>
-          <span v-else class="primary">进行中</span>
-        </template>
-      </el-table-column>
-      <el-table-column property="schoolYear" label="学年" width="130px">
-        <template slot-scope="scope">
-          <span>{{ `${scope.row.schoolYear}-${parseInt(scope.row.schoolYear)+1}学年` }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column property="termCode" label="学期" width="100px">
-        <template slot-scope="scope">
-          <span>{{ `第${scope.row.termCode == '1' ? '一' : '二'}学期` }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column property="gradeName" label="年级" width="100px"/>
+      <el-table-column property="beginTime" label="开始时间" width="150px"></el-table-column>
+      <el-table-column property="endTime" label="结束时间" width="150px"></el-table-column>
     </el-table>
     <el-pagination
       :current-page="pageTot.currentPage"
@@ -42,7 +27,7 @@
   </div>
 </template>
 <script>
-import { getPKCXListInfo } from '@/api/pkcx'
+import { qryChoseCourseList } from '@/api/xkrw'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 export default {
@@ -52,16 +37,14 @@ export default {
     return {
       listLoading: true,
       listQuery: {
-        'a.arrange_type01': '2',
         'a.school_year01': '',
         'a.term_code01': '',
-        'a.cur_status01': ''
+        'a.pub_flag01': ''
       },
-      // 排课状态
+      // 选课状态
       ztOptions: [
-        { label: '进行中', value: '0' },
-        { label: '完成', value: '1' },
-        { label: '冲突', value: '2' }
+        { label: '可用', value: '0' },
+        { label: '不可用', value: '1' }
       ],
       pageSizes: pageSizes,
       tableH: tableH,
@@ -78,31 +61,20 @@ export default {
     ...mapGetters(['curYear', 'curTerm'])
   },
   created() {
-    if (this.curTerm === '' || this.curYear === '') {
-      this.$store.dispatch('GetInfo').then(() => {
-        this.getInitData()
-      })
-      return
-    }
-    this.getInitData()
+    Object.assign(this.listQuery, {
+      'a.school_year01': this.curYear,
+      'a.term_code01': this.curTerm
+    })
+    this.fetchData()
   },
   methods: {
-    getInitData() {
-      Object.assign(this.listQuery, {
-        'a.school_year01': this.curYear,
-        'a.term_code01': this.curTerm
-      })
-      this.fetchData()
+    getParams() {
+      return this.currentRow
     },
-    // 获取表格数据
     fetchData() {
       this.listLoading = true
-      const params = Object.assign(
-        {},
-        this.listQuery,
-        paramsToString(this.pageTot)
-      )
-      getPKCXListInfo(params).then(res => {
+      const params = Object.assign(this.listQuery, paramsToString(this.pageTot))
+      qryChoseCourseList({ dataStr: JSON.stringify(params) }).then(res => {
         this.pageTotal = res.NUM
         this.tableData = res.DATA
         this.listLoading = false

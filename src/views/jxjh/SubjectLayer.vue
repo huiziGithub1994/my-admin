@@ -4,7 +4,7 @@
     <div style="overflow:hidden">
       <condition></condition>
       <operation>
-        <el-button type="primary" plain @click="importTask" v-if="splitLayerType==1" :disabled="btnDisabled">导入选课任务</el-button>
+        <el-button type="primary" plain @click="dialogTableVisible = true" v-if="splitLayerType==1" :disabled="btnDisabled">导入选课任务</el-button>
         <el-button type="primary" plain @click="saveOrder" :loading="orderLoading" :disabled="btnDisabled">保存顺序</el-button>
         <el-button type="primary" plain @click="addBtn" :disabled="btnDisabled">增加</el-button>
         <el-button type="primary" plain @click="editBtn" :disabled="btnDisabled">修改</el-button>
@@ -79,10 +79,10 @@
       </div>
     </el-dialog>
     <el-dialog title="导入选课任务" :visible.sync="dialogTableVisible" width="80%" class="dialog-padding">
-      <import-task v-if="dialogTableVisible"></import-task>
+      <import-task v-if="dialogTableVisible" ref="importTask"></import-task>
       <div slot="footer" class="dialog-footer">
         <el-button plain @click="dialogTableVisible = false">取 消</el-button>
-        <el-button plain type="primary">确 定</el-button>
+        <el-button plain type="primary" @click="importTask">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -96,7 +96,8 @@ import {
   delLayerInfo,
   getSbjestClassListInfo,
   saveCourseLayerListDisp,
-  qryArrangeDetail
+  qryArrangeDetail,
+  choseTaskRsId
 } from '@/api/pkcx'
 import {
   validEditBtn,
@@ -210,8 +211,17 @@ export default {
   },
   methods: {
     // 导入教学任务
-    importTask() {
-      this.dialogTableVisible = true
+    async importTask() {
+      const row = this.$refs.importTask.getParams()
+      if (!row) {
+        this.$message.warning('请先选择“选课任务”')
+        return
+      }
+      const res = await choseTaskRsId({
+        arrangeId: this.query.arrangeId,
+        choseRsId: row.choseRsId
+      })
+      this.$message.success(res.MSG)
     },
     // 获取基础信息
     async getBaseInfo() {

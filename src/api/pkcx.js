@@ -38,6 +38,14 @@ export function saveArrange(params) {
   })
 }
 
+// 学科分层及课时-从选课任务导入接口
+export function choseTaskRsId(params) {
+  return request({
+    url: URL.choseTaskRsId,
+    params
+  })
+}
+
 // 学科分层查询列表接口
 export function getSbjestClassListInfo(params) {
   return request({

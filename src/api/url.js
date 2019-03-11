@@ -8,6 +8,7 @@ export default {
   // 教学计划
   saveArrange: `zxx/arrange/saveArrangeBaseInfo`, // 保存排课基础信息
   qrylayerList: `/zxx/layer/qryCourseLayerInfoList`, // 学科分层查询列表
+  choseTaskRsId: `/zxx/chose/choseTaskRsId`, // 学科分层及课时-从选课任务导入接口
   saveCourseLayerListDisp: `/zxx/layer/saveCourseLayerListDisp`, // 学科分层列表保存顺序
   // qrylayerCourseName: `/zxx/layer/qryCourseNameListForArrange`, // 学科分层课程名称下拉列表查询接口
   qrylayerCourseName: `/zxx/layer/qryCourseNameListForGrade`, // 学科分层课程名称下拉列表查询接口
