@@ -6,10 +6,6 @@
         <label>选课任务名称：</label>
         <span>{{ arrangeName }}</span>
       </div>
-      <!-- <div>
-        <label>年级</label>
-        <el-cascader expand-trigger="hover" :options="classOptions" v-model="selectedClass" @change="fetchData"></el-cascader>
-      </div>-->
     </div>
     <div>
       <div class="left">

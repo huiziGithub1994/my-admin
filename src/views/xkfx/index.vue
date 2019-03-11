@@ -4,6 +4,7 @@
     <el-tabs v-model="activeTabName">
       <el-tab-pane label="单科分析" name="1"></el-tab-pane>
       <el-tab-pane label="选组合分析" name="2"></el-tab-pane>
+      <el-tab-pane label="选课查询" name="3"></el-tab-pane>
     </el-tabs>
     <single-subject :choosed="activeTabName"></single-subject>
   </div>
