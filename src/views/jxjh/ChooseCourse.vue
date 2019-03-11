@@ -31,7 +31,7 @@
         <el-button type="primary" plain>导出</el-button>
         <!-- <el-button type="primary" @click="addBtn" plain :disabled="btnDisabled">增加</el-button>
         <el-button type="primary" @click="editBtn" plain :disabled="btnDisabled">修改</el-button>
-        <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button> -->
+        <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button>-->
       </operation>
     </div>
     <div class="table-wapper">
@@ -40,7 +40,7 @@
         <el-table-column label="学段/专业" property="segName" fixed></el-table-column>
         <el-table-column label="年级" property="gradeName" fixed></el-table-column>
         <el-table-column label="行政班" property="className" fixed></el-table-column>
-        <el-table-column label="学号" property="stuNo" width="100" fixed></el-table-column>
+        <el-table-column label="学号" property="stuNo" width="120" fixed></el-table-column>
         <el-table-column label="姓名" property="stuName" fixed></el-table-column>
         <el-table-column label="性别" property="stuSex" width="55" fixed></el-table-column>
         <!-- 按成绩分层 -->
