@@ -13,19 +13,13 @@
           <label>学生姓名</label>
           <el-input placeholder="可模糊检索" v-model="search['a.stu_name06']" clearable></el-input>
         </div>
-        <div class="condition">
-          <label>选课状态</label>
-          <el-select v-model="search['a.finish_flag01']" clearable placeholder="请选择">
-            <el-option v-for="item in finisFlagOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </div>
       </condition>
       <operation class="operation">
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
         <!-- <el-button type="primary" plain>参选课表</el-button> -->
-        <!-- <a :href="downloadUrl" download="蓝墨水-选课参选学生.xls">
+        <a :href="downloadUrl" download="蓝墨水-选课参选学生.xls">
           <el-button type="primary" plain>模板下载</el-button>
-        </a>-->
+        </a>
         <el-upload
           action="http://47.107.255.128:8089/zxx/chose/upStuAttendSel"
           name="filename"
@@ -36,7 +30,7 @@
           :on-success="uploadSuccess"
           ref="upload"
         >
-          <el-button type="primary" plain>导出Excel</el-button>
+          <el-button type="primary" plain>导入学生</el-button>
         </el-upload>
       </operation>
     </div>
@@ -79,13 +73,8 @@ export default {
       search: {
         'a.class_name01': '',
         'a.stu_name06': '',
-        'a.chose_rs_id01': sessionStorage.getItem('local_arrangeId'),
-        'a.finish_flag01': ''
+        'a.chose_rs_id01': sessionStorage.getItem('local_arrangeId')
       },
-      finisFlagOptions: [
-        { value: '1', label: '已选' },
-        { value: '0', label: '未选' }
-      ],
       // 班级下拉选项数据
       classesOptions: [],
       pageSizes: pageSizes,
