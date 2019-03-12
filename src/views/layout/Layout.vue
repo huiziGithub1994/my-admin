@@ -32,25 +32,26 @@
       <app-main/>
     </div>
     <el-dialog title="修改密码" :visible.sync="dialogUpdatePwd" width="400px">
-      <el-form :model="pwdForm" label-width="80px">
-        <el-form-item label="原密码">
-          <el-input v-model="pwdForm.name" type="password"></el-input>
+      <el-form :model="pwdForm" :rules="rules" ref="ruleForm" label-width="80px">
+        <el-form-item label="原密码" prop="oldPwd">
+          <el-input v-model.trim="pwdForm.oldPwd" type="password" clearable></el-input>
         </el-form-item>
-        <el-form-item label="新密码">
-          <el-input v-model="pwdForm.name" type="password"></el-input>
+        <el-form-item label="新密码" prop="newPwd">
+          <el-input v-model.trim="pwdForm.newPwd" type="password" clearable></el-input>
         </el-form-item>
-        <el-form-item label="确认密码">
-          <el-input v-model="pwdForm.name" type="password"></el-input>
+        <el-form-item label="确认密码" prop="newPwdSame">
+          <el-input v-model.trim="pwdForm.newPwdSame" type="password" clearable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdatePwd = false">取 消</el-button>
-        <el-button type="primary" @click="dialogUpdatePwd = false">确 定</el-button>
+        <el-button type="primary" @click="saveBtn">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { initUserPwd } from '@/api/base'
 import { mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
@@ -67,7 +68,20 @@ export default {
     return {
       dialogUpdatePwd: false,
       // 密码
-      pwdForm: {},
+      pwdForm: {
+        oldPwd: '',
+        newPwd: '',
+        newPwdSame: ''
+      },
+      rules: {
+        oldPwd: [
+          { required: true, message: '请输入原始密码', trigger: 'blur' }
+        ],
+        newPwd: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        newPwdSame: [
+          { required: true, message: '请输入确认密码', trigger: 'blur' }
+        ]
+      },
       choosedMenu: {
         name: '',
         command: ''
@@ -106,7 +120,22 @@ export default {
   },
   methods: {
     // 修改密码
-    updatePwd() {},
+    saveBtn() {
+      this.$refs.ruleForm.validate(async valid => {
+        if (valid) {
+          const { newPwd, newPwdSame } = this.pwdForm
+          if (newPwd !== newPwdSame) {
+            this.$message.warning('新密码和确认密码不一致，请重新输入')
+            return
+          }
+          await initUserPwd(this.pwdForm)
+          this.$message.success('修改密码成功')
+          this.dialogUpdatePwd = false
+        } else {
+          return false
+        }
+      })
+    },
     // 退出登录
     logoutBtn() {
       this.$store.dispatch('LogOut').then(() => {

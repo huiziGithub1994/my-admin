@@ -80,7 +80,7 @@ export default {
       codeSrc: '',
       ruleForm: {
         loginid: 'lmsadmin', // 用户名 lmsadmin 190302
-        loginpwd: '123456', // 密码 123456  190302
+        loginpwd: '', // 密码 123456  190302
         validateCode: ''
       },
       rules: {

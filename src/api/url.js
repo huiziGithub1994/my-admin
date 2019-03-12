@@ -126,6 +126,7 @@ export default {
 
   // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,
+  initUserPwd: `/zxx/user/initUserPwd`, // 修改密码
 
   // 学校信息
   qrySchoolInfo: `/zxx/qrySjsSchoolById`, // 学校信息查询

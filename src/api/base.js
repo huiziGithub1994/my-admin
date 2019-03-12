@@ -1,6 +1,13 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
 
+export function initUserPwd(params) {
+  return request({
+    url: URL.initUserPwd,
+    method: 'post',
+    params
+  })
+}
 // 用户基础信息
 export function getBaseInfo() {
   return request({
