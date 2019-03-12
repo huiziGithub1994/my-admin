@@ -261,7 +261,6 @@ export default {
         this.$message.warning('请选择教学班')
         return
       }
-
       // 服务端转移
       const { classId, arrangeId, toChooseId } = this.leftCurrentRow
       if (classId === this.rightTableQueryValue) {

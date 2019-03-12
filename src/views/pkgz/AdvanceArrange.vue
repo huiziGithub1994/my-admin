@@ -204,6 +204,7 @@ export default {
         arrangeId: this.arrangeId,
         modelString: JSON.stringify(modelString)
       })
+      this.getArrangeData()
       this.$message.success('保存成功')
     },
     // 删除课时预排
