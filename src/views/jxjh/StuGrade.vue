@@ -3,7 +3,8 @@
   <div v-loading="loading">
     <div class="operation">
       <p class="tip">
-        <label>温馨提示：</label>年级不能混排。
+        <label>温馨提示：</label>
+        年级不能混排。{{ btnDisabled ? tips:'' }}
       </p>
       <el-button type="primary" plain @click="saveBtn" :loading="saveBtnLoading" :disabled="btnDisabled">保存</el-button>
     </div>
@@ -36,6 +37,7 @@ export default {
       }
     }
     return {
+      tips: '',
       showTable: false,
       saveBtnLoading: false,
       btnDisabled: false,
@@ -145,6 +147,10 @@ export default {
         this.loading = false
       })
       this.hotInstance.loadData(res.DATA)
+      const firstRow = res.DATA[0]
+      this.tips = `以下年级为${firstRow.gradeName}，包含${res.EXTRA}个行政班，${
+        res.DATA.length
+      }个学生。`
     },
     queryBtn() {},
     validRows(row) {
