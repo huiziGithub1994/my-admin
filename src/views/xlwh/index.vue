@@ -1,25 +1,39 @@
 <template>
   <!-- 校历维护-->
   <div>
-    <div class="operation">
-      <p class="tip">
-        <label>温馨提示：</label>表格中灰色为不可以编辑，全校固定非课程编排请表格中设置，如每周五下午第7节为“班会”，时间格式如 08:30。
-      </p>
-      <el-button type="primary" @click="saveBtn" plain>保存</el-button>
+    <div v-area>
+      <condition>
+        <div class="condition">
+          <label>学年</label>
+          <selectChild v-model="listQuery['a.school_year01']" :clearable="false" tp="yearSelect"/>
+        </div>
+        <div class="condition">
+          <label>学期</label>
+          <selectChild v-model="listQuery['a.term_code01']" :clearable="false" tp="termSelect"/>
+        </div>
+      </condition>
+      <operation class="btns">
+        <el-button type="primary" @click="queryBtn" plain>查询</el-button>
+        <el-button type="primary" @click="addBtn" plain>新增</el-button>
+        <el-button type="primary" @click="saveBtn" plain>保存</el-button>
+      </operation>
     </div>
-    <div class="area-data">
+    <p class="tip">
+      <label>温馨提示：</label>表格中灰色为不可以编辑，全校固定非课程编排请表格中设置，如每周五下午第7节为“班会”，时间格式如 08:30。
+    </p>
+    <div class="area-data" :style="{height:pageHeight+'px'}">
       <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="100px">
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="当前学年" prop="schoolYear">
-              <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect"/>
+              <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect" :disabled="disabledItem"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="当前学期" prop="termCode">
-              <selectChild v-model="data.termCode" :clearable="false" tp="termSelect"/>
+              <selectChild v-model="data.termCode" :clearable="false" tp="termSelect" :disabled="disabledItem"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -78,6 +92,27 @@ import { setCookie } from '@/utils/auth'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 
+const initFormData = () => ({
+  data: {
+    calenderId: undefined,
+    schoolId: undefined,
+    arrangeName: undefined,
+    schoolYear: undefined,
+    termCode: undefined,
+    gradeCode: undefined, // 0302
+    beginDate: undefined,
+    endDate: undefined,
+    workDays: 5,
+    countInMorning: 0,
+    countMorning: 4,
+    countAfternoon: 4,
+    countNight: 0,
+    curStatus: undefined,
+    calFixList: [],
+    rows: 0,
+    cols: 0
+  }
+})
 export default {
   name: 'BaseInfo',
   components: {
@@ -85,28 +120,16 @@ export default {
   },
   data() {
     return {
+      listQuery: {
+        'a.term_code01': '',
+        'a.cur_status01': ''
+      },
+      disabledItem: true,
+      pageHeight: document.body.clientHeight - 190,
       // table实例
       hotInstance: null,
       // 表单数据
-      data: {
-        calenderId: undefined,
-        schoolId: undefined,
-        arrangeName: undefined,
-        schoolYear: undefined,
-        termCode: undefined,
-        gradeCode: undefined, // 0302
-        beginDate: undefined,
-        endDate: undefined,
-        workDays: 5,
-        countInMorning: 0,
-        countMorning: 4,
-        countAfternoon: 4,
-        countNight: 0,
-        curStatus: undefined,
-        calFixList: [],
-        rows: 0,
-        cols: 0
-      },
+      ...initFormData(),
       // 基础信息表单规则
       baseInfoRules: {
         schoolYear: [
@@ -134,7 +157,7 @@ export default {
         data: null,
         colHeaders: [],
         columns: [],
-        height: 330
+        height: 300
       },
       // 标记原始数据
       markTableData: {}
@@ -150,6 +173,12 @@ export default {
       }
     }
   },
+  created() {
+    Object.assign(this.listQuery, {
+      'a.school_year01': this.curYear,
+      'a.term_code01': this.curTerm
+    })
+  },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
     this.assembleWorkDaysOptions() // 作习安排 天/周 下拉选项数据 的初始化
@@ -159,6 +188,14 @@ export default {
     }
   },
   methods: {
+    // 查询按钮
+    queryBtn() {},
+    // 新增 按钮
+    addBtn() {
+      Object.assign(this.$data, initFormData())
+      this.disabledItem = false
+      this.initEditTableData() // 作息安排初始化表格的头部、行列、数据为空
+    },
     // 作习安排 天/周 下拉选项数据
     assembleWorkDaysOptions() {
       const arr = []
@@ -302,17 +339,8 @@ export default {
 .center-text {
   text-align: center;
 }
-.operation {
-  overflow: hidden;
-  height: 33px;
-  > p {
-    position: relative;
-    top: 17px;
-    display: inline-block;
-  }
-  > button {
-    float: right;
-  }
+p.tip {
+  margin-top: 10px;
 }
 </style>
 <style>
