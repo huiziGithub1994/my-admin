@@ -5,16 +5,15 @@
       <condition>
         <div class="condition">
           <label>学年</label>
-          <selectChild v-model="listQuery['a.school_year01']" :clearable="false" tp="yearSelect"/>
+          <selectChild v-model="listQuery['xn']" :clearable="false" tp="yearSelect"/>
         </div>
         <div class="condition">
           <label>学期</label>
-          <selectChild v-model="listQuery['a.term_code01']" :clearable="false" tp="termSelect"/>
+          <selectChild v-model="listQuery['xq']" :clearable="false" tp="termSelect"/>
         </div>
       </condition>
       <operation class="btns">
         <el-button type="primary" @click="queryBtn" plain>查询</el-button>
-        <el-button type="primary" @click="addBtn" plain>新增</el-button>
         <el-button type="primary" @click="saveBtn" plain>保存</el-button>
       </operation>
     </div>
@@ -25,16 +24,12 @@
       <el-form :model="data" ref="baseInfoRef" :rules="baseInfoRules" label-width="100px">
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item label="当前学年" prop="schoolYear">
-              <selectChild v-model="data.schoolYear" :clearable="false" tp="yearSelect" :disabled="disabledItem"/>
-            </el-form-item>
+            <el-form-item label="当前学年" prop="schoolYear">{{ `${data.schoolYear}-${+data.schoolYear+1}学年` }}</el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item label="当前学期" prop="termCode">
-              <selectChild v-model="data.termCode" :clearable="false" tp="termSelect" :disabled="disabledItem"/>
-            </el-form-item>
+            <el-form-item label="当前学期" prop="termCode">{{ +data.termCode === 1 ? "第一学期" : "第二学期" }}</el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
@@ -121,8 +116,8 @@ export default {
   data() {
     return {
       listQuery: {
-        'a.term_code01': '',
-        'a.cur_status01': ''
+        xn: '',
+        xq: ''
       },
       disabledItem: true,
       pageHeight: document.body.clientHeight - 190,
@@ -164,32 +159,29 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['curYear', 'curTerm', 'schoolId', 'calenderId'])
-  },
-  watch: {
-    calenderId(newVal) {
-      if (this.calenderId !== '') {
-        this.fetchFormData()
-      }
-    }
-  },
-  created() {
-    Object.assign(this.listQuery, {
-      'a.school_year01': this.curYear,
-      'a.term_code01': this.curTerm
-    })
+    ...mapGetters(['curYear', 'curTerm', 'schoolId'])
   },
   mounted() {
+    Object.assign(this.listQuery, {
+      xn: this.curYear,
+      xq: this.curTerm
+    })
+    Object.assign(this.data, {
+      schoolYear: this.curYear,
+      termCode: this.curTerm
+    })
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
     this.assembleWorkDaysOptions() // 作习安排 天/周 下拉选项数据 的初始化
     this.initEditTableData() // 作息安排初始化表格的头部、行列、数据为空
-    if (this.calenderId !== '') {
-      this.fetchFormData()
+    if (this.curYear && this.curTerm) {
+      this.fetchFormData({ xn: this.curYear, xq: this.curTerm })
     }
   },
   methods: {
     // 查询按钮
-    queryBtn() {},
+    queryBtn() {
+      this.fetchFormData(this.listQuery)
+    },
     // 新增 按钮
     addBtn() {
       Object.assign(this.$data, initFormData())
@@ -209,16 +201,25 @@ export default {
       this.initEditTableData()
     },
     // 获取表单数据
-    async fetchFormData() {
-      const res = await qryCalendar({ calenderId: this.calenderId })
-      setDatas(this.data, res.DATA)
-      // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
-      this.initEditTableData()
-      // 数据填充表格
-      this.fillTableData()
-      this.$nextTick(function() {
-        this.$refs['baseInfoRef'].clearValidate()
-      })
+    async fetchFormData(params) {
+      await qryCalendar(params).then(
+        res => {
+          setDatas(this.data, res.DATA)
+          // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
+          this.initEditTableData()
+          // 数据填充表格
+          this.fillTableData()
+          this.$nextTick(function() {
+            this.$refs['baseInfoRef'].clearValidate()
+          })
+        },
+        errorRes => {
+          Object.assign(this.data, {
+            schoolYear: this.listQuery['xn'],
+            termCode: this.listQuery['xq']
+          })
+        }
+      )
     },
     // 数据填充表格
     fillTableData() {
