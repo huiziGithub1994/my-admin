@@ -113,7 +113,7 @@ export default {
 
   /* 系统配置 */
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
-  qryCalendar: `/zxx/calendar/qryCalendarInfoDetail`, // 校历维护 详情
+  qryCalendar: `/zxx/calendar/qryCalendarInfoDetailByXnXq`, // 校历维护 详情
   saveCalendar: `/zxx/calendar/saveCalendarInfo`, // 校历维护 保存
   qryCoursePlain: `/zxx/calendar/qryCoursePlanList`, // 课程计划列表查询
   qryGrade: `/zxx/arrange/qrySegGradeInfo`, // 年级

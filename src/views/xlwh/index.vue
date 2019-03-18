@@ -212,14 +212,27 @@ export default {
           this.$nextTick(function() {
             this.$refs['baseInfoRef'].clearValidate()
           })
+          // 修改本地缓存
+          this.updateStore()
         },
         errorRes => {
+          Object.assign(this.$data, initFormData())
           Object.assign(this.data, {
             schoolYear: this.listQuery['xn'],
             termCode: this.listQuery['xq']
           })
+          // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
+          this.initEditTableData()
         }
       )
+    },
+    // 修改本地缓存
+    updateStore() {
+      const { schoolYear, termCode } = this.data
+      this.$store.commit('SET_CURYEAR', schoolYear)
+      this.$store.commit('SET_CURTERM', termCode)
+      setCookie('curYear', schoolYear)
+      setCookie('curTerm', termCode)
     },
     // 数据填充表格
     fillTableData() {
