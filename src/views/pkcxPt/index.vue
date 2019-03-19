@@ -91,7 +91,11 @@
 
 <script>
 import { getPKCXListInfo, saveArrange, delArrange } from '@/api/pkcx'
-import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
+import {
+  getTableBestRows,
+  paramsToString,
+  clearSessionStorage
+} from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
@@ -204,11 +208,7 @@ export default {
       })
     },
     clearStorage() {
-      sessionStorage.removeItem('local_curYear')
-      sessionStorage.removeItem('local_curTerm')
-      sessionStorage.removeItem('local_arrangeId')
-      sessionStorage.removeItem('gradeStr')
-      sessionStorage.removeItem('arrangeName')
+      clearSessionStorage()
       this.$store.commit('SET_ARRANGENAME', '')
     },
     // 查询按钮

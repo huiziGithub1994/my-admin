@@ -211,3 +211,12 @@ export function columnsWidth(width, wapperWidth) {
   })
   return columnsWidth
 }
+
+// 清空 sessionStorage中的数据
+export function clearSessionStorage() {
+  sessionStorage.removeItem('local_curYear')
+  sessionStorage.removeItem('local_curTerm')
+  sessionStorage.removeItem('local_arrangeId')
+  sessionStorage.removeItem('gradeStr')
+  sessionStorage.removeItem('arrangeName')
+}

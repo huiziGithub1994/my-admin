@@ -82,7 +82,7 @@
 import { qryCalendar, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
-import { setDatas } from '@/utils/businessUtil'
+import { setDatas, clearSessionStorage } from '@/utils/businessUtil'
 import { setCookie } from '@/utils/auth'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
@@ -214,6 +214,8 @@ export default {
           })
           // 修改本地缓存
           this.updateStore()
+          // 清空 sessionStorage中的数据
+          this.clearSession()
         },
         errorRes => {
           Object.assign(this.$data, initFormData())
@@ -229,10 +231,18 @@ export default {
     // 修改本地缓存
     updateStore() {
       const { schoolYear, termCode } = this.data
+      if (schoolYear === this.curYear && termCode === this.curTerm) return
       this.$store.commit('SET_CURYEAR', schoolYear)
       this.$store.commit('SET_CURTERM', termCode)
       setCookie('curYear', schoolYear)
       setCookie('curTerm', termCode)
+    },
+    clearSession() {
+      const curYear = sessionStorage.getItem('local_curYear')
+      const curTerm = sessionStorage.getItem('local_curTerm')
+      if (+curYear === +this.curYear && +curTerm === +this.curTerm) return
+      clearSessionStorage()
+      this.$store.commit('SET_ARRANGENAME', '')
     },
     // 数据填充表格
     fillTableData() {
@@ -304,9 +314,11 @@ export default {
           }).then(res => {
             if (res.SUCCESS) {
               this.$message({ type: 'success', message: '保存成功' })
+              // 如果是新增
               if (!this.calenderId) {
                 this.$store.commit('SET_CALENDERID', res.DATA)
                 setCookie('calenderId', res.DATA)
+                this.updateStore()
               }
               this.$nextTick(function() {
                 this.$refs['baseInfoRef'].clearValidate()
