@@ -213,9 +213,9 @@ export default {
             this.$refs['baseInfoRef'].clearValidate()
           })
           // 修改本地缓存
-          this.updateStore()
+          // this.updateStore()
           // 清空 sessionStorage中的数据
-          this.clearSession()
+          // this.clearSession()
         },
         errorRes => {
           Object.assign(this.$data, initFormData())
@@ -318,7 +318,7 @@ export default {
               if (!this.calenderId) {
                 this.$store.commit('SET_CALENDERID', res.DATA)
                 setCookie('calenderId', res.DATA)
-                this.updateStore()
+                // this.updateStore()
               }
               this.$nextTick(function() {
                 this.$refs['baseInfoRef'].clearValidate()

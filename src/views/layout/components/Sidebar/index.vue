@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div class="userInfo">
-      <img src="../../../../assets/ui/Avatar.png">
-      <div>{{ userName }}</div>
+    <div class="info">
+      <div class="name">{{ userName }}</div>
+      <div class="condition">
+        <label>学年</label>
+        <selectChild v-model="listQuery['schoolYear']" :clearable="false" tp="yearSelect" @change="selectChange"/>
+      </div>
+      <div class="condition">
+        <label>学期</label>
+        <selectChild v-model="listQuery['termCode']" :clearable="false" tp="termSelect" @change="selectChange"/>
+      </div>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
@@ -23,11 +30,27 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { setCookie } from '@/utils/auth'
 import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
+  data() {
+    return {
+      listQuery: {
+        schoolYear: '',
+        termCode: ''
+      }
+    }
+  },
   computed: {
-    ...mapGetters(['sidebar', 'menutype', 'userName', 'userType']),
+    ...mapGetters([
+      'sidebar',
+      'menutype',
+      'userName',
+      'userType',
+      'curYear',
+      'curTerm'
+    ]),
     routes() {
       const allRoutes = this.$router.options.routes
       const { length } = allRoutes
@@ -53,23 +76,40 @@ export default {
       return arr
     }
   },
-  created() {}
+  created() {
+    Object.assign(this.listQuery, {
+      schoolYear: this.curYear,
+      termCode: this.curTerm
+    })
+  },
+  methods: {
+    selectChange(val) {
+      const { schoolYear, termCode } = this.listQuery
+      this.$store.commit('SET_CURYEAR', schoolYear)
+      this.$store.commit('SET_CURTERM', termCode)
+      setCookie('curYear', schoolYear)
+      setCookie('curTerm', termCode)
+      this.$message.success('系统当前学年学期切换成功')
+    }
+  }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.userInfo {
-  font-size: 12px;
+.info {
+  font-size: 15px;
+  border-bottom: 1px solid #e8e9fd;
+  padding: 8px 0;
   text-align: center;
-  padding-top: 5px;
-  img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-  }
-  > div {
+  > div.name {
+    color: #3887fe;
+    font-weight: bold;
     font-size: 16px;
-    padding: 5px 0;
-    border-bottom: 1px solid #e8e9fd;
+  }
+  .condition {
+    margin-top: 5px;
+    > div {
+      width: 160px;
+    }
   }
 }
 </style>
