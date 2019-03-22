@@ -97,6 +97,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .info {
   font-size: 15px;
+  background: white;
   border-bottom: 1px solid #e8e9fd;
   padding: 8px 0;
   text-align: center;

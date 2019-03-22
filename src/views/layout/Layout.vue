@@ -181,6 +181,7 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  background: url('../../assets/bg/bg3.jpg') no-repeat 100% 100%;
   &.mobile.openSidebar {
     position: fixed;
   }
@@ -197,7 +198,7 @@ export default {
 .app-header {
   height: 60px;
   line-height: 60px;
-  background: #3887fe;
+  // background: #3887fe;
   .logo {
     width: 35px;
     height: 50px;
@@ -228,7 +229,8 @@ export default {
     > label {
       margin-left: 10px;
       color: white;
-      background: #5a9cfc;
+      // background: #5a9cfc;
+      background: RGB(1, 0, 0, 0.3);
       padding: 7px 12px;
       border-radius: 15px;
       &.choosedMenu {
@@ -237,7 +239,8 @@ export default {
       }
       &:hover {
         cursor: pointer;
-        background: #0066ff;
+        background: white;
+        color: #3788fe;
       }
     }
     > span {
