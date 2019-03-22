@@ -9,19 +9,19 @@
       </div>
       <div class="buttons">
         <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
-        <span>
+        <span @click="dialogUpdatePwd = true" class="pwd">
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
-            <img src="../../assets/ui/icon_suo.png" @click="dialogUpdatePwd = true">
+            <svg-icon icon-class="icon-pwd"></svg-icon>
           </el-tooltip>
         </span>
         <span>
           <el-tooltip class="item" effect="dark" content="更换皮肤" placement="bottom">
-            <img src="../../assets/ui/icon_pifu.png">
+            <svg-icon icon-class="icon-skin"></svg-icon>
           </el-tooltip>
         </span>
-        <span @click="logoutBtn">
+        <span @click="logoutBtn" class="logout">
           <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
-            <img src="../../assets/ui/icon_tuichu.png">
+            <svg-icon icon-class="icon-logout"></svg-icon>
           </el-tooltip>
         </span>
       </div>
@@ -239,24 +239,41 @@ export default {
       }
       &:hover {
         cursor: pointer;
-        background: white;
-        color: #3788fe;
+        background: RGB(1, 0, 0, 0.7);
       }
     }
     > span {
+      line-height: initial;
       margin-left: 10px;
       display: inline-block;
-      height: 60px;
-      img {
-        width: 38px;
-        height: 38px;
-        position: relative;
-        top: 12px;
+      background: RGB(1, 0, 0, 0.3);
+      width: 35px;
+      height: 35px;
+      text-align: center;
+      border-radius: 15px;
+      padding-top: 6px;
+      position: relative;
+      top: 4px;
+      &:hover {
+        cursor: pointer;
+        background: RGB(1, 0, 0, 0.8);
       }
-    }
-    > span:hover {
-      cursor: pointer;
-      opacity: 0.8;
+      .svg-icon {
+        width: 22px;
+        height: 22px;
+      }
+      &.pwd {
+        .svg-icon {
+          width: 21px;
+          height: 21px;
+        }
+      }
+      &.logout {
+        padding-left: 3px;
+        .svg-icon {
+          width: 18px;
+        }
+      }
     }
   }
 }
