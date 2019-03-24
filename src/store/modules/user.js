@@ -107,7 +107,9 @@ function commitBaseInfo(commit, res) {
   commit('SET_USERNAME', userName)
   setCookie('schoolId', schoolId)
   setCookie('curYear', curXn)
+  setCookie('curTureYear', curXn)
   setCookie('curTerm', curXq)
+  setCookie('curTureTerm', curXq)
   setCookie('userType', userType)
   setCookie('userName', userName)
   if (userType === '2') {
@@ -135,7 +137,9 @@ function removeBaseInfo(commit, dispatch) {
     'Admin-Token',
     'schoolId',
     'curTerm',
+    'curTureTerm',
     'curYear',
+    'curTureYear',
     'userType',
     'menutype',
     'userName'

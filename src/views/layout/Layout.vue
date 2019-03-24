@@ -7,6 +7,7 @@
         <p class="big">蓝墨水</p>
         <p class="small">教育云平台</p>
       </div>
+      <span class="schoolName">湖南蓝墨水实验中学</span>
       <div class="buttons">
         <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
         <span @click="dialogUpdatePwd = true" class="pwd">
@@ -14,7 +15,7 @@
             <svg-icon icon-class="icon-pwd"></svg-icon>
           </el-tooltip>
         </span>
-        <span>
+        <span v-popover:popover>
           <el-tooltip class="item" effect="dark" content="更换皮肤" placement="bottom">
             <svg-icon icon-class="icon-skin"></svg-icon>
           </el-tooltip>
@@ -48,6 +49,14 @@
         <el-button type="primary" @click="saveBtn">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 换肤 -->
+    <el-popover ref="popover" placement="bottom" width="350" trigger="click">
+      <el-radio-group v-model="backgroundType">
+        <el-radio :label="1">皮肤1</el-radio>
+        <el-radio :label="2">皮肤2</el-radio>
+        <el-radio :label="3">皮肤3</el-radio>
+      </el-radio-group>
+    </el-popover>
   </div>
 </template>
 <script>
@@ -66,6 +75,8 @@ export default {
   mixins: [ResizeMixin],
   data() {
     return {
+      // 背景
+      backgroundType: 3,
       dialogUpdatePwd: false,
       // 密码
       pwdForm: {
@@ -111,7 +122,8 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        mobile: this.device === 'mobile',
+        [`bg${this.backgroundType}`]: true
       }
     }
   },
@@ -176,12 +188,26 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import 'src/styles/mixin.scss';
+.schoolName {
+  margin-left: 80px;
+  color: white;
+  font-size: 21px;
+  letter-spacing: 5px;
+}
 .app-wrapper {
   @include clearfix;
   position: relative;
   height: 100%;
   width: 100%;
-  background: url('../../assets/bg/bg3.jpg') no-repeat 100% 100%;
+  &.bg1 {
+    background: url('../../assets/bg/bg1.jpg') no-repeat 100% 100%;
+  }
+  &.bg2 {
+    background: url('../../assets/bg/bg2.jpg') no-repeat 100% 100%;
+  }
+  &.bg3 {
+    background: url('../../assets/bg/bg3.jpg') no-repeat 100% 100%;
+  }
   &.mobile.openSidebar {
     position: fixed;
   }

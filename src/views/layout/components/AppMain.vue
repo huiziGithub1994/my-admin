@@ -29,8 +29,8 @@ export default {
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 8px;
-  padding-left: 10px;
+  /* padding-top: 8px; */
+  /* padding-left: 10px; */
 }
 .content-wapper {
   background: white;
