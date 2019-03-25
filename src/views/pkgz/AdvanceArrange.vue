@@ -59,6 +59,8 @@ export default {
     return {
       addBtnDisabled: true, // 新增课时组
       arrangeId: sessionStorage.getItem('local_arrangeId'),
+      curYear: sessionStorage.getItem('local_curYear'),
+      curTerm: sessionStorage.getItem('local_curTerm'),
       treeHeight: document.body.clientHeight - 255,
       completeData: [],
       calendarData: {},
@@ -72,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['calenderId', 'curYear', 'curTerm'])
+    ...mapGetters(['calenderId'])
   },
   async created() {
     // 获取校历表格数据并初始化表格
