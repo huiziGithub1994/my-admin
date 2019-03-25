@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { qryCalendar, saveCalendar } from '@/api/base'
+import { qryCalendarByXnXq, saveCalendar } from '@/api/base'
 import { HotTable } from '@handsontable/vue'
 import { initTableData } from '@/utils/inlineEditTable'
 import { setDatas, clearSessionStorage } from '@/utils/businessUtil'
@@ -202,7 +202,7 @@ export default {
     },
     // 获取表单数据
     async fetchFormData(params) {
-      await qryCalendar(params).then(
+      await qryCalendarByXnXq(params).then(
         res => {
           setDatas(this.data, res.DATA)
           // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
@@ -212,6 +212,9 @@ export default {
           this.$nextTick(function() {
             this.$refs['baseInfoRef'].clearValidate()
           })
+          const { calenderId } = res.DATA
+          this.$store.commit('SET_CALENDERID', calenderId)
+          setCookie('calenderId', calenderId)
           // 修改本地缓存
           // this.updateStore()
           // 清空 sessionStorage中的数据

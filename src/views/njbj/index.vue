@@ -74,7 +74,7 @@ export default {
         height: document.body.clientHeight - 170,
         colWidths: columnsWidth(
           ['20%', '15%', '15%', '15%', '20%', '15%'],
-          document.body.clientWidth - 200 - 390
+          document.body.clientWidth - 210 - 390
         ),
         beforeRemoveRow: (index, amount, physicalRows, source) => {
           const data = this.hotInstance.getSourceData()

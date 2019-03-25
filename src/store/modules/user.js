@@ -11,6 +11,7 @@ const user = {
     curYear: getCookie('curYear'),
     curTerm: getCookie('curTerm'),
     schoolId: getCookie('schoolId'),
+    calenderId: getCookie('calenderId'),
     userType: getCookie('userType'),
     userName: getCookie('userName'),
     arrangeName: sessionStorage.getItem('arrangeName')
@@ -19,6 +20,9 @@ const user = {
   mutations: {
     SET_SCHOOLID: (state, schoolId) => {
       state.schoolId = schoolId
+    },
+    SET_CALENDERID: (state, calenderId) => {
+      state.calenderId = calenderId
     },
     SET_CURYEAR: (state, curYear) => {
       state.curYear = curYear
@@ -123,6 +127,7 @@ function removeBaseInfo(commit, dispatch) {
   const commits = [
     'SET_TOKEN',
     'SET_SCHOOLID',
+    'SET_CALENDERID',
     'SET_CURYEAR',
     'SET_CURTERM',
     'SET_ARRANGENAME',
@@ -136,6 +141,7 @@ function removeBaseInfo(commit, dispatch) {
   const removeCookies = [
     'Admin-Token',
     'schoolId',
+    'calenderId',
     'curTerm',
     'curTureTerm',
     'curYear',

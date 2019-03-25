@@ -23,7 +23,7 @@
           </el-checkbox-group>
         </div>
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
-        <el-button type="primary" plain>下载</el-button>
+        <el-button type="primary" plain @click="handleDownload" :loading="downloadLoading">下载</el-button>
       </operation>
     </div>
     <div v-loading="loading">
@@ -65,10 +65,12 @@ import {
   qryCourseForInTeacher
 } from '@/api/kbcx'
 import { initTableData } from '@/utils/inlineEditTable'
+import { parseTime } from '@/utils'
 export default {
   data() {
     return {
       loading: false,
+      downloadLoading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       // 课程名称下拉菜单数据
       courseOptions: [],
@@ -163,6 +165,41 @@ export default {
         return 'hasClass'
       }
       return ''
+    },
+    // 下载按钮
+    handleDownload() {
+      if (this.tableDatas.length === 0) return
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const filterVal = []
+        this.colHeaders.forEach((item, index) => {
+          filterVal.push(index === 0 ? 'lessionSeq' : index - 1 + '')
+        })
+        const list = this.tableDatas[0].data
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: this.colHeaders,
+          data,
+          filename: this.tableDatas[0].teaName + '老师的课表',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          const cell = v[j]
+          if (j === 'timestamp') {
+            return parseTime(cell)
+          } else if (j === 'lessionSeq') {
+            return cell
+          } else {
+            return `${cell.cellValue}`
+          }
+        })
+      )
     }
   }
 }

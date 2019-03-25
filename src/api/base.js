@@ -46,6 +46,12 @@ export function qryCalendar(listQuery) {
     params: listQuery
   })
 }
+export function qryCalendarByXnXq(listQuery) {
+  return request({
+    url: URL.qryCalendarByXnXq,
+    params: listQuery
+  })
+}
 
 // 校历维护 保存
 export function saveCalendar(listQuery) {

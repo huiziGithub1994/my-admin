@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { qryCalendar } from '@/api/base'
+import { qryCalendarByXnXq } from '@/api/base'
 import {
   qryArrangeGroupInfo,
   saveCoursePlanInfo,
@@ -72,7 +72,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['calenderId'])
+    ...mapGetters(['calenderId', 'curYear', 'curTerm'])
   },
   async created() {
     // 获取校历表格数据并初始化表格
@@ -123,7 +123,11 @@ export default {
         return
       }
       // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.calenderId })
+      // const res = await qryCalendar({ calenderId: this.calenderId })
+      const res = await qryCalendarByXnXq({
+        xn: this.curYear,
+        xq: this.curTerm
+      })
       this.calendarData = res.DATA
       this.initEditTableData()
       // 数据填充表格
