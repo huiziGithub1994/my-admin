@@ -133,7 +133,7 @@ export default {
       })
     },
     numValidator(value, callback) {
-      if (value !== '') {
+      if (value) {
         if (value.indexOf('+') > -1) {
           const splitArr = value.split('+')
           let flag = true
@@ -147,7 +147,6 @@ export default {
               break
             }
           }
-          console.log(value, flag)
           callback(flag)
         } else {
           if (typeof +value !== 'number') {
