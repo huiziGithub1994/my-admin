@@ -269,9 +269,25 @@ export default {
       this.settings.data = defaultData
       this.hotInstance.loadData(defaultData)
     },
+    validateColumns() {
+      const theThis = this
+      return new Promise(function(resolve) {
+        theThis.hotInstance.validateColumns([0, 1], valid => {
+          if (!valid) {
+            theThis.$message({
+              type: 'warning',
+              message: '请输入正确的时间，例如(16:20)。'
+            })
+            resolve(false)
+          } else {
+            resolve(true)
+          }
+        })
+      })
+    },
     // 保存按钮
-    async saveBtn() {
-      this.$refs['baseInfoRef'].validate(valid => {
+    saveBtn() {
+      this.$refs['baseInfoRef'].validate(async valid => {
         if (valid) {
           // 教学时间的校验
           const { beginDate, endDate } = this.data
@@ -280,15 +296,7 @@ export default {
             return
           }
           let isContinue = true
-          this.hotInstance.validateColumns([0, 1], valid => {
-            if (!valid) {
-              isContinue = false
-              this.$message({
-                type: 'warning',
-                message: '请输入正确的时间，例如(16:20)。'
-              })
-            }
-          })
+          isContinue = await this.validateColumns()
           if (!isContinue) return
           const data = this.hotInstance.getSourceData()
           const newData = []
