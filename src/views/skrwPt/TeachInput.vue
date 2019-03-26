@@ -133,7 +133,7 @@ export default {
       })
     },
     numValidator(value, callback) {
-      if (value) {
+      if (value !== '' && value !== undefined && value !== null) {
         if (value.indexOf('+') > -1) {
           const splitArr = value.split('+')
           let flag = true
