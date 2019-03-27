@@ -175,6 +175,27 @@ export default {
         this.$message.warning('请选择年级')
         return
       }
+      if (this.showTable) {
+        this.$confirm('原来的课程安排数据会被清空, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.refreshData(keys)
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
+            this.dialogVisible = false
+          })
+      } else {
+        this.refreshData(keys)
+      }
+    },
+    refreshData(keys) {
       this.gradeStr = keys.join(',')
       this.getTableData()
       this.dialogVisible = false
@@ -194,10 +215,10 @@ export default {
       }
       this.hotInstance.validateRows(validateRows, async valid => {
         if (valid) {
-          if (!this.validNullLine(params.classList, len)) {
-            this.$message.warning('所有单元格都必须填写')
-            return
-          }
+          // if (!this.validNullLine(params.classList, len)) {
+          //   this.$message.warning('所有单元格都必须填写')
+          //   return
+          // }
           const res = await saveCourseTaskList(params)
           sessionStorage.setItem('gradeStr', this.gradeStr)
           const { classList } = res.DATA
