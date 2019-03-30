@@ -10,9 +10,9 @@
         </div>
       </div>
       <div class="right">
-        <el-button type="primary" plain @click="chooseGrade">选择参排年级</el-button>
-        <el-button type="primary" plain @click="saveArrange">保存任课安排</el-button>
-        <el-button type="primary" plain>查看授课样例</el-button>
+        <el-button type="primary" plain @click="chooseGrade" :disabled="disabledChooseGrade">选择参排年级</el-button>
+        <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">保存任课安排</el-button>
+        <el-button type="primary" plain @click="splitTaskBtn" :loading="splitTaskLoading">分拆教学任务</el-button>
       </div>
     </div>
     <div class="data-area">
@@ -32,13 +32,16 @@
 <script>
 import { HotTable } from '@handsontable/vue'
 import { qrySegGradeTree } from '@/api/njkc'
-import { qryCourseTaskList, saveCourseTaskList } from '@/api/skrwPt'
+import { qryCourseTaskList, saveCourseTaskList, splitTask } from '@/api/skrwPt'
 export default {
   components: {
     HotTable
   },
   data() {
     return {
+      saveArrangeLoading: false, // 保存任课安排
+      splitTaskLoading: false, // 分拆教学任务
+      disabledChooseGrade: false, // 选择参排年级
       hotInstance: null,
       showTable: false,
       dialogVisible: false, // 弹窗
@@ -73,6 +76,7 @@ export default {
     this.getTreeData()
     if (this.gradeStr) {
       this.getTableData()
+      this.disabledChooseGrade = true
     } else {
       const h = this.$createElement
       this.$notify({
@@ -219,11 +223,15 @@ export default {
           //   this.$message.warning('所有单元格都必须填写')
           //   return
           // }
-          const res = await saveCourseTaskList(params)
+          this.saveArrangeLoading = true
+          const res = await saveCourseTaskList(params).finally(() => {
+            this.saveArrangeLoading = false
+          })
           sessionStorage.setItem('gradeStr', this.gradeStr)
           const { classList } = res.DATA
           this.hotInstance.loadData(classList)
           this.$message.success('保存成功')
+          this.$emit('updateTab', 'two')
         } else {
           this.$message.warning('字段校验不通过')
         }
@@ -244,6 +252,14 @@ export default {
         if (!isContinue) break
       }
       return isContinue
+    },
+    // 分拆教学任务
+    async splitTaskBtn() {
+      this.splitTaskLoading = true
+      const res = await splitTask({ arrangeId: this.arrangeId }).finally(() => {
+        this.splitTaskLoading = false
+      })
+      if (res.SUCCESS) this.$message.success(res.MSG)
     }
   }
 }

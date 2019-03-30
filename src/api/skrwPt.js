@@ -20,3 +20,19 @@ export function saveCourseTaskList(params) {
     params
   })
 }
+
+// 分拆教学任务
+export function splitTask(listQuery) {
+  return request({
+    url: URL.splitTask,
+    params: listQuery
+  })
+}
+
+// 课程计划汇总表
+export function qryTeaCourseCount(listQuery) {
+  return request({
+    url: URL.qryTeaCourseCount,
+    params: listQuery
+  })
+}

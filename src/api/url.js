@@ -67,6 +67,11 @@ export default {
   // 授课任务-》授课录入
   qryCourseTaskList: `/zxx/qryCourseTaskList`, // 根据年级串获取班级授课列表
   saveCourseTaskList: `/zxx/saveCourseTaskList`, // 保存班级授课列表
+  splitTask: `/zxx/splitTask`, // 分拆教学任务
+  // 授课任务-》课程计划汇总表
+  qryTeaCourseCount: `/zxx/qryTeaCourseCount`, // 课程计划汇总表
+  // 开始排课
+  arrangeCourse: `/zxx/arrangeCourse`, // 自动排课
 
   // 排课规则 -》固排禁排
   // 年级/班级禁排固排

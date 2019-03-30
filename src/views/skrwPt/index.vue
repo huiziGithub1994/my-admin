@@ -11,9 +11,11 @@
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName">
         <el-tab-pane label="授课录入" name="one">
-          <teach-input v-if="activeTabName == 'one'"></teach-input>
+          <teach-input v-if="activeTabName == 'one'" @updateTab="changeTab"></teach-input>
         </el-tab-pane>
-        <el-tab-pane label="课程计划汇总表" name="two"></el-tab-pane>
+        <el-tab-pane label="课程计划汇总表" name="two">
+          <course-plain-table v-if="activeTabName == 'two'"></course-plain-table>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -21,6 +23,7 @@
 <script>
 // import TeachTask from './TeachTask' // 教学任务tab页组件
 import TeachInput from './TeachInput' // 授课录入tab页组件
+import CoursePlainTable from './CoursePlainTable' // 课程计划汇总表组件
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -42,11 +45,17 @@ export default {
     })
   },
   components: {
-    TeachInput
+    TeachInput,
+    CoursePlainTable
   },
   data() {
     return {
       activeTabName: 'one' // tab页高亮
+    }
+  },
+  methods: {
+    changeTab(val) {
+      this.activeTabName = val
     }
   }
 }

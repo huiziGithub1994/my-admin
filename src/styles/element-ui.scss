@@ -4,7 +4,10 @@
     display: none !important;
   }
 }
-
+.el-button > .el-icon-loading {
+  position: absolute;
+  left: 5px;
+}
 .el-upload__input {
   display: none;
 }
