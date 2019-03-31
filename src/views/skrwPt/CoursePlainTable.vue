@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%" v-loading="listLoading">
+    <el-table ref="singleTable" :data="tableData" :height="tableH" highlight-current-row style="width: 100%" v-loading="listLoading">
       <el-table-column property="teaName" label="姓名"/>
       <el-table-column property="courseName" label="课程"/>
       <el-table-column property="className" label="班级"/>
@@ -12,10 +12,13 @@
 import { qryTeaCourseCount } from '@/api/skrwPt'
 export default {
   data() {
+    const h = 205
+    const tableH = document.body.clientHeight - h
     return {
       listLoading: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
-      tableData: []
+      tableData: [],
+      tableH: tableH
     }
   },
   created() {
