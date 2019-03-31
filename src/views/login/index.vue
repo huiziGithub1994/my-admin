@@ -72,6 +72,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getValidCode } from '@/api/login'
+import { getCookie, setCookie, removeCookie } from '@/utils/auth'
 import moment from 'moment'
 export default {
   data() {
@@ -79,7 +80,7 @@ export default {
       loginLoading: false,
       codeSrc: '',
       ruleForm: {
-        loginid: 'lmsadmin', // 用户名 lmsadmin 190302
+        loginid: '', // 用户名 lmsadmin 190302
         loginpwd: '', // 密码 123456  190302
         validateCode: ''
       },
@@ -111,8 +112,17 @@ export default {
   created() {
     this.getTime()
     this.fetchValidCode()
+    this.isRememberUser()
   },
   methods: {
+    // 记住用户
+    isRememberUser() {
+      const loginid = getCookie('loginid')
+      if (loginid) {
+        Object.assign(this.ruleForm, { loginid })
+        this.autoLogin = true
+      }
+    },
     async fetchValidCode() {
       const res = await getValidCode()
       this.codeSrc = res.DATA
@@ -129,6 +139,12 @@ export default {
                 this.$router.push({
                   name: this.userType === '2' ? 'Xsxk' : 'Home'
                 })
+                // 记住用户
+                if (this.autoLogin) {
+                  setCookie('loginid', this.ruleForm.loginid)
+                } else {
+                  removeCookie('loginid')
+                }
               },
               errorRes => {
                 this.fetchValidCode()
