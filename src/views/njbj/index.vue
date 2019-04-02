@@ -25,6 +25,7 @@ import 'handsontable/languages/zh-CN'
 import { qrySegGradeTree } from '@/api/njkc'
 import { qryClassesByGradeId, saveClassesList } from '@/api/njbj'
 import { columnsWidth } from '@/utils/businessUtil'
+import addHooks from './handle'
 // 原始表格数据
 let originTableData = {}
 let delTableData = []
@@ -89,9 +90,13 @@ export default {
   },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
+    // this.tableAddHook()
     this.getTreeData()
   },
   methods: {
+    tableAddHook() {
+      addHooks(this.hotInstance)
+    },
     // 学段(专业)/年级
     async getTreeData() {
       const res = await qrySegGradeTree()
