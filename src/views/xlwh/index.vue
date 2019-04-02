@@ -1,6 +1,6 @@
 <template>
   <!-- 校历维护-->
-  <div>
+  <div v-loading="loading">
     <div v-area>
       <condition>
         <div class="condition">
@@ -55,10 +55,10 @@
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，上午
               <el-select v-model="data.countMorning" :clearable="false" placeholder @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in optionsSub" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，下午
               <el-select v-model="data.countAfternoon" :clearable="false" placeholder @change="studyArrangeChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in optionsSub" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>节，晚上
               <el-select v-model="data.countNight" :clearable="false" placeholder @change="studyArrangeChange">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -145,6 +145,12 @@ export default {
         { value: '3', label: '3' },
         { value: '4', label: '4' }
       ],
+      optionsSub: [
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' }
+      ],
       // 节次时间表格
       loading: false, // 表格加载
       // 表格数据
@@ -152,7 +158,8 @@ export default {
         data: null,
         colHeaders: [],
         columns: [],
-        height: 300
+        height: 300,
+        colWidths: '110px'
       },
       // 标记原始数据
       markTableData: {}
@@ -202,34 +209,39 @@ export default {
     },
     // 获取表单数据
     async fetchFormData(params) {
-      await qryCalendarByXnXq(params).then(
-        res => {
-          setDatas(this.data, res.DATA)
-          // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
-          this.initEditTableData()
-          // 数据填充表格
-          this.fillTableData()
-          this.$nextTick(function() {
-            this.$refs['baseInfoRef'].clearValidate()
-          })
-          const { calenderId } = res.DATA
-          this.$store.commit('SET_CALENDERID', calenderId)
-          setCookie('calenderId', calenderId)
-          // 修改本地缓存
-          // this.updateStore()
-          // 清空 sessionStorage中的数据
-          // this.clearSession()
-        },
-        errorRes => {
-          Object.assign(this.$data, initFormData())
-          Object.assign(this.data, {
-            schoolYear: this.listQuery['xn'],
-            termCode: this.listQuery['xq']
-          })
-          // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
-          this.initEditTableData()
-        }
-      )
+      this.loading = true
+      await qryCalendarByXnXq(params)
+        .then(
+          res => {
+            setDatas(this.data, res.DATA)
+            // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
+            this.initEditTableData()
+            // 数据填充表格
+            this.fillTableData()
+            this.$nextTick(function() {
+              this.$refs['baseInfoRef'].clearValidate()
+            })
+            const { calenderId } = res.DATA
+            this.$store.commit('SET_CALENDERID', calenderId)
+            setCookie('calenderId', calenderId)
+            // 修改本地缓存
+            // this.updateStore()
+            // 清空 sessionStorage中的数据
+            // this.clearSession()
+          },
+          errorRes => {
+            Object.assign(this.$data, initFormData())
+            Object.assign(this.data, {
+              schoolYear: this.listQuery['xn'],
+              termCode: this.listQuery['xq']
+            })
+            // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
+            this.initEditTableData()
+          }
+        )
+        .finally(() => {
+          this.loading = false
+        })
     },
     // 修改本地缓存
     updateStore() {

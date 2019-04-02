@@ -13,7 +13,7 @@
         <el-tab-pane label="授课录入" name="one">
           <teach-input v-if="activeTabName == 'one'" @updateTab="changeTab"></teach-input>
         </el-tab-pane>
-        <el-tab-pane label="课程计划汇总表" name="two">
+        <el-tab-pane label="授课任务统计" name="two">
           <course-plain-table v-if="activeTabName == 'two'"></course-plain-table>
         </el-tab-pane>
       </el-tabs>
@@ -23,7 +23,7 @@
 <script>
 // import TeachTask from './TeachTask' // 教学任务tab页组件
 import TeachInput from './TeachInput' // 授课录入tab页组件
-import CoursePlainTable from './CoursePlainTable' // 课程计划汇总表组件
+import CoursePlainTable from './CoursePlainTable' // 授课任务统计
 
 export default {
   beforeRouteEnter(to, from, next) {

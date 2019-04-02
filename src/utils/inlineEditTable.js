@@ -75,11 +75,32 @@ export function initTableData(
     Number(countMorning) +
     Number(countAfternoon) +
     Number(countNight)
+  const sum1 = Number(countInMorning) + Number(countMorning)
+  const sum2 = sum1 + Number(countAfternoon)
   for (let i = 0; i < count; i++) {
     for (let j = -1; j < workDays; j++) {
       if (j === -1) {
         // j=-1 :后台数据j=0表示周一
-        defaultRow.lessionSeq = `第${i + 1}节`
+        let lessionSeq = ''
+        if (countInMorning > 0) {
+          if (i < countInMorning) lessionSeq = `早上第${i + 1}节`
+          else if (i < sum1) {
+            lessionSeq = `上午第${i - Number(countInMorning) + 1}节`
+          } else if (i < sum2) {
+            lessionSeq = `下午第${i - sum1 + 1}节`
+          } else {
+            lessionSeq = `晚上第${i - sum2 + 1}节`
+          }
+        } else {
+          if (i < sum1) {
+            lessionSeq = `上午第${i - Number(countInMorning) + 1}节`
+          } else if (i < sum2) {
+            lessionSeq = `下午第${i - sum1 + 1}节`
+          } else {
+            lessionSeq = `晚上第${i - sum2 + 1}节`
+          }
+        }
+        defaultRow.lessionSeq = lessionSeq
       } else {
         if (valueType === '1') {
           defaultRow[j] = ''

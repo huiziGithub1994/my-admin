@@ -36,7 +36,7 @@
         <el-table ref="singleTable" :data="arrangeTableData" style="width: 100%" border @cell-click="cellClick" :cell-class-name="cellClassName">
           <el-table-column :property="index === 0 ? 'rowOrder' : 'col'+index+'M'" :label="item" v-for="(item,index) in colHeaders" :key="index">
             <template slot-scope="scope">
-              <div v-if="index === 0">第{{ scope.row.rowOrder }}节</div>
+              <div v-if="index === 0">{{ scope.row.rowOrder|callessionSeq }}</div>
               <div v-else-if="scope.row['col'+index+'M']" class="cell-arrange">
                 {{ scope.row['col'+index+'M'].cellMeaning }}
                 <i class="el-icon-error" v-if="scope.row['col'+index+'M']" @click.stop="removeArrange(scope.row,index)"></i>

@@ -1,6 +1,35 @@
 import { qryCalendar } from '@/api/base'
 import { qryPreArrangeCell } from '@/api/pkgzPt'
+let timeDuration = {}
 export default {
+  filters: {
+    callessionSeq(val) {
+      const i = val - 1
+      const { countInMorning, countMorning, countAfternoon } = timeDuration
+      const sum1 = Number(countInMorning) + Number(countMorning)
+      const sum2 = sum1 + Number(countAfternoon)
+      let lessionSeq = ''
+      if (countInMorning > 0) {
+        if (i < countInMorning) lessionSeq = `早上第${i + 1}节`
+        else if (i < sum1) {
+          lessionSeq = `上午第${i - Number(countInMorning) + 1}节`
+        } else if (i < sum2) {
+          lessionSeq = `下午第${i - sum1 + 1}节`
+        } else {
+          lessionSeq = `晚上第${i - sum2 + 1}节`
+        }
+      } else {
+        if (i < sum1) {
+          lessionSeq = `上午第${i - Number(countInMorning) + 1}节`
+        } else if (i < sum2) {
+          lessionSeq = `下午第${i - sum1 + 1}节`
+        } else {
+          lessionSeq = `晚上第${i - sum2 + 1}节`
+        }
+      }
+      return lessionSeq
+    }
+  },
   methods: {
     // 获取校历数据
     async fetchCalendarData() {
@@ -13,6 +42,12 @@ export default {
         countAfternoon,
         countNight
       } = res.DATA
+      timeDuration = {
+        countInMorning,
+        countMorning,
+        countAfternoon,
+        countNight
+      }
       this.count =
         Number(countInMorning) +
         Number(countMorning) +
