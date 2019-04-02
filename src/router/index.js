@@ -161,7 +161,13 @@ export const ptRouterMap = [
         path: 'kspkPt',
         name: 'KspkPt',
         component: () => import('@/views/kspkPt/index'),
-        meta: { title: '开始排课', icon: 'table' }
+        meta: { title: '开始排课', icon: 'kspk' }
+      },
+      {
+        path: 'kbcxPt',
+        name: 'KbcxPt',
+        component: () => import('@/views/kbcxPt/index'),
+        meta: { title: '课表查询', icon: 'table' }
       }
     ]
   }

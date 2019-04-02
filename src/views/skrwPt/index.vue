@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      activeTabName: 'one' // tab页高亮
+      activeTabName: sessionStorage.getItem('local_arrangeId') ? 'one' : '' // tab页高亮
     }
   },
   methods: {

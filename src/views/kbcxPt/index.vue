@@ -1,25 +1,30 @@
 <template>
   <div class="conent">
     <div class="nav-block">
-      <el-steps :active="3" finish-status="success" simple>
-        <el-step title="授课任务"></el-step>
+      <el-steps :active="4" finish-status="success" simple>
+        <el-step title="教学计划"></el-step>
         <el-step title="排课规则"></el-step>
         <el-step title="排课过程"></el-step>
         <el-step title="课表查询"></el-step>
       </el-steps>
     </div>
-    <div class="jxjh-tabs">
+    <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
-        <el-tab-pane label="自动排课" name="one">
-          <auto-arrange></auto-arrange>
+        <el-tab-pane label="教师课表" name="1">
+          <teacher-table v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="规则一览表" name="two"></el-tab-pane>
+        <el-tab-pane label="学生课表" name="2">
+          <stu-table v-if="activeTabName == 2"/>
+        </el-tab-pane>
+        <el-tab-pane label="教室课表" name="3"></el-tab-pane>
+        <el-tab-pane label="教师任务报表" name="4"></el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
-import AutoArrange from './AutoArrange' // 自动排课tab页组件
+import TeacherTable from './TeacherTable' // 基础信息tab页组件
+import StuTable from './StuTable' // 基础信息tab页组件
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -40,15 +45,14 @@ export default {
       }
     })
   },
-  components: { AutoArrange },
+  components: {
+    TeacherTable,
+    StuTable
+  },
   data() {
     return {
-      activeTabName: 'one' // tab页高亮
-    }
-  },
-  methods: {
-    changeTab(val) {
-      this.activeTabName = val
+      tabsHeight: document.body.clientHeight - 160,
+      activeTabName: sessionStorage.getItem('local_arrangeId') ? '1' : '' // tab页高亮
     }
   }
 }
@@ -57,15 +61,6 @@ export default {
 .nav-block {
   > .el-steps--simple {
     padding: 8px 8%;
-  }
-}
-.next-wapper {
-  overflow: hidden;
-  > div {
-    float: right;
-    display: inline-block;
-
-    margin-right: 17px;
   }
 }
 </style>

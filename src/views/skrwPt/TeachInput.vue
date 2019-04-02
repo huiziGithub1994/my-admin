@@ -1,3 +1,4 @@
+<!-- 授课录入-->
 <template>
   <div>
     <div class="opera-area">
@@ -66,7 +67,11 @@ export default {
           { data: 'segName', readOnly: true, trimWhitespace: true },
           { data: 'gradeName', readOnly: true, trimWhitespace: true },
           { data: 'className', readOnly: true, trimWhitespace: true },
-          { data: 'chargeTeaName', trimWhitespace: true }
+          {
+            data: 'chargeTeaName',
+            trimWhitespace: true,
+            className: 'columnClass'
+          }
         ],
         height: document.body.clientHeight - 270
       }
@@ -123,6 +128,10 @@ export default {
           Object.assign(temp, {
             validator: this.numValidator,
             allowInvalid: true
+          })
+        } else {
+          Object.assign(temp, {
+            className: 'columnClass'
           })
         }
         columns.push(temp)
@@ -290,3 +299,10 @@ export default {
   overflow: auto;
 }
 </style>
+<style>
+.columnClass {
+  font-weight: bold;
+  text-align: center;
+}
+</style>
+
