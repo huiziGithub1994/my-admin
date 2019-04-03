@@ -10,21 +10,19 @@
     </div>
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
-        <el-tab-pane label="教师课表" name="1">
-          <teacher-table v-if="activeTabName == 1"/>
+        <el-tab-pane label="班级课表" name="1">
+          <class-table v-if="activeTabName == 1"/>
         </el-tab-pane>
-        <el-tab-pane label="学生课表" name="2">
-          <stu-table v-if="activeTabName == 2"/>
+        <el-tab-pane label="教师课表" name="2">
+          <teacher-table v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane label="教室课表" name="3"></el-tab-pane>
-        <el-tab-pane label="教师任务报表" name="4"></el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
-import TeacherTable from './TeacherTable' // 基础信息tab页组件
-import StuTable from './StuTable' // 基础信息tab页组件
+import TeacherTable from './TeacherTable' // 教师课表tab页组件
+import ClassTable from './ClassTable' // 班级课表tab页组件
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -47,7 +45,7 @@ export default {
   },
   components: {
     TeacherTable,
-    StuTable
+    ClassTable
   },
   data() {
     return {

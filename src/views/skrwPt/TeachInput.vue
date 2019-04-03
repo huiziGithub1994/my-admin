@@ -16,7 +16,7 @@
         <el-button type="primary" plain @click="splitTaskBtn" :loading="splitTaskLoading">分拆教学任务</el-button>
       </div>
     </div>
-    <div class="data-area">
+    <div class="data-area" v-loading="loading">
       <hot-table :settings="settings" ref="hotTableComponent" v-if="showTable"></hot-table>
     </div>
     <el-dialog title="选择参排年级" :visible.sync="dialogVisible" width="400px">
@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       saveArrangeLoading: false, // 保存任课安排
       splitTaskLoading: false, // 分拆教学任务
       disabledChooseGrade: false, // 选择参排年级
@@ -103,9 +104,12 @@ export default {
       this.treeData = [res.DATA]
     },
     async getTableData() {
+      this.loading = true
       const res = await qryCourseTaskList({
         arrangeId: this.arrangeId,
         gradeIdsStr: this.gradeStr
+      }).finally(() => {
+        this.loading = false
       })
       const { headers, classList } = res.DATA
       const headerArr = []

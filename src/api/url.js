@@ -72,6 +72,8 @@ export default {
   qryTeaCourseCount: `/zxx/qryTeaCourseCount`, // 课程计划汇总表
   // 开始排课
   arrangeCourse: `/zxx/arrangeCourse`, // 自动排课
+  // 课表查询
+  qryClassTimetable: `/zxx/qryClassTimetable0`, // 班级课表
 
   // 排课规则 -》固排禁排
   // 年级/班级禁排固排

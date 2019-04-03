@@ -10,7 +10,8 @@ export function getCookie(key) {
   return Cookies.get(key)
 }
 
-export function setCookie(key, val) {
+export function setCookie(key, val, expires) {
+  if (expires) return Cookies.set(key, val, { expires })
   return Cookies.set(key, val)
 }
 

@@ -141,7 +141,7 @@ export default {
                 })
                 // 记住用户
                 if (this.autoLogin) {
-                  setCookie('loginid', this.ruleForm.loginid)
+                  setCookie('loginid', this.ruleForm.loginid, 7)
                 } else {
                   removeCookie('loginid')
                 }
