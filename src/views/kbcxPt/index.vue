@@ -16,6 +16,7 @@
         <el-tab-pane label="教师课表" name="2">
           <teacher-table v-if="activeTabName == 2"/>
         </el-tab-pane>
+        <el-tab-pane label="场地课表" name="3"></el-tab-pane>
       </el-tabs>
     </div>
   </div>

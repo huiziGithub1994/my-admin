@@ -74,6 +74,7 @@ export default {
   arrangeCourse: `/zxx/arrangeCourse`, // 自动排课
   // 课表查询
   qryClassTimetable: `/zxx/qryClassTimetable0`, // 班级课表
+  qryTeaTimetable: `/zxx/qryTeaTimetable0`, // 教师/教室课表查询
 
   // 排课规则 -》固排禁排
   // 年级/班级禁排固排
