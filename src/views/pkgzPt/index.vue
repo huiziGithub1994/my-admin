@@ -27,6 +27,8 @@
           <teacher v-else-if="gpjpTabActive === '2'"></teacher>
           <!-- 教研组禁排 -->
           <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
+          <!-- 教研组禁排 -->
+          <course v-else-if="gpjpTabActive === '4'"></course>
         </div>
         <!-- end  固排禁排 -->
         <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two">
@@ -47,6 +49,7 @@
 import GradeClass from './GradeClass' // 固排禁排tab页：年级/班级禁排固排tab页组件
 import Teacher from './Teacher' // 固排禁排tab页：教师禁排固排tab页组件
 import TeachGroup from './TeachGroup' // 固排禁排tab页：教研组禁排tab页组件
+import Course from './Course' // 固排禁排tab页：课程禁排固排tab页组件
 import MergeClass from './MergeClass' // 合班设置
 
 export default {
@@ -68,7 +71,7 @@ export default {
       }
     })
   },
-  components: { GradeClass, Teacher, TeachGroup, MergeClass },
+  components: { GradeClass, Teacher, TeachGroup, MergeClass, Course },
   data() {
     return {
       activeTabName: 'one', // tab页高亮
