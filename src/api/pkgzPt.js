@@ -42,3 +42,22 @@ export function getTeachGroupTreeData(listQuery) {
     params: listQuery
   })
 }
+
+// 合班设置 查询合班信息
+export function qryJoinClassL(listQuery) {
+  return request({
+    url: URL.qryJoinClassL,
+    params: listQuery
+  })
+}
+// 合班设置 合班/解散
+export function saveSjsJoinClasses(params) {
+  return request({
+    url: URL.saveSjsJoinClasses,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    params
+  })
+}

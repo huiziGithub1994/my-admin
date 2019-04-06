@@ -85,9 +85,8 @@ export default {
   getTeachGroupTree: `/zxx/qryOnlyCourseLByArrangeId`, // 教研组禁排 treeData
 
   // 排课规则 -》合班设置
-  getClasses: `/base/getClasses`, // 根据年级获取班级信息
-  getCourse: `/base/getCourse`, // 获取课程信息
-
+  qryJoinClassL: `/zxx/qryJoinClassL`, // 查询合班信息
+  saveSjsJoinClasses: `/zxx/saveSjsJoinClasses`, // 合班/解散
   /** 选课平台  */
 
   // 选课列表（选课任务）
@@ -109,7 +108,6 @@ export default {
   qryJoinedStudents: `/zxx/chose/qryStuAttendList`, // 参与学生信息
   // 选课结果
   qrySingleSubjectAnalysis: `/zxx/chose/qryStuChoseResultInfo`, //  单科分析
-  qryAssembleSubjectAnalysis: `/base/qryAssembleSubjectAnalysis`, // 选课组合分析
 
   // 学生选课
   qryStuChooseCourseList: `/zxx/chose/qryStuChooseTaskList`, // 列表查询

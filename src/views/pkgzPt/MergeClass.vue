@@ -22,16 +22,21 @@
     <div class="block block-last">
       <div class="title">合班上课列表</div>
       <div class="group" :style="{height:groupHeiht}">
-        <ul class="classInfo">
-          <li v-for="(item,index) in mergeInfo" :key="index" @click="selectedMergeInfo = item" :class="{active:selectedMergeInfo.id === item.id}">{{ item.text }}</li>
+        <ul class="classInfo" v-if="mergeInfo.length">
+          <li v-for="(item,index) in mergeInfo" :key="index" @click="selectedMergeInfo = item" :class="{active:selectedMergeInfo.joinId === item.joinId}">{{ item.classStr }}</li>
         </ul>
+        <p v-else>暂无合班信息</p>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { qrySegGradeTree } from '@/api/njkc'
-import { getTeachGroupTreeData } from '@/api/pkgzPt'
+import {
+  getTeachGroupTreeData,
+  qryJoinClassL,
+  saveSjsJoinClasses
+} from '@/api/pkgzPt'
 export default {
   data() {
     const h = 260
@@ -49,8 +54,12 @@ export default {
     }
   },
   created() {
+    // 获取班级信息
     this.fetchClassesData()
+    // 获取课程信息
     this.fetchCourseData()
+    // 获取合班信息
+    this.fetchMergeClass()
   },
   methods: {
     // 获取班级信息
@@ -63,8 +72,13 @@ export default {
       const res = await getTeachGroupTreeData({ arrangeId: this.arrangeId })
       this.courseData = res.DATA
     },
+    // 获取合班信息
+    async fetchMergeClass() {
+      const res = await qryJoinClassL({ arrangeId: this.arrangeId })
+      this.mergeInfo = res.DATA || []
+    },
     // 合班按钮的点击
-    mergeClick() {
+    async mergeClick() {
       const selectClasses = this.$refs.classesTreeRef.getCheckedNodes()
       if (selectClasses.length === 0) {
         this.$message.warning('请选择班级')
@@ -79,30 +93,57 @@ export default {
         this.$message.warning('请选择课程')
         return
       }
-
-      const names = selectClasses.filter(item => item.classId)
-      const classesName = names.map(val => val.label).join('-')
-      console.log(classesName)
-      const text = classesName + ' ' + selectCourse.label
-      this.mergeInfo.push({ id: parseInt(Math.random() * 1000), text })
-      // this.$message.success('合班成功')
+      const onlyClasses = selectClasses.filter(item => item.classId)
+      const courseName = selectCourse.label
+      const joinStr = []
+      const className = []
+      onlyClasses.forEach(item => {
+        joinStr.push(item.classId)
+        className.push(item.className)
+      })
+      if (this.existThisInfo(joinStr.join(','), courseName)) {
+        this.$message.warning('该合班信息已存在，不要重复添加')
+        return
+      }
+      await saveSjsJoinClasses({
+        joinStr: joinStr.join(','),
+        classStr: `${className.join('-')} ${courseName}`,
+        courseName,
+        arrangeId: this.arrangeId,
+        act: 0
+      })
+      this.fetchMergeClass()
+    },
+    existThisInfo(joinStr, courseName) {
+      const index = this.mergeInfo.findIndex(value => {
+        return joinStr === value.joinStr && courseName === value.courseName
+      })
+      const no = -1
+      return index > no
     },
     // 解散按钮
-    cancelBtn() {
+    async cancelBtn() {
       if (Object.keys(this.selectedMergeInfo).length === 0) {
         this.$message.warning('请先选则要解散的班级')
         return
       }
-      const len = this.mergeInfo.length
-      const mergeInfo = this.mergeInfo
-      for (let i = 0; i < len; i++) {
-        if (mergeInfo[i].id === this.selectedMergeInfo.id) {
-          this.mergeInfo.splice(i, 1)
-          this.$message.success('解散成功')
-          this.selectedMergeInfo = {} // 清空数据
-          return
-        }
-      }
+      const {
+        joinId,
+        joinStr,
+        classStr,
+        courseName,
+        arrangeId
+      } = this.selectedMergeInfo
+      await saveSjsJoinClasses({
+        joinId,
+        joinStr,
+        classStr,
+        courseName,
+        arrangeId,
+        act: 1
+      })
+      this.fetchMergeClass()
+      this.$message.success('解散成功')
     }
   }
 }
@@ -135,6 +176,10 @@ export default {
   padding: 5px;
   border: 1px solid #dddddd;
   overflow: auto;
+  > p {
+    text-align: center;
+    color: #b3b3b3;
+  }
 }
 .marginLeft {
   margin-top: 10px;

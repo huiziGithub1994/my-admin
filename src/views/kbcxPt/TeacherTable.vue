@@ -26,7 +26,7 @@
           <template slot-scope="scope">
             <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
             <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
-              <div>{{ scope.row[index-1].courseName }}</div>
+              <div>{{ scope.row[index-1].courseName }} - {{scope.row[index-1].className}}班</div>
               <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1].classRoom }}</div>
               <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
             </div>

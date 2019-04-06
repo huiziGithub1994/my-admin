@@ -89,11 +89,3 @@ export function getSingleSubjectAnalysis(listQuery) {
     params: listQuery
   })
 }
-
-// 选课结果-》选课组合分析tab
-export function getAssembleSubjectAnalysis(listQuery) {
-  return request({
-    url: URL.qryAssembleSubjectAnalysis,
-    params: listQuery
-  })
-}
