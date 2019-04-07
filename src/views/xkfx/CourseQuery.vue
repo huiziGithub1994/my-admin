@@ -50,6 +50,11 @@
         <el-table-column label="姓名" property="stuName" width="80px"></el-table-column>
         <el-table-column label="学号" property="stuCode"></el-table-column>
         <el-table-column label="性别" property="stuSex" width="80px"></el-table-column>
+        <el-table-column label="选择状态" property="choseFlag" width="80px">
+          <template slot-scope="scope">
+            <span class="default" :class="{active:scope.row.choseFlag != '未选'}">{{ scope.row.choseFlag }}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :current-page="pageTot.currentPage"
@@ -194,6 +199,14 @@ export default {
   }
   button {
     width: 80px;
+  }
+}
+span {
+  &.default {
+    color: #f56c6c;
+  }
+  &.active {
+    color: #67c23a;
   }
 }
 </style>

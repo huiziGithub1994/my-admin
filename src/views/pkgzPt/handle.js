@@ -1,5 +1,6 @@
-import { qryCalendar } from '@/api/base'
+import { qryCalendarByXnXq } from '@/api/base'
 import { qryPreArrangeCell } from '@/api/pkgzPt'
+
 let timeDuration = {}
 export default {
   filters: {
@@ -30,11 +31,20 @@ export default {
       return lessionSeq
     }
   },
+  data() {
+    return {
+      curYear: sessionStorage.getItem('local_curYear'),
+      curTerm: sessionStorage.getItem('local_curTerm')
+    }
+  },
   methods: {
     // 获取校历数据
     async fetchCalendarData() {
       // 获取校历信息
-      const res = await qryCalendar({ calenderId: this.calenderId })
+      const res = await qryCalendarByXnXq({
+        xn: this.curYear,
+        xq: this.curTerm
+      })
       this.calendarData = res.DATA
       const {
         countInMorning,

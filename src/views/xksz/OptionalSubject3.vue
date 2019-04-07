@@ -185,7 +185,7 @@ export default {
     Object.assign(this.search, {
       'a.school_year01': curYear,
       'a.term_code01': curTerm,
-      'a.arrange_id01': arrangeId
+      'a.chose_rs_id01': arrangeId
     })
     this.fetchData()
     this.getCourseName()

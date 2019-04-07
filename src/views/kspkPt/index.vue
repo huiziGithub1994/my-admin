@@ -11,15 +11,19 @@
     <div class="jxjh-tabs">
       <el-tabs v-model="activeTabName">
         <el-tab-pane label="自动排课" name="one">
-          <auto-arrange></auto-arrange>
+          <auto-arrange v-if="activeTabName == 'one'"></auto-arrange>
         </el-tab-pane>
         <el-tab-pane label="规则一览表" name="two"></el-tab-pane>
+        <el-tab-pane label="调整课表" name="three">
+          <change-schedule v-if="activeTabName == 'three'"></change-schedule>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
 import AutoArrange from './AutoArrange' // 自动排课tab页组件
+import ChangeSchedule from './ChangeSchedule' // 调整课表tab页组件
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -40,7 +44,7 @@ export default {
       }
     })
   },
-  components: { AutoArrange },
+  components: { AutoArrange, ChangeSchedule },
   data() {
     return {
       activeTabName: 'one' // tab页高亮

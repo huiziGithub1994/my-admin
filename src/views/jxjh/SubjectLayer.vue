@@ -217,6 +217,7 @@ export default {
         this.$message.warning('请先选择“选课任务”')
         return
       }
+      this.dialogTableVisible = false
       const res = await choseTaskRsId({
         arrangeId: this.query.arrangeId,
         choseRsId: row.choseRsId

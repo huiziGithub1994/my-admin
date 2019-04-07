@@ -1,6 +1,6 @@
 <!-- 参选学生-->
 <template>
-  <div>
+  <div v-loading="pageLoading" element-loading-text="文件上传中">
     <div>
       <condition>
         <div class="condition">
@@ -27,7 +27,9 @@
           :show-file-list="false"
           :headers="httpHeaders"
           :before-upload="beforeUpload"
+          :on-progress="uploadProgress"
           :on-success="uploadSuccess"
+          :on-error="uploadError"
           ref="upload"
         >
           <el-button type="primary" plain>导入学生</el-button>
@@ -70,6 +72,7 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {
+      pageLoading: false,
       search: {
         'a.class_name01': '',
         'a.stu_name06': '',
@@ -137,21 +140,30 @@ export default {
     // 文件上传的回调函数
     uploadSuccess(res) {
       if (res.SUCCESS) {
-        this.$message({
-          message: '文件上传成功!',
-          type: 'success'
-        })
         Object.assign(this.search, {
           'a.class_name01': '',
           'a.stu_name06': ''
         })
+        this.$message({
+          message: res.MSG,
+          type: 'success'
+        })
         this.queryBtn()
       } else {
-        this.$message({
-          message: '文件上传失败!',
-          type: 'error'
+        const h = this.$createElement
+        this.$notify({
+          title: '提示',
+          message: h('i', { style: 'color: red' }, res.MSG),
+          duration: 8 * 1000
         })
       }
+      this.pageLoading = false
+    },
+    uploadProgress() {
+      this.pageLoading = true
+    },
+    uploadError() {
+      this.pageLoading = false
     },
     // 文件上传前的钩子
     beforeUpload(file) {

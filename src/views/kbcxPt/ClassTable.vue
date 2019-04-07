@@ -13,7 +13,7 @@
     </div>
     <div class="right">
       <div class="teaTableName"></div>
-      <el-table ref="singleTable" :data="tableData" style="width:75%" border :cell-class-name="cellClassName">
+      <el-table ref="singleTable" :data="tableData" style="width:850px" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
           :label="item"

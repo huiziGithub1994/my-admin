@@ -7,9 +7,9 @@
   </div>
 </template>
 <script>
-import SubjectLayer from './OptionalSubject2' // 学科分层及学时tab页组件
+import SubjectLayer from './OptionalSubject2' // 学科分层及学时tab页组件  分层教学
 import SubjectLayer3 from './OptionalSubject3' // 学科分层及学时tab页组件 校本课
-import OptionalSubject1 from './OptionalSubject1' // 可选学科tab页组件
+import OptionalSubject1 from './OptionalSubject1' // 可选学科tab页组件 新高考选考
 import { qrySjsChoseTaskByChoseId } from '@/api/xkrw'
 export default {
   name: 'OptionalSubject',
@@ -33,7 +33,7 @@ export default {
     async fetchBaseData() {
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       this.baseData = res.DATA
-      const { choseType } = res.DATA // 2:分层教学
+      const { choseType } = res.DATA // 1:新高考选考   2:分层教学  3:校本课
       this.componentName = choseType
     },
     nextStep(name) {

@@ -13,7 +13,7 @@
     </div>
     <div class="right">
       <div class="teaTableName"></div>
-      <el-table ref="singleTable" :data="tableData" style="width:75%" border :cell-class-name="cellClassName">
+      <el-table ref="singleTable" :data="tableData" style="width:850px" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
           :label="item"
@@ -26,7 +26,7 @@
           <template slot-scope="scope">
             <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
             <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
-              <div>{{ scope.row[index-1].courseName }} - {{scope.row[index-1].className}}班</div>
+              <div>{{ scope.row[index-1].courseName }} - {{ scope.row[index-1].className+'班' }}</div>
               <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1].classRoom }}</div>
               <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
             </div>
