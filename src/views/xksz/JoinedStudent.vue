@@ -32,7 +32,7 @@
           :on-error="uploadError"
           ref="upload"
         >
-          <el-button type="primary" plain>导入学生</el-button>
+          <el-button type="primary" plain :disabled="disabledBtn">导入学生</el-button>
         </el-upload>
       </operation>
     </div>
@@ -62,8 +62,13 @@
   </div>
 </template>
 <script>
-import { getJoinedStudents, getClassesOptions } from '@/api/xkrw'
+import {
+  qrySjsChoseTaskByChoseId,
+  getJoinedStudents,
+  getClassesOptions
+} from '@/api/xkrw'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
+
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
 export default {
@@ -72,11 +77,12 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH)
     return {
+      disabledBtn: false,
       pageLoading: false,
       search: {
         'a.class_name01': '',
         'a.stu_name06': '',
-        'a.chose_rs_id01': sessionStorage.getItem('local_arrangeId')
+        'a.chose_rs_id01': ''
       },
       // 班级下拉选项数据
       classesOptions: [],
@@ -93,7 +99,7 @@ export default {
       // 模板下载
       downloadUrl: URL.joinedStudentExcelTemplate,
       uloadParams: {
-        choseRsId: sessionStorage.getItem('local_arrangeId')
+        choseRsId: ''
       }
     }
   },
@@ -101,15 +107,25 @@ export default {
     ...mapGetters(['token'])
   },
   created() {
+    this.choseRsId = sessionStorage.getItem('local_arrangeId')
+    Object.assign(this.uloadParams, { choseRsId: this.choseRsId })
+    Object.assign(this.search, { 'a.chose_rs_id01': this.choseRsId })
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
+    this.fetchBaseData() // 获取基础信息
     this.fetchClassesOptions()
     this.fetchJoinedStudents()
   },
   methods: {
+    // 获取基础信息
+    async fetchBaseData() {
+      const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
+      const { pubFlag } = res.DATA // 1:新高考选考   2:分层教学  3:校本课
+      this.disabledBtn = pubFlag === '1'
+    },
     // 获取班级下拉选项数据
     async fetchClassesOptions() {
       const res = await getClassesOptions({
-        choseRsId: sessionStorage.getItem('local_arrangeId')
+        choseRsId: this.choseRsId
       })
       this.classesOptions = res.DATA
     },

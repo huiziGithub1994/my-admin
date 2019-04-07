@@ -1,5 +1,5 @@
 <template>
-  <!-- 分层教学 -学科分层及课时 tab页-->
+  <!-- 校本课 -学科分层及课时 tab页-->
   <div>
     <div>
       <condition>
@@ -12,9 +12,9 @@
       </condition>
       <operation>
         <el-button type="primary" plain>保存顺序</el-button>
-        <el-button type="primary" plain @click="addBtn">增加</el-button>
-        <el-button type="primary" plain @click="editBtn">修改</el-button>
-        <el-button type="primary" plain @click="deleteBtn">删除</el-button>
+        <el-button type="primary" plain @click="addBtn" :disabled="disabledBtn">增加</el-button>
+        <el-button type="primary" plain @click="editBtn" :disabled="disabledBtn">修改</el-button>
+        <el-button type="primary" plain @click="deleteBtn" :disabled="disabledBtn">删除</el-button>
       </operation>
     </div>
     <div class="table-wapper">
@@ -101,6 +101,12 @@ import {
   paramsToString
 } from '@/utils/businessUtil'
 export default {
+  props: {
+    disabledBtn: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       loading: false,

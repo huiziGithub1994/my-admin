@@ -1,5 +1,5 @@
 <template>
-  <!-- 选课设置 -》 可选学科  :新高考选考、校本课-->
+  <!-- 新高考选考 -学科分层及课时 tab页-->
   <div>
     <el-form :model="fromData" ref="baseInfoRef" label-width="90px" v-loading="loading">
       <el-row :gutter="10">
@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="12">
           <div class="btns-right">
-            <el-button type="primary" plain @click="saveBtn">保 存</el-button>
+            <el-button type="primary" plain @click="saveBtn" :disabled="disabledBtn">保 存</el-button>
             <el-button type="success" plain @click="nextStep">下一步</el-button>
           </div>
         </el-col>
@@ -51,6 +51,10 @@ export default {
       default: function() {
         return {}
       }
+    },
+    disabledBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

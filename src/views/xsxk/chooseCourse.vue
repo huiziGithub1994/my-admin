@@ -1,101 +1,106 @@
 <template>
+  <!-- 学生选课 -详细信息页面 -->
   <div>
-    <el-form :model="fromData" ref="baseInfoRef" label-width="120px">
-      <el-row :gutter="10">
-        <el-col :span="12">
-          <div class="taskName">{{ fromData.choseTaskName }}</div>
-        </el-col>
-        <el-col :span="12">
-          <div class="btns-right">
-            <el-button type="primary" plain @click="submitBtn" :disabled="disabledSubmit">确认提交</el-button>
-            <el-button type="primary" plain @click="backBtn">返&nbsp;&nbsp;&nbsp;回</el-button>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="学号">
-            <div>{{ stuData.stuCode }}</div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="姓名">
-            <div>{{ stuData.stuName }}</div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="班级">
-            <div>{{ stuData.gradeName + stuData.className }}</div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="选课说明">
-            <div v-html="fromData.moreDesc" :class="{'moreDescShowMore':showMore,'moreDescNotShowMore':!showMore}"></div>
-            <div class="showMoreBtn" v-if="fromData.moreDesc">
-              <span v-if="!showMore" @click="showMore = true">
-                展开
-                <i class="el-icon-arrow-down"></i>
-              </span>
-              <span v-else @click="showMore = false">
-                收起
-                <i class="el-icon-arrow-up"></i>
-              </span>
-            </div>
-            <div v-else>无</div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="任务类型">
-            <div>{{ taskType[fromData.choseType] }}</div>
-          </el-form-item>
-        </el-col>
-        <!-- 新高考选考&&按单科选择-->
-        <template v-if="fromData.choseType == '1' && fromData.choseCourseType == '1'">
-          <!--必选科目数-->
-          <el-col :span="24" v-if="fromData.mustChoseType !='0'">
-            <el-form-item label="必选课程">
-              <el-checkbox-group v-model="mustChoose">
-                <el-checkbox :label="item.layerId" v-for="item in mustChoseData" :key="item.layerId">{{ item.courseName }}</el-checkbox>
-              </el-checkbox-group>
+    <div class="operation">
+      <div>
+        <el-button type="primary" plain @click="submitBtn" :disabled="disabledSubmit">确认提交</el-button>
+        <el-button type="primary" plain @click="backBtn">返&nbsp;&nbsp;&nbsp;回</el-button>
+      </div>
+    </div>
+    <div class="content" :style="{'min-height':minHeight+'px'}">
+      <el-form :model="fromData" ref="baseInfoRef" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="24">
+            <div class="taskName">{{ fromData.choseTaskName }}</div>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学号">
+              <div>{{ stuData.stuCode }}</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="自由选课程">
-              <el-checkbox-group v-model="freeChoose">
-                <el-checkbox :label="item.layerId" v-for="item in fromData.sjsCourseLayer" :key="item.layerId">{{ item.courseName }}</el-checkbox>
-              </el-checkbox-group>
+            <el-form-item label="姓名">
+              <div>{{ stuData.stuName }}</div>
             </el-form-item>
           </el-col>
-        </template>
-        <!-- 新高考选考&&指定选科组合-->
-        <template v-else-if="fromData.choseType == '1' && fromData.choseCourseType == '2'">
           <el-col :span="24">
-            <el-form-item label="可选组合课程">
-              <el-radio-group v-model="chooseGroup">
-                <el-radio :label="item.layerId" v-for="item in fromData.sjsCourseLayer" :key="item.layerId">{{ item.courseName }}</el-radio>
-              </el-radio-group>
+            <el-form-item label="班级">
+              <div>{{ stuData.gradeName + stuData.className }}</div>
             </el-form-item>
           </el-col>
-        </template>
-        <!-- 分层教学-->
-        <template v-else>
-          <el-col :span="24" v-for="course in fromData.sjsCourseLayer" :key="course.courseId">
-            <el-form-item :label="course.courseName">
-              <el-radio-group v-model="chooseLayer[course.courseId]">
-                <el-radio :label="layer.layerId" v-for="layer in course.layersList" :key="layer.layerId">{{ layer.allName }}</el-radio>
-              </el-radio-group>
+          <el-col :span="24">
+            <el-form-item label="选课说明">
+              <el-collapse accordion v-if="fromData.moreDesc" class="collapse">
+                <el-collapse-item>
+                  <template slot="title">
+                    <div class="collapse-title">
+                      <i class="header-icon el-icon-info"></i>
+                      选课前请先仔细阅读选课说明
+                    </div>
+                  </template>
+                  <div v-html="fromData.moreDesc"></div>
+                </el-collapse-item>
+              </el-collapse>
+              <div v-else>无</div>
             </el-form-item>
           </el-col>
-        </template>
-      </el-row>
-    </el-form>
+          <el-col :span="24">
+            <el-form-item label="任务类型">
+              <div>{{ taskType[fromData.choseType] }}</div>
+            </el-form-item>
+          </el-col>
+          <!-- 新高考选考&&按单科选择-->
+          <template v-if="fromData.choseType == '1' && fromData.choseCourseType == '1'">
+            <!--必选科目数-->
+            <el-col :span="24" v-if="fromData.mustChoseType !='0'">
+              <el-form-item label="必选课程">
+                <el-checkbox-group v-model="mustChoose">
+                  <el-checkbox :label="item.layerId" v-for="item in mustChoseData" :key="item.layerId">{{ item.courseName }}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="自由选课程">
+                <el-checkbox-group v-model="freeChoose">
+                  <el-checkbox :label="item.layerId" v-for="item in fromData.sjsCourseLayer" :key="item.layerId">{{ item.courseName }}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+          </template>
+          <!-- 新高考选考&&指定选科组合-->
+          <template v-else-if="fromData.choseType == '1' && fromData.choseCourseType == '2'">
+            <el-col :span="24">
+              <el-form-item label="可选组合课程">
+                <el-radio-group v-model="chooseGroup">
+                  <el-radio :label="item.layerId" v-for="item in fromData.sjsCourseLayer" :key="item.layerId">{{ item.courseName }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </template>
+          <!-- 分层教学-->
+          <template v-else>
+            <el-col :span="24" v-for="course in fromData.sjsCourseLayer" :key="course.courseId">
+              <el-form-item :label="course.courseName">
+                <el-radio-group v-model="chooseLayer[course.courseId]">
+                  <el-radio :label="layer.layerId" v-for="layer in course.layersList" :key="layer.layerId">{{ layer.allName }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </template>
+        </el-row>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
 import { qryStuChooseTaskDef, doStuChose } from '@/api/xsxk'
 export default {
   data() {
+    const h = 155
+    const mheight = document.body.clientHeight - h
     return {
       disabledSubmit: false, // 确认提交按钮
-      showMore: false,
+      minHeight: mheight,
       taskType: {
         '1': '新高考选考',
         '2': '分层教学',
@@ -192,32 +197,41 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.btns-right {
-  float: right;
-  button.el-button {
-    width: 80px !important;
-  }
+.el-form-item--small {
+  margin-bottom: 10px;
 }
-.showMoreBtn {
-  text-align: right;
-  > span {
-    color: rgb(64, 158, 255);
-    &:hover {
-      cursor: pointer;
-      color: #0066ff;
+.operation {
+  overflow: hidden;
+  margin-bottom: 10px;
+  > div {
+    float: right;
+    button.el-button {
+      width: 80px !important;
     }
   }
 }
-.moreDescNotShowMore {
-  overflow: hidden;
-  text-overflow: ellipsis; //文本溢出显示省略号
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+.content {
+  border: 1px solid #dddddd;
+  padding: 10px 0;
 }
 .taskName {
   text-align: center;
   font-size: 1.2rem;
+}
+.collapse {
+  border: 1px solid #dddddd;
+  margin-right: 10px;
+  padding-left: 10px;
+}
+.el-collapse-item__arrow {
+  float: unset;
+}
+.collapse-title {
+  display: inline-block;
+  color: #409eff;
+  > i {
+    margin-right: 5px;
+  }
 }
 </style>
 

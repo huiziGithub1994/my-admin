@@ -3,7 +3,7 @@
   <div>
     <div class="operation">
       <div class="btns-right">
-        <el-button type="primary" plain @click="saveBtn">保 存</el-button>
+        <el-button type="primary" plain @click="saveBtn" :disabled="saveBtnDisabled">保 存</el-button>
         <el-button type="success" @click="nextStep">下一步</el-button>
       </div>
     </div>
@@ -80,6 +80,7 @@ export default {
   name: 'BaseInfo',
   data() {
     return {
+      saveBtnDisabled: false, // 保存按钮
       optionDisabed: false,
       choseRsId: sessionStorage.getItem('local_arrangeId'),
       formatTime: 'yyyy-MM-dd HH:mm',
@@ -192,7 +193,8 @@ export default {
       this.optionDisabed = true
       const res = await qrySjsChoseTaskByChoseId({ choseRsId: this.choseRsId })
       setDatas(this.data, res.DATA)
-      const { segId, gradeId, moreDesc } = this.data
+      const { segId, gradeId, moreDesc, pubFlag } = this.data
+      this.saveBtnDisabled = pubFlag === '1'
       this.data.selectedGrade = [segId, gradeId]
       const timeArr = ['beginTime', 'endTime']
       timeArr.forEach((key, index) => {
