@@ -13,7 +13,7 @@
     </div>
     <div class="right">
       <div class="teaTableName"></div>
-      <el-table ref="singleTable" :data="tableData" style="width:850px" border :cell-class-name="cellClassName">
+      <el-table ref="singleTable" :data="tableData" style="width:850px" border>
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
           :label="item"
@@ -25,13 +25,13 @@
         >
           <template slot-scope="scope">
             <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
-            <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
+            <div v-else-if="Object.keys(scope.row[index-1]).length">
               <div>{{ scope.row[index-1].courseName }} - {{ scope.row[index-1].className+'班' }}</div>
               <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1].classRoom }}</div>
               <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
             </div>
             <template v-else>
-              <div class="scheduleCell"></div>
+              <div></div>
             </template>
           </template>
         </el-table-column>
@@ -100,22 +100,10 @@ export default {
         }
       })
       this.tableData = theData
-    },
-    // 表格单元添加样式
-    cellClassName({ row, column, rowIndex, columnIndex }) {
-      if (row[columnIndex - 1] && Object.keys(row[columnIndex - 1]).length) {
-        return 'hasClass'
-      }
-      return ''
     }
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss">
-.schedule-table .el-table__body tr > td.hasClass {
-  background: #f5f7fa !important;
-}
-</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .left {
   float: left;
