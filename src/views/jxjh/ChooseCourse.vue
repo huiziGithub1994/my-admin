@@ -462,9 +462,11 @@ export default {
         this.fetchTableData() // 表格数据
         this.fetchArrangeClasses() // 行政班级数据
       } else {
-        this.$message({
-          message: '文件上传失败!',
-          type: 'error'
+        const h = this.$createElement
+        this.$notify({
+          title: '提示',
+          message: h('i', { style: 'color:#F56C6C' }, res.MSG),
+          duration: 8 * 1000
         })
       }
       this.loading = false

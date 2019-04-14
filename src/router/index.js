@@ -195,6 +195,12 @@ export const xkRouterMap = [
         meta: { title: '选课设置', icon: 'xksz' }
       },
       {
+        path: 'fbrw',
+        name: 'Fbrw',
+        component: () => import('@/views/fbrw/index'),
+        meta: { title: '发布任务', icon: 'fbrw' }
+      },
+      {
         path: 'xkfx',
         name: 'Xkfx',
         component: () => import('@/views/xkfx/index'),

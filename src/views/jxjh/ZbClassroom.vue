@@ -207,8 +207,10 @@ export default {
       })
       this.tableData = res.DATA
     },
+    clearFormData() {},
     // 新增按钮
     addBtn() {
+      // 表单数据
       this.selectAll = true
       this.checkbokAllChange(true)
       this.editDialogFormVisible = true

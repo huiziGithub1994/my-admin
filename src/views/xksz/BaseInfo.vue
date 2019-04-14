@@ -231,7 +231,6 @@ export default {
                 this.choseRsId = sessionStorage.getItem('local_arrangeId')
               })
               .catch(error => {
-                console.log(error)
                 this.$message({
                   type: 'info',
                   message: error.MSG ? error.MSG : '已取消保存'
@@ -246,6 +245,7 @@ export default {
     async saveInfo(params) {
       const res = await saveSjsChoseCourseDef(params)
       this.$message.success('保存成功')
+      this.optionDisabed = true
       // 存储数据
       setDatas(this.data, res.DATA)
       const { segId, gradeId, moreDesc } = this.data

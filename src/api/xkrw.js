@@ -89,3 +89,11 @@ export function getSingleSubjectAnalysis(listQuery) {
     params: listQuery
   })
 }
+
+// 发布任务
+export function qryChoseStuSumList(listQuery) {
+  return request({
+    url: URL.qryChoseStuSumList,
+    params: listQuery
+  })
+}

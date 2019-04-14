@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { qryChoseCourseList, delChooseCourse, pubChoseTask } from '@/api/xkrw'
+import { qryChoseCourseList, delChooseCourse } from '@/api/xkrw'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -127,10 +127,13 @@ export default {
         this.$message.info('请选择要发布的数据')
         return
       }
-      const res = await pubChoseTask({ choseRsId: this.currentRow.choseRsId })
-      if (res.SUCCESS) {
-        this.$message.success('选课任务发布成功')
-      }
+      this.editXk(this.currentRow, 'Fbrw')
+      // this.$router.push({ name: 'Fbrw' })
+      // const res = await pubChoseTask({ choseRsId: this.currentRow.choseRsId })
+      // if (res.SUCCESS) {
+      //   this.$message.success('选课任务发布成功')
+      //   this.fetchData()
+      // }
     },
     // 新增按钮
     addBtn() {
@@ -173,7 +176,7 @@ export default {
         })
     },
     // 修改按钮
-    editXk(row) {
+    editXk(row, name = 'Xksz') {
       const { schoolYear, termCode, choseRsId, choseTaskName } = row
       if (sessionStorage) {
         sessionStorage.setItem('local_curYear', schoolYear)
@@ -185,7 +188,7 @@ export default {
         sessionStorage.setItem('arrangeName', nameStr) // choseTaskName
         this.$store.commit('SET_ARRANGENAME', nameStr)
       }
-      this.$router.push({ name: 'Xksz' })
+      this.$router.push({ name })
     },
     // 分析按钮
     analysisXK(row) {

@@ -106,6 +106,10 @@ export default {
   // 选课设置 -》参选学生tab
   qryClassesOptions: `/zxx/chose/qryDistinctClassList`, // 班级下拉列表
   qryJoinedStudents: `/zxx/chose/qryStuAttendList`, // 参与学生信息
+
+  // 发布任务
+  qryChoseStuSumList: `/zxx/chose/qryChoseStuSumList`, // 查询参选学生统计数量
+
   // 选课结果
   qrySingleSubjectAnalysis: `/zxx/chose/qryStuChoseResultInfo`, //  单科分析
 
