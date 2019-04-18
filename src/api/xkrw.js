@@ -82,7 +82,15 @@ export function getJoinedStudents(listQuery) {
   })
 }
 
-// 选课结果-》单科分析tab
+// 发布任务
+export function qryChoseStuSumList(listQuery) {
+  return request({
+    url: URL.qryChoseStuSumList,
+    params: listQuery
+  })
+}
+
+// 选课分析-》单科分析tab
 export function getSingleSubjectAnalysis(listQuery) {
   return request({
     url: URL.qrySingleSubjectAnalysis,
@@ -90,10 +98,11 @@ export function getSingleSubjectAnalysis(listQuery) {
   })
 }
 
-// 发布任务
-export function qryChoseStuSumList(listQuery) {
+// 选课分析 -》选课查询导出
+export function expQryStuAttendList(listQuery) {
   return request({
-    url: URL.qryChoseStuSumList,
+    url: URL.expQryStuAttendList,
+    responseType: 'blob',
     params: listQuery
   })
 }

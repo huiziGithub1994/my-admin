@@ -110,8 +110,9 @@ export default {
   // 发布任务
   qryChoseStuSumList: `/zxx/chose/qryChoseStuSumList`, // 查询参选学生统计数量
 
-  // 选课结果
+  // 选课分析
   qrySingleSubjectAnalysis: `/zxx/chose/qryStuChoseResultInfo`, //  单科分析
+  expQryStuAttendList: `/zxx/chose/expQryStuAttendList`, // 选课查询导出
 
   // 学生选课
   qryStuChooseCourseList: `/zxx/chose/qryStuChooseTaskList`, // 列表查询

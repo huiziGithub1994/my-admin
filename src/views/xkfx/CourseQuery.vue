@@ -22,12 +22,13 @@
       </condition>
       <operation class="operation">
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
+        <el-button type="primary" plain @click="exportExcel">导出Excel</el-button>
         <!-- <el-button type="primary" plain>参选课表</el-button> -->
         <!-- <a :href="downloadUrl" download="蓝墨水-选课参选学生.xls">
           <el-button type="primary" plain>模板下载</el-button>
         </a>-->
-        <el-upload
-          action="http://47.107.255.128:8089/zxx/chose/upStuAttendSel"
+        <!-- <el-upload
+          action="http://47.107.255.128:8089/zxx/chose/expQryStuAttendList"
           name="filename"
           :data="uloadParams"
           :show-file-list="false"
@@ -36,8 +37,7 @@
           :on-success="uploadSuccess"
           ref="upload"
         >
-          <el-button type="primary" plain>导出Excel</el-button>
-        </el-upload>
+        </el-upload>-->
       </operation>
     </div>
     <div>
@@ -71,7 +71,11 @@
   </div>
 </template>
 <script>
-import { getJoinedStudents, getClassesOptions } from '@/api/xkrw'
+import {
+  getJoinedStudents,
+  getClassesOptions,
+  expQryStuAttendList
+} from '@/api/xkrw'
 import { getTableBestRows, paramsToString } from '@/utils/businessUtil'
 import { mapGetters } from 'vuex'
 import URL from '@/api/url'
@@ -104,17 +108,13 @@ export default {
       tableData: [],
       httpHeaders: {},
       // 模板下载
-      downloadUrl: URL.joinedStudentExcelTemplate,
-      uloadParams: {
-        choseRsId: sessionStorage.getItem('local_arrangeId')
-      }
+      downloadUrl: URL.joinedStudentExcelTemplate
     }
   },
   computed: {
     ...mapGetters(['token'])
   },
   created() {
-    Object.assign(this.httpHeaders, { x_auth_token: this.token })
     this.fetchClassesOptions()
     this.fetchJoinedStudents()
   },
@@ -125,6 +125,18 @@ export default {
         choseRsId: sessionStorage.getItem('local_arrangeId')
       })
       this.classesOptions = res.DATA
+    },
+    // 导出按钮
+    async exportExcel() {
+      const res = await expQryStuAttendList(this.search)
+      const url = window.URL.createObjectURL(res)
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = url
+      link.setAttribute('download', '选课查询.xls')
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
     },
     // 查询按钮
     queryBtn() {
