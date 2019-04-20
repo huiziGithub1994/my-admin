@@ -128,7 +128,11 @@ export default {
     },
     // 导出按钮
     async exportExcel() {
-      const res = await expQryStuAttendList(this.search)
+      const params = {
+        ...this.search,
+        ...paramsToString(this.pageTot)
+      }
+      const res = await expQryStuAttendList({ dataStr: JSON.stringify(params) })
       const url = window.URL.createObjectURL(res)
       const link = document.createElement('a')
       link.style.display = 'none'

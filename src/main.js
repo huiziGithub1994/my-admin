@@ -20,6 +20,7 @@ import operation from './components/operation/index'
 import condition from './components/condition/index'
 import selectChild from './components/selectChild/index'
 import area from './utils/directives/area'
+import './utils/calcuRem'
 
 /* 功能页面操作域组件。将条件域中的条件放入操作域中的“更多条件”下拉按钮中 */
 Vue.component('operation', operation)

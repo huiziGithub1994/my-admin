@@ -71,16 +71,15 @@ export default {
     ]),
     routes() {
       const allRoutes = this.$router.options.routes
-      const { length } = allRoutes
       if (this.userType === '2') {
-        return allRoutes.slice(length - 1, length)
+        return allRoutes.slice(10, 11)
       }
       if (this.menutype === 'zb') {
         return allRoutes.slice(0, 8)
       } else if (this.menutype === 'pt') {
         return [...allRoutes.slice(0, 7), ...allRoutes.slice(8, 9)]
       } else {
-        return [...allRoutes.slice(0, 7), ...allRoutes.slice(9, length - 1)]
+        return [...allRoutes.slice(0, 7), ...allRoutes.slice(9, 10)]
       }
     },
     isCollapse() {

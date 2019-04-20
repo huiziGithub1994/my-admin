@@ -235,6 +235,26 @@ export const stuRouterMap = [
   }
 ]
 
+export const h5RouterMap = [
+  {
+    path: '/loginh5',
+    component: () => import('@/views/h5/login'),
+    hidden: true
+  },
+  {
+    path: '/xsxkh5',
+    name: 'Xsxkh5',
+    component: () => import('@/views/h5/xsxk'),
+    hidden: true
+  },
+  {
+    path: '/detailh5',
+    name: 'Detailh5',
+    component: () => import('@/views/h5/detail'),
+    hidden: true
+  }
+]
+
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
@@ -243,6 +263,7 @@ export default new Router({
     ...zbRouterMap,
     ...ptRouterMap,
     ...xkRouterMap,
-    ...stuRouterMap
+    ...stuRouterMap,
+    ...h5RouterMap
   ]
 })

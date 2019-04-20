@@ -183,7 +183,6 @@ export default {
         })
         choseStr = tempLayerId.join(',')
       }
-      console.log(choseStr)
       if (choseStr.length === 0) {
         this.$message.warning('请选择课程')
         return

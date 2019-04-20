@@ -61,9 +61,10 @@ export default {
     // 获取表格数据
     async fetchData() {
       this.listLoading = true
-      const res = await qryStuChooseCourseList()
+      const res = await qryStuChooseCourseList().finally(
+        () => (this.listLoading = false)
+      )
       this.tableData = res.DATA
-      this.listLoading = false
     },
     // 去选课按钮
     stuSelectCourse(choseRsId) {
