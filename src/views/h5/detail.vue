@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="fromData" ref="baseInfoRef" label-width="80px">
+    <el-form :model="fromData" ref="baseInfoRef" label-width="90px">
       <el-row :gutter="10">
         <el-col :span="24">
           <div class="taskName">{{ fromData.choseTaskName }}</div>
@@ -75,7 +75,7 @@
             </el-form-item>
           </el-col>
         </template>
-        <!-- 分层教学-->
+        <!-- 分层教学、校本课-->
         <template v-else>
           <el-col :span="24" v-for="course in fromData.sjsCourseLayer" :key="course.courseId">
             <el-form-item :label="course.courseName">
@@ -154,6 +154,7 @@ export default {
     },
     async submitBtn() {
       const { choseType, choseCourseType, mustChoseType } = this.fromData
+      console.log(choseType, choseCourseType, mustChoseType) // 3 1 0
       let choseStr = ''
       // 新高考选考&&按单科选择-->
       if (choseType === '1' && choseCourseType === '1') {
@@ -169,8 +170,8 @@ export default {
       } else if (choseType === '1' && choseCourseType === '2') {
         // 新高考选考&&指定选科组合-->
         choseStr = this.chooseGroup
-      } else if (choseType === '2') {
-        // 分层教学
+      } else {
+        // 分层教学、校本课
         const tempLayerId = []
         Object.keys(this.chooseLayer).forEach(key => {
           if (this.chooseLayer[key]) {

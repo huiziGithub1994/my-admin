@@ -40,13 +40,13 @@ export default {
       const res = await qryStuChooseCourseList().finally(
         () => (this.listLoading = false)
       )
-      const len = 3
+      const len = res.DATA.length
       const arrIndex = []
       for (let i = 0; i < len; i++) {
         arrIndex.push(i)
       }
       this.activeNames = arrIndex
-      this.tableData = [...res.DATA, ...res.DATA, ...res.DATA]
+      this.tableData = res.DATA
     },
     toDetail(choseRsId) {
       const params = { choseRsId }
@@ -63,6 +63,9 @@ export default {
 }
 .title {
   padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .content {
   padding-left: 10px;

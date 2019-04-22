@@ -114,6 +114,7 @@ div.login {
   position: relative;
   display: flex;
   flex-direction: column;
+  padding-top: 1rem;
   > .logo {
     height: 3.5rem;
     text-align: center;
@@ -127,6 +128,8 @@ div.login {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 75%;
+    margin-left: 12.5%;
   }
 }
 .loginBtn {
