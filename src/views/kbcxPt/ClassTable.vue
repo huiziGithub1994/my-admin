@@ -11,8 +11,11 @@
         <el-tree ref="treeRef" :data="treeData" node-key="id" default-expand-all :expand-on-click-node="false" highlight-current @node-click="treeNodeClick"></el-tree>
       </div>
     </div>
+    <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
     <div class="right">
-      <div class="teaTableName"></div>
+      <div class="teaTableName">
+        <el-button class="excel-btn" type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
+      </div>
       <el-table ref="singleTable" :data="tableData" style="width:850px" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
@@ -41,7 +44,7 @@
 </template>
 <script>
 import { qrySegGradeTree } from '@/api/njkc'
-import { qryClassTimetable } from '@/api/kbcxPt'
+import { qryClassTimetable, expCourse2Excel } from '@/api/kbcxPt'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
@@ -71,6 +74,7 @@ export default {
     // 班级的点击
     async treeNodeClick(data) {
       if (data.level !== '3') return
+
       const res = await qryClassTimetable({
         arrangeId: this.arrangeId,
         classId: data.id
@@ -109,6 +113,27 @@ export default {
         return 'hasClass'
       }
       return ''
+    },
+    // 下载excel
+    async exportExcel() {
+      const params = { arrangeId: this.arrangeId, taskType: 0 }
+      const node = this.$refs.treeRef.getCurrentNode()
+      if (+node.level === 3) {
+        params.classId = node.classId
+        if (this.tableData.length === 0) {
+          this.$message.warning('该班级未检索到课表数据，无法进行下载')
+          return
+        }
+      }
+      const res = await expCourse2Excel(params)
+      const url = window.URL.createObjectURL(res)
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = url
+      link.setAttribute('download', '课程表.xls')
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
     }
   }
 }
@@ -132,8 +157,9 @@ export default {
   overflow: auto;
 }
 .teaTableName {
-  height: 20px;
-  line-height: 20px;
-  margin-bottom: 8px;
+  overflow: hidden;
+  .excel-btn {
+    float: right;
+  }
 }
 </style>

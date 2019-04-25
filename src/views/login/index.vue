@@ -43,12 +43,17 @@
                 </div>
               </div>
             </el-form-item>
+            <div class="school">
+              <el-select size="middle" v-model.trim="schoolValue" filterable remote reserve-keyword placeholder="请输入学校名称" :remote-method="remoteMethod" :loading="selectLoading">
+                <el-option v-for="item in schoolOptions" :key="item.schoolCode" :label="item.schoolName" :value="item.schoolCode"></el-option>
+              </el-select>
+            </div>
             <div class="autoLogin">
               <el-checkbox v-model="autoLogin">记住用户</el-checkbox>
-              <span class="pwdReg">
+              <!-- <span class="pwdReg">
                 <span>找回密码</span>
                 <span>注册新用户</span>
-              </span>
+              </span>-->
             </div>
             <el-button class="loginBtn" type="primary" @click="submitForm" :loading="loginLoading">登 录</el-button>
             <!-- <div class="other">
@@ -71,12 +76,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getValidCode } from '@/api/login'
+import { getValidCode, qrySjsSchoolList } from '@/api/login'
 import { getCookie, setCookie, removeCookie } from '@/utils/auth'
 import moment from 'moment'
 export default {
   data() {
     return {
+      selectLoading: false, // 学校搜索loading
+      schoolOptions: [], // 学校下拉数据
+      schoolValue: '', // 学校下拉选中值
       loginLoading: false,
       codeSrc: '',
       ruleForm: {
@@ -115,6 +123,17 @@ export default {
     this.isRememberUser()
   },
   methods: {
+    // 学校名称搜索
+    async remoteMethod(query) {
+      if (query !== '') {
+        this.selectLoading = true
+        const res = await qrySjsSchoolList({ schoolName: query })
+        this.schoolOptions = res.DATA
+        this.selectLoading = false
+      } else {
+        this.schoolOptions = []
+      }
+    },
     // 记住用户
     isRememberUser() {
       const loginid = getCookie('loginid')
@@ -171,6 +190,12 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.school {
+  margin-bottom: 10px;
+  > div {
+    width: 100%;
+  }
+}
 .content {
   height: 100%;
   display: flex;

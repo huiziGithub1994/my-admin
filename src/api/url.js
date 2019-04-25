@@ -74,6 +74,7 @@ export default {
   arrangeCourse: `/zxx/arrangeCourse`, // 自动排课
   // 课表查询
   qryClassTimetable: `/zxx/qryClassTimetable0`, // 班级课表
+  expCourse2Excel: `/zxx/expCourse2Excel`, // 班级课表-》导出excel
   qryTeaTimetable: `/zxx/qryTeaTimetable0`, // 教师/教室课表查询
 
   // 排课规则 -》固排禁排
@@ -135,6 +136,7 @@ export default {
   qryValidCode: `/zxx/visitor/picture/createValidateCode`, // 验证码
   userLogin: `/zxx/visitor/user/login`, // 登录
   logout: `/zxx/user/logout`, // 退出
+  qrySjsSchoolList: `/zxx/qrySjsSchoolList`, // 学校列表
 
   // 用户基础信息
   qryBaseInfo: `/qry/qryBaseInfo`,

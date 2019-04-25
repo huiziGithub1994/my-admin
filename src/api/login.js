@@ -30,3 +30,10 @@ export function logout() {
     url: URL.logout
   })
 }
+// 学校列表
+export function qrySjsSchoolList(params) {
+  return request({
+    url: URL.qrySjsSchoolList,
+    params
+  })
+}
