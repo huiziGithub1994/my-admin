@@ -1,5 +1,5 @@
 <template>
-  <!-- 单科分析 -->
+  <!-- 组合分析 -->
   <div>
     <div class="top-operation">
       <div>
@@ -106,7 +106,7 @@ export default {
     async fetchData() {
       const res = await getSingleSubjectAnalysis({
         choseRsId: this.choseRsId,
-        groupType: '1'
+        groupType: '2'
       })
       setDatas(this.data, res.DATA)
       this.selectedClassChange()
@@ -125,8 +125,7 @@ export default {
           formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
-          orient: 'vertical',
-          left: '0',
+          top: '30',
           data: [],
           formatter: function(name) {
             return name
@@ -137,7 +136,7 @@ export default {
             name: '访问来源',
             type: 'pie',
             radius: '55%',
-            center: ['50%', '60%'],
+            center: ['50%', '65%'],
             data: [],
             itemStyle: {
               emphasis: {

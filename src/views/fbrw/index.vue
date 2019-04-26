@@ -1,4 +1,5 @@
 <template>
+  <!-- 选课平台-发布任务 -->
   <div>
     <div class="operation">
       <div class="btns-right">
@@ -20,7 +21,7 @@
       </div>
       <div>
         <span class="title">分层类型</span>
-        {{ fromData.choseCourseType }}
+        {{ fromData.choseCourseTypeName }}
       </div>
       <div>
         <span class="title">选课时间段</span>
@@ -94,7 +95,7 @@ export default {
       const len = returnLOut.length
       returnLOut[len - 1] = {
         gradeName: '',
-        stuQty: 382,
+        stuQty: returnLOut[len - 1].stuQty,
         segName: '',
         className: '合计'
       }

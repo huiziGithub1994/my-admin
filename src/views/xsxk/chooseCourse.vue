@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="content" :style="{'min-height':minHeight+'px'}">
-      <el-form :model="fromData" ref="baseInfoRef" label-width="120px">
+      <el-form :model="fromData" ref="baseInfoRef" label-width="120px" v-loading="formLoading">
         <el-row :gutter="10">
           <el-col :span="24">
             <div class="taskName">{{ fromData.choseTaskName }}</div>
@@ -99,6 +99,7 @@ export default {
     const h = 155
     const mheight = document.body.clientHeight - h
     return {
+      formLoading: false,
       disabledSubmit: false, // 确认提交按钮
       minHeight: mheight,
       taskType: {
@@ -127,7 +128,10 @@ export default {
       this.$router.push({ name: 'Xsxk' })
     },
     async getDetail() {
-      const res = await qryStuChooseTaskDef({ choseRsId: this.choseRsId })
+      this.formLoading = true
+      const res = await qryStuChooseTaskDef({
+        choseRsId: this.choseRsId
+      }).finally(() => (this.formLoading = false))
       this.fromData = res.DATA
       this.stuData = res.EXTRA
       const {
@@ -156,7 +160,7 @@ export default {
         })
       }
     },
-    async submitBtn() {
+    submitBtn() {
       const { choseType, choseCourseType, mustChoseType } = this.fromData
       let choseStr = ''
       // 新高考选考&&按单科选择-->
@@ -188,9 +192,23 @@ export default {
         return
       }
       this.disabledSubmit = true
-      await doStuChose({ choseRsId: this.choseRsId, choseStr })
-      this.$message.success('选课成功')
-      this.$router.go(-1)
+      // 选课提示
+      this.$confirm('选课确认提交后不可更改, 是否继续提交?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await doStuChose({ choseRsId: this.choseRsId, choseStr })
+          this.$message.success('选课成功')
+          this.$router.go(-1)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消提交'
+          })
+        })
     }
   }
 }

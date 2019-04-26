@@ -6,12 +6,14 @@
       <el-tab-pane label="选组合分析" name="2"></el-tab-pane>
       <el-tab-pane label="选课查询" name="3"></el-tab-pane>
     </el-tabs>
-    <single-subject :choosed="activeTabName" v-if="activeTabName<3"></single-subject>
+    <single-subject v-if="activeTabName==1"></single-subject>
+    <group-subject v-if="activeTabName==2"></group-subject>
     <course-query v-if="activeTabName==3"></course-query>
   </div>
 </template>
 <script>
 import SingleSubject from './SingleSubject' // 单科、组合分析tab页组件
+import GroupSubject from './GroupSubject' // 单科、组合分析tab页组件
 import CourseQuery from './CourseQuery' // 选课查询
 
 export default {
@@ -33,7 +35,7 @@ export default {
       }
     })
   },
-  components: { SingleSubject, CourseQuery },
+  components: { SingleSubject, GroupSubject, CourseQuery },
   data() {
     return {
       activeTabName: '1' // tab页高亮

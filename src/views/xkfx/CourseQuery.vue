@@ -55,6 +55,7 @@
             <span class="default" :class="{active:scope.row.choseFlag != '未选'}">{{ scope.row.choseFlag }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="选课结果" show-overflow-tooltip min-width="120px" property="allName"></el-table-column>
       </el-table>
       <el-pagination
         :current-page="pageTot.currentPage"
