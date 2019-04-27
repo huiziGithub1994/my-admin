@@ -1,0 +1,55 @@
+.top-operation {
+  > div {
+    margin-bottom: 15px;
+    > label {
+      width: 100px;
+      display: inline-block;
+    }
+  }
+}
+.left {
+  width: 290px;
+  margin-right: 10px;
+  padding: 5px;
+  float: left;
+  border: 1px solid #dddddd;
+  .desc {
+    overflow: hidden;
+    .title,
+    .list {
+      float: left;
+    }
+    .title {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .list > ul {
+      padding: 0;
+      margin: 0;
+      > li {
+        list-style: none;
+        padding-left: 15px;
+        height: 20px;
+        line-height: 20px;
+        > span {
+          margin: 0 6px 0 3px;
+        }
+      }
+    }
+  }
+}
+.right {
+  overflow: hidden;
+  border: 1px solid #dddddd;
+  max-width: 800px;
+  > div {
+    height: 100%;
+  }
+}
+.text-green {
+  color: #3986ac;
+}
+.table-outer {
+  margin-top: 10px;
+  border: 1px solid #dddddd;
+}
