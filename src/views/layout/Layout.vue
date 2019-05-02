@@ -9,6 +9,7 @@
       </div>
       <span class="schoolName">湖南蓝墨水实验中学</span>
       <div class="buttons">
+        <!-- 菜单 -->
         <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
         <span @click="dialogUpdatePwd = true" class="pwd">
           <el-tooltip class="item" effect="dark" content="修改密码" placement="bottom">
@@ -108,7 +109,8 @@ export default {
       return [
         { command: 'zb', name: '走班排课' },
         { command: 'pt', name: '普通排课' },
-        { command: 'xk', name: '选课平台' }
+        { command: 'xk', name: '选课平台' },
+        { command: 'xgk', name: '新高考排课' }
       ]
     },
     sidebar() {

@@ -32,7 +32,8 @@
         <el-row :gutter="10">
           <el-col :span="18">
             <el-form-item prop="splitLayerType" label="学生分层方式">
-              <el-radio-group v-model="data.splitLayerType" :disabled="btnDisabled">
+              <div v-if="menutype === 'xgk'">新高考排课</div>
+              <el-radio-group v-model="data.splitLayerType" :disabled="btnDisabled" v-else>
                 <el-radio :label="1">学生自由选择分层</el-radio>
                 <el-radio :label="2">按成绩分层</el-radio>
               </el-radio-group>
@@ -48,6 +49,7 @@
 import { qryArrangeDetail, saveArrange } from '@/api/pkcx'
 import { getSegGrade } from '@/api/base'
 import { setDatas } from '@/utils/businessUtil'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'BaseInfo',
@@ -97,7 +99,13 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['menutype'])
+  },
   async created() {
+    if (this.menutype === 'xgk') {
+      Object.assign(this.data, { splitLayerType: '3' })
+    }
     const { local_curYear, local_curTerm } = sessionStorage
     Object.assign(this.data, {
       schoolYear: local_curYear,

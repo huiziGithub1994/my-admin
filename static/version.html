@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>蓝墨水教育云平台</title>
+    <link rel="shortcut icon" href="/static/version/favicon.ico" />
+
+    <style>
+      body {
+        background-image: none;
+        font-family: '微软雅黑', 'Open Sans', Arial, Helvetica, Sans-Serif;
+      }
+      * {
+        margin: 0;
+      }
+
+      .head {
+        height: 80px;
+        line-height: 80px;
+        background: #5e80fe;
+      }
+      .head-inner {
+        width: 80%;
+        margin-left: 10%;
+      }
+      .head-title {
+        float: left;
+      }
+      .head-name {
+        font-size: 20px;
+        color: white;
+        border-right: 1px solid white;
+        padding-right: 15px;
+        margin-right: 10px;
+      }
+      .head-qs {
+        color: #333;
+      }
+      .head-back {
+        color: white;
+        float: right;
+      }
+      .head-back > div:hover {
+        cursor: pointer;
+      }
+      .head-back img {
+        position: relative;
+        top: 6px;
+        width: 26px;
+        height: 26px;
+      }
+      .article {
+        color: #333;
+      }
+      .article-con {
+        margin: 0 auto;
+        margin-top: 70px;
+        width: 580px;
+      }
+      .text-center {
+        text-align: center;
+        font-size: 14px;
+      }
+      .article-old {
+        font-size: 17px;
+      }
+      .article-old > span {
+        font-size: 22px;
+        color: #2aaffd;
+        margin: 0 5px;
+      }
+      .article-text {
+        margin-top: 20px;
+      }
+      .article-text > p {
+        margin-bottom: 10px;
+      }
+      .article-browser {
+        margin-top: 20px;
+        overflow: hidden;
+      }
+      .article-bropng {
+        float: left;
+        margin-right: 40px;
+      }
+      .article-bropng:hover {
+        cursor: pointer;
+        color: #25acfd;
+      }
+      .footer {
+        height: 30px;
+        line-height: 30px;
+        background: #5e80fe;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      .footer-copyright {
+        color: white;
+        font-size: 12px !important;
+      }
+      .download {
+        color: #ff7f27;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="head">
+      <div class="head-inner">
+        <div class="head-title">
+          <span class="head-name">蓝墨水教育云平台</span>
+          <span class="head-qs">常见问题</span>
+        </div>
+        <!-- <div class="head-back">
+          <div onclick="backToLogin()">
+            <img src="version/user.png" />返回登录
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div class="article">
+      <div class="article-con">
+        <div class="text-center">
+          <img src="version/tip.png" />
+        </div>
+        <p class="text-center article-old">
+          温馨提示:您的浏览器<span>太陈旧</span>了！
+        </p>
+        <div class="article-text">
+          <p>
+            我们检测到您的浏览器，无法完美支持系统的各项功能，需要升级后才能使用。
+          </p>
+          <p>
+            建议您使用以下浏览器<span class="download"> ( 点击下载 ) </span>:
+          </p>
+        </div>
+        <div class="article-browser text-center">
+          <div class="article-bropng" onclick="downloadBrowser('firefox')">
+            <img src="version/firefox.png" />
+            <p>Firefox</p>
+          </div>
+          <div class="article-bropng" onclick="downloadBrowser('chrome')">
+            <img src="version/chrome.png" />
+            <p>Chrome</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p class="footer-copyright text-center">
+        Copyright © <span id="year"></span> 湖南蓝墨水软件科技有限公司
+      </p>
+    </div>
+    <script>
+      //windows版本
+      // var isWin = (navigator.platform == "Win32") || (navigator.platform == "Windows"); // 确保为windows系统
+      // var isWin98 = isWin2000 = isWinXP = false;
+      // var sUserAgent = navigator.userAgent;
+      // if(isWin) {
+      //     isWinXP = sUserAgent.indexOf("Windows NT 5.1") > -1 || sUserAgent.indexOf("Windows Xp") > -1; //winxp
+      // }
+      //页面初始化
+      document.getElementById('year').innerHTML = new Date().getFullYear()
+      //下载浏览器
+      function downloadBrowser(browser) {
+        switch (browser) {
+          case 'firefox':
+            window.open('https://www.mozilla.org/zh-CN/firefox/')
+            break
+          case 'chrome':
+            window.open('http://browsehappy.osfipin.com/')
+            break
+        }
+      }
+      function backToLogin() {
+        window.location.href = '/'
+      }
+    </script>
+  </body>
+</html>

@@ -235,6 +235,43 @@ export const stuRouterMap = [
   }
 ]
 
+// 新高考选考
+export const xgkRouterMap = [
+  {
+    path: '/xgkpk',
+    component: Layout,
+    redirect: '/xgkpk/xgkpkcx',
+    name: 'Xgkpk',
+    meta: { title: '新高考排课', icon: 'example' },
+    children: [
+      {
+        path: 'xgkpkcx',
+        name: 'Xgkpkcx',
+        component: () => import('@/views/pkcx/index'),
+        meta: { title: '排课任务', icon: 'pkcx' }
+      },
+      {
+        path: 'xgkjxjh',
+        name: 'Xgkjxjh',
+        component: () => import('@/views/jxjh/index'),
+        meta: { title: '教学计划', icon: 'jxjh' }
+      },
+      {
+        path: 'xgkjxrw',
+        name: 'Xgkjxrw',
+        component: () => import('@/views/jxrwxgk/index'),
+        meta: { title: '教学任务', icon: 'pkgc' }
+      },
+      {
+        path: 'xgkpkgz',
+        name: 'Xgkpkgz',
+        component: () => import('@/views/pkgzXgk/index'),
+        meta: { title: '排课规则', icon: 'pkgz' }
+      }
+    ]
+  }
+]
+
 export const h5RouterMap = [
   {
     path: '/loginh5',
@@ -264,6 +301,7 @@ export default new Router({
     ...ptRouterMap,
     ...xkRouterMap,
     ...stuRouterMap,
+    ...xgkRouterMap,
     ...h5RouterMap
   ]
 })

@@ -71,6 +71,7 @@ export default {
     ]),
     routes() {
       const allRoutes = this.$router.options.routes
+      // 学生选课
       if (this.userType === '2') {
         return allRoutes.slice(10, 11)
       }
@@ -78,8 +79,10 @@ export default {
         return allRoutes.slice(0, 8)
       } else if (this.menutype === 'pt') {
         return [...allRoutes.slice(0, 7), ...allRoutes.slice(8, 9)]
-      } else {
+      } else if (this.menutype === 'xk') {
         return [...allRoutes.slice(0, 7), ...allRoutes.slice(9, 10)]
+      } else if (this.menutype === 'xgk') {
+        return [...allRoutes.slice(0, 7), ...allRoutes.slice(11, 12)]
       }
     },
     isCollapse() {

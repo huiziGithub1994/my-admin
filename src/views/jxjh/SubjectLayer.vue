@@ -53,16 +53,14 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="500px">
       <el-form :model="formData" :rules="rules" ref="ruleForm" label-width="100px">
         <el-form-item label="课程" prop="courseId">
-          <el-select v-model="formData.courseId" clearable>
+          <el-select v-model="formData.courseId" clearable :change="dialogSelectChange(formData.courseId)">
             <el-option v-for="(item,index) in courseOptionsFrom" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="分层名称" prop="courseLayerName">
           <el-input v-model="formData.courseLayerName"></el-input>
         </el-form-item>
-        <el-form-item label="课时(节/周)" prop="weekHours">
-          <el-input-number v-model="formData.weekHours" :min="1" :max="20"></el-input-number>
-        </el-form-item>
+        <el-form-item label="课时(节/周)" prop="weekHours">{{ formData.weekHours }}</el-form-item>
         <!-- 如果学生分层方式为按成绩分层时显示-->
         <template v-if="splitLayerType === 2">
           <el-form-item label="最低分" prop="lowScore">
@@ -318,6 +316,16 @@ export default {
     async editBtn() {
       if (!validEditBtn(this)) return
       setDatas(this.formData, this.multipleSelection[0])
+    },
+    dialogSelectChange(id) {
+      if (!id) {
+        this.formData.weekHours = ''
+        return
+      }
+      const filterItem = this.courseOptions.filter(item => {
+        return item.courseId === id
+      })
+      this.formData.weekHours = filterItem[0].sumWeek
     },
     // 弹窗中的保存按钮
     saveBtn() {

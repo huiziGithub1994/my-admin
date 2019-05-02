@@ -3,9 +3,12 @@
     <div class="nav-block">
       <el-steps :active="1" finish-status="success" simple>
         <el-step title="教学计划"></el-step>
+        <el-step title="教学任务" v-if="menutype == 'xgk'"></el-step>
         <el-step title="排课规则"></el-step>
-        <el-step title="排课过程"></el-step>
-        <el-step title="课表查询"></el-step>
+        <template v-if="menutype != 'xgk'">
+          <el-step title="排课过程"></el-step>
+          <el-step title="课表查询"></el-step>
+        </template>
       </el-steps>
     </div>
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
@@ -23,7 +26,8 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
-          <split-class-manage v-if="activeTabName == 4"/>
+          <split-class-manage v-if="activeTabName == 4&&menutype!='xgk'"/>
+          <split-class-xgk v-if="activeTabName == 4&&menutype=='xgk'"/>
         </el-tab-pane>
         <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
           <zb-classroom v-if="activeTabName == 5"/>
@@ -39,10 +43,12 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import BaseInfo from './BaseInfo' // 基础信息tab页组件
 import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
 import StuGrade from './StuGrade' // 学科分层及学时tab页组件（按成绩分层时）
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
+import SplitClassXgk from '../jxjhxgk/SplitClassXgk' // 新高考-选课分班
 
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
@@ -75,7 +81,8 @@ export default {
     StuGrade,
     ChooseCourse,
     SplitClassManage,
-    ZbClassroom
+    ZbClassroom,
+    SplitClassXgk
   },
   data() {
     return {
@@ -84,6 +91,9 @@ export default {
       tabDisabled: true,
       splitLayerType: undefined
     }
+  },
+  computed: {
+    ...mapGetters(['menutype'])
   },
   created() {
     if (
@@ -111,7 +121,9 @@ export default {
       if (temp <= 5) {
         this.activeTabName = temp + ''
       } else {
-        this.$router.push({ name: 'Pkgz' })
+        this.$router.push({
+          name: this.menutype === 'xgk' ? 'Xgkjxrw' : 'Pkgz'
+        })
       }
     },
     // 根据 ‘学生分层方式’展示不同的tab页 1:学生自由选择分层  2:按成绩分层
