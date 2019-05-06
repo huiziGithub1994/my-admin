@@ -104,7 +104,7 @@ export default {
   },
   async created() {
     if (this.menutype === 'xgk') {
-      Object.assign(this.data, { splitLayerType: '3' })
+      Object.assign(this.data, { arrangeType: '3', splitLayerType: '3' })
     }
     const { local_curYear, local_curTerm } = sessionStorage
     Object.assign(this.data, {

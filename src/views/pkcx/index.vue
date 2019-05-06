@@ -99,7 +99,7 @@ export default {
     return {
       listLoading: true,
       listQuery: {
-        'a.arrange_type01': '2',
+        'a.arrange_type01': '',
         'a.school_year01': '',
         'a.term_code01': '',
         'a.cur_status01': ''
@@ -124,6 +124,9 @@ export default {
     ...mapGetters(['curYear', 'curTerm', 'menutype'])
   },
   created() {
+    Object.assign(this.listQuery, {
+      'a.arrange_type01': this.menutype === 'xgk' ? '3' : '2'
+    })
     if (this.curTerm === '' || this.curYear === '') {
       this.$store.dispatch('GetInfo').then(() => {
         this.getInitData()
