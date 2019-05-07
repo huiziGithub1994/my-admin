@@ -19,10 +19,10 @@
         <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
           <subject-layer v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane :label="splitLayerType === 1 ? '导入学生选课' : '学生成绩'" name="3" :disabled="tabDisabled">
+        <el-tab-pane :label="splitLayerType === 2 ? '学生成绩' : '导入学生选课'" name="3" :disabled="tabDisabled">
           <template v-if="activeTabName == 3">
-            <choose-course v-if="splitLayerType == 1"/>
-            <stu-grade v-if="splitLayerType === 2"/>
+            <stu-grade v-if="splitLayerType == 2"/>
+            <choose-course v-else/>
           </template>
         </el-tab-pane>
         <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
