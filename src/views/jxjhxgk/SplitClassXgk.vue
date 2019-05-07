@@ -4,7 +4,7 @@
       <el-tab-pane label="分班设置" name="1">
         <split-class-setting v-if="activeTabName == '1'"/>
       </el-tab-pane>
-      <el-tab-pane label="分班及教室" name="2">
+      <el-tab-pane label="教学设置" name="2">
         <split-class-room v-if="activeTabName == '2'"/>
       </el-tab-pane>
     </el-tabs>

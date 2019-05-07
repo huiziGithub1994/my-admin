@@ -44,6 +44,7 @@ export default {
           { data: 'className', readOnly: true, trimWhitespace: true },
           {
             data: 'chargeTeaName',
+            readOnly: true,
             trimWhitespace: true,
             className: 'columnClass'
           }
