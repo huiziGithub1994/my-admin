@@ -183,13 +183,14 @@ export default {
     async fetchCourseOption() {
       const res = await getCourseOptions({ arrangeId: this.arrangeId })
       let allLayerLen = 0
-      res.DATA.forEach(item => {
+      const filterData = res.DATA.filter(item => item.layersList.length)
+      filterData.forEach(item => {
         Object.assign(item, { allName: item.courseName })
         this.$set(this.layersData, item.courseId, [])
         allLayerLen = allLayerLen + item.layersList.length
       })
       this.allLayerLen = allLayerLen
-      this.courseOptions = res.DATA
+      this.courseOptions = filterData
     },
     // 获取表格数据
     async fetchData() {
