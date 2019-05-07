@@ -24,24 +24,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       usePostCSS: true
     })
   },
+  // 此选项控制是否生成，以及如何生成 source map。
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
 
   // these devServer options should be customized in /config/index.js
   devServer: {
     clientLogLevel: 'warning',
-    historyApiFallback: true,
-    hot: true,
-    compress: true,
-    host: HOST || config.dev.host,
-    port: PORT || config.dev.port,
-    open: config.dev.autoOpenBrowser,
+    historyApiFallback: true, // 当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html。
+    hot: true, // 启用 webpack 的 模块热替换 功能
+    compress: true, // 一切服务都启用 gzip 压缩
+    host: HOST || config.dev.host, // 指定使用一个 host。默认是 localhost
+    port: PORT || config.dev.port, // 指定要监听请求的端口号
+    open: config.dev.autoOpenBrowser, // 告诉 dev-server 在 server 启动后打开浏览器
+    // 当出现编译器错误或警告时，在浏览器中显示全屏覆盖层
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
-    quiet: true, // necessary for FriendlyErrorsPlugin
+    // 启用 devServer.quiet 后，除了初始启动信息之外的任何内容都不会被打印到控制台。
+    // 这也意味着来自 webpack 的错误或警告在控制台不可见。
+    quiet: true,
+    // 与监视文件相关的控制选项。
     watchOptions: {
       poll: config.dev.poll
     }

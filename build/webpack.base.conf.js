@@ -21,6 +21,7 @@ const createLintingRule = () => ({
 })
 
 module.exports = {
+  // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
@@ -33,8 +34,11 @@ module.exports = {
         ? config.build.assetsPublicPath
         : config.dev.assetsPublicPath
   },
+  // 配置模块如何解析。
   resolve: {
+    // 自动解析确定的扩展
     extensions: ['.js', '.vue', '.json'],
+    // 创建 import 或 require 的别名，来确保模块引入变得更简单
     alias: {
       '@': resolve('src')
     }
@@ -91,7 +95,11 @@ module.exports = {
       }
     ]
   },
+  // plugins 选项用于以各种方式自定义 webpack 构建过程
   plugins: [new VueLoaderPlugin()],
+  // 是一个对象，其中每个属性都是 Node.js 全局变量或模块的名称.
+  // 这些选项可以配置是否 polyfill 或 mock 某些 Node.js 全局变量和模块。
+  // 这可以使最初为 Node.js 环境编写的代码，在其他环境（如浏览器）中运行。
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).
