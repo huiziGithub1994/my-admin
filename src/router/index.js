@@ -267,6 +267,18 @@ export const xgkRouterMap = [
         name: 'Xgkpkgz',
         component: () => import('@/views/pkgzXgk/index'),
         meta: { title: '排课规则', icon: 'pkgz' }
+      },
+      {
+        path: 'xgkkspk',
+        name: 'Xgkkspk',
+        component: () => import('@/views/kspkPt/index'),
+        meta: { title: '开始排课', icon: 'kspk' }
+      },
+      {
+        path: 'xgkkbcx',
+        name: 'Xgkkbcx',
+        component: () => import('@/views/kbcxPt/index'),
+        meta: { title: '课表查询', icon: 'table' }
       }
     ]
   }

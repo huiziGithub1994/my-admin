@@ -7,69 +7,15 @@
       </div>
     </div>
     <div class="data-area">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading">
-        <el-table-column label="学段/专业" property="segName"></el-table-column>
-        <el-table-column label="年级" property="gradeName"></el-table-column>
-        <el-table-column label="教学班级" property="className"></el-table-column>
-        <el-table-column label="科目" property="chargeTeaName"></el-table-column>
-        <el-table-column label="政治">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading" border>
+        <el-table-column label="学段/专业" property="segName" fixed width="100px"></el-table-column>
+        <el-table-column label="年级" property="gradeName" fixed></el-table-column>
+        <el-table-column label="教学班级" property="className" fixed></el-table-column>
+        <el-table-column label="科目" property="chargeTeaName" min-width="250px" show-overflow-tooltip fixed></el-table-column>
+        <el-table-column :label="item.label" v-for="(item,index) in tableColumns" :key="item.property" width="100px">
           <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="历史">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="地理">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="物理">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="化学">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="生物">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="节数">
-          <template slot-scope="scope">
-            <split-input :row="scope.row"/>
+            <el-input v-model="scope.row[item.property]" v-if="scope.row.chargeTeaName.indexOf(item.label)>-1 || index&&scope.row.chargeTeaName.indexOf(tableColumns[index-1].label)>-1"/>
+            <div v-else>{{ scope.row[item.property] }}</div>
           </template>
         </el-table-column>
       </el-table>
@@ -77,13 +23,10 @@
   </div>
 </template>
 <script>
-import SplitInput from './SplitInput'
+import { qryCourseTaskList } from '@/api/skrwPt'
 export default {
-  components: {
-    SplitInput
-  },
   data() {
-    const h = 295
+    const h = 240
     const tableH = document.body.clientHeight - h
     return {
       tableH,
@@ -93,13 +36,65 @@ export default {
       showTable: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       gradeStr: sessionStorage.getItem('gradeStr'),
-      tableData: []
+      tableColumns: [
+        { label: '政治', property: 'col1' },
+        { label: '节数', property: 'col2' },
+        { label: '历史', property: 'col3' },
+        { label: '节数', property: 'col4' },
+        { label: '地理', property: 'col5' },
+        { label: '节数', property: 'col6' },
+        { label: '物理', property: 'col7' },
+        { label: '节数', property: 'col8' },
+        { label: '化学', property: 'col9' },
+        { label: '节数', property: 'col10' },
+        { label: '生物', property: 'col11' },
+        { label: '节数', property: 'col12' },
+        { label: '技术', property: 'col13' },
+        { label: '节数', property: 'col14' }
+      ],
+      tableData: [
+        {
+          arrangeId: 'c7f54c579e94448794f637cc90b758aa',
+          chargeTeaName: '化学选考、地理选考',
+          classId: '66eac589488042198b22f3e0c330c9a1',
+          className: 'C1701',
+          col1: '李静',
+          col2: '4',
+          col3: '颜婷',
+          col4: '4',
+          col5: '彭阳',
+          col6: '4',
+          col7: '张长鹰',
+          col8: '2',
+          col9: '黄德昌',
+          col10: '2',
+          col11: '张鑫慧',
+          col12: '2',
+          col13: '张鑫慧',
+          col14: '2',
+          rsId: 'dab9b9aa049e4838a16de2e578c24d55',
+          segId: 'db40e982d29144309c568f8ee8449721',
+          segName: '初中',
+          gradeName: '初二'
+        }
+      ]
     }
   },
   created() {
-    // this.getTableData()
+    this.getTableData()
   },
-  methods: {}
+  methods: {
+    async getTableData() {
+      this.loading = true
+      await qryCourseTaskList({
+        arrangeId: this.arrangeId,
+        gradeIdsStr: 'c9fe41ddc32643779c31df8b0e7dadc7'
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    saveArrange() {}
+  }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -108,11 +103,6 @@ export default {
   > .right {
     float: right;
   }
-}
-.tree-wapper {
-  height: 300px;
-  border: 1px solid #dddddd;
-  overflow: auto;
 }
 </style>
 <style>

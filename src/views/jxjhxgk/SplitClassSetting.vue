@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div v-area>
       <!-- 分班设置 -->
       <condition>
         <div class="condition">
@@ -23,9 +23,9 @@
     </div>
     <div class="table-outer">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading">
-        <el-table-column label="走班(定二)班级名称" property="teachingClass"></el-table-column>
-        <el-table-column label="人数" property="stuSum"></el-table-column>
-        <el-table-column label="选考科目" property="adminClassName"></el-table-column>
+        <el-table-column label="走班(定二)班级名称" property="teachingClass" width="150px"></el-table-column>
+        <el-table-column label="人数" property="stuSum" width="70px"></el-table-column>
+        <el-table-column label="选考科目" property="adminClassName" width="250px"></el-table-column>
         <el-table-column label="其他选考科目及走班人数">
           <el-table-column v-for="item in tableColumns" :key="item.property" :label="item.label" :property="item.property">
             <!-- <template slot-scope="scope">
