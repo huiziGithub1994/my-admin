@@ -3,81 +3,60 @@
   <div>
     <div class="opera-area">
       <div class="right">
-        <el-button type="primary" plain @click="saveArrange" :loading="saveBtn">保存</el-button>
+        <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">保存</el-button>
       </div>
     </div>
-    <div class="data-area">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading" border>
-        <el-table-column label="学段/专业" property="segName" fixed width="100px"></el-table-column>
-        <el-table-column label="年级" property="gradeName" fixed></el-table-column>
-        <el-table-column label="教学班级" property="className" fixed></el-table-column>
-        <el-table-column label="科目" property="chargeTeaName" min-width="250px" show-overflow-tooltip fixed></el-table-column>
-        <el-table-column :label="item.label" v-for="(item,index) in tableColumns" :key="item.property" width="100px">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row[item.property]" v-if="scope.row.chargeTeaName.indexOf(item.label)>-1 || index&&scope.row.chargeTeaName.indexOf(tableColumns[index-1].label)>-1"/>
-            <div v-else>{{ scope.row[item.property] }}</div>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div class="data-area" v-loading="loading">
+      <hot-table :settings="settings" ref="hotTableComponent" v-if="showTable"></hot-table>
     </div>
   </div>
 </template>
 <script>
-import { qryCourseTaskList } from '@/api/skrwPt'
+import { qryArrangeDetail } from '@/api/pkcx'
+import { HotTable } from '@handsontable/vue'
+import { qryCourseTaskList, saveCourseTaskList } from '@/api/skrwPt'
+import { numValidator } from '@/utils/validate'
 export default {
+  components: {
+    HotTable
+  },
   data() {
     const h = 240
     const tableH = document.body.clientHeight - h
     return {
       tableH,
       loading: false,
-      saveBtn: false, // 保存任课安排
+      saveArrangeLoading: false, // 保存按钮
       hotInstance: null,
       showTable: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
-      gradeStr: sessionStorage.getItem('gradeStr'),
-      tableColumns: [
-        { label: '政治', property: 'col1' },
-        { label: '节数', property: 'col2' },
-        { label: '历史', property: 'col3' },
-        { label: '节数', property: 'col4' },
-        { label: '地理', property: 'col5' },
-        { label: '节数', property: 'col6' },
-        { label: '物理', property: 'col7' },
-        { label: '节数', property: 'col8' },
-        { label: '化学', property: 'col9' },
-        { label: '节数', property: 'col10' },
-        { label: '生物', property: 'col11' },
-        { label: '节数', property: 'col12' },
-        { label: '技术', property: 'col13' },
-        { label: '节数', property: 'col14' }
-      ],
-      tableData: [
-        {
-          arrangeId: 'c7f54c579e94448794f637cc90b758aa',
-          chargeTeaName: '化学选考、地理选考',
-          classId: '66eac589488042198b22f3e0c330c9a1',
-          className: 'C1701',
-          col1: '李静',
-          col2: '4',
-          col3: '颜婷',
-          col4: '4',
-          col5: '彭阳',
-          col6: '4',
-          col7: '张长鹰',
-          col8: '2',
-          col9: '黄德昌',
-          col10: '2',
-          col11: '张鑫慧',
-          col12: '2',
-          col13: '张鑫慧',
-          col14: '2',
-          rsId: 'dab9b9aa049e4838a16de2e578c24d55',
-          segId: 'db40e982d29144309c568f8ee8449721',
-          segName: '初中',
-          gradeName: '初二'
-        }
-      ]
+      gradeStr: '',
+      // 表格数据
+      remoteHeaders: [], // 保存时需要的参数
+      settings: {
+        className: 'htCenter',
+        fixedColumnsLeft: 4,
+        data: null,
+        dataSchema: {
+          segName: null,
+          gradeName: null,
+          className: null,
+          chargeTeaName: null
+        },
+        rowHeaders: true,
+        colHeaders: ['学段/专业', '年 级', '班级名称', '班 主 任'],
+        columns: [
+          { data: 'segName', readOnly: true, trimWhitespace: true },
+          { data: 'gradeName', readOnly: true, trimWhitespace: true },
+          { data: 'className', readOnly: true, trimWhitespace: true },
+          {
+            data: 'chargeTeaName',
+            trimWhitespace: true,
+            className: 'columnClass'
+          }
+        ],
+        height: document.body.clientHeight - 250
+      }
     }
   },
   created() {
@@ -85,15 +64,84 @@ export default {
   },
   methods: {
     async getTableData() {
+      // 获取表单数据
+      const base = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { gradeId } = base.DATA
+      this.gradeStr = gradeId
       this.loading = true
-      await qryCourseTaskList({
+      const res = await qryCourseTaskList({
         arrangeId: this.arrangeId,
-        gradeIdsStr: 'c9fe41ddc32643779c31df8b0e7dadc7'
+        gradeIdsStr: gradeId
       }).finally(() => {
         this.loading = false
       })
+      const { headers, classList } = res.DATA
+      this.remoteHeaders = [...headers] // 保存任课安排时需要的参数
+      this.settings.colHeaders.push(...headers)
+      const len = headers.length
+      const columns = []
+      const dataSchema = {}
+      for (let i = 1; i <= len; i++) {
+        const temp = {
+          data: `col${i}`,
+          trimWhitespace: true
+        }
+        if (i % 2 === 0) {
+          Object.assign(temp, {
+            validator: numValidator,
+            allowInvalid: true
+          })
+        } else {
+          Object.assign(temp, {
+            className: 'columnClass'
+          })
+        }
+        columns.push(temp)
+        dataSchema[`col${i}`] = null
+      }
+      this.settings.columns.push(...columns)
+      Object.assign(this.settings.dataSchema, dataSchema)
+      this.showTable = true
+      this.$nextTick(() => {
+        this.hotInstance = this.$refs.hotTableComponent.hotInstance
+        this.hotInstance.loadData(classList)
+      })
     },
-    saveArrange() {}
+    // 保存按钮
+    async saveArrange() {
+      const params = {
+        arrangeId: this.arrangeId,
+        headerStr2: this.remoteHeaders.join(','),
+        gradeStr: this.gradeStr,
+        classList: this.hotInstance.getSourceData()
+      }
+      const len = params.classList.length
+      const validateRows = []
+      for (let i = 0; i <= len; i++) {
+        validateRows.push(i)
+      }
+      this.hotInstance.validateRows(validateRows, async valid => {
+        if (valid) {
+          // if (!this.validNullLine(params.classList, len)) {
+          //   this.$message.warning('所有单元格都必须填写')
+          //   return
+          // }
+          this.saveArrangeLoading = true
+          const res = await saveCourseTaskList(params).finally(() => {
+            this.saveArrangeLoading = false
+          })
+          sessionStorage.setItem('gradeStr', this.gradeStr)
+          const { classList } = res.DATA
+          this.hotInstance.loadData(classList)
+          this.$message.success(res.MSG)
+          this.$emit('updateTab', 'two')
+        } else {
+          this.$message.warning('字段校验不通过')
+        }
+      })
+    }
   }
 }
 </script>
@@ -103,6 +151,9 @@ export default {
   > .right {
     float: right;
   }
+}
+.data-area {
+  padding-top: 10px;
 }
 </style>
 <style>

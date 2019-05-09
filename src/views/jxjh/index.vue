@@ -5,10 +5,8 @@
         <el-step title="教学计划"></el-step>
         <el-step title="教学任务" v-if="menutype == 'xgk'"></el-step>
         <el-step title="排课规则"></el-step>
-        <template v-if="menutype != 'xgk'">
-          <el-step title="排课过程"></el-step>
-          <el-step title="课表查询"></el-step>
-        </template>
+        <el-step title="排课过程"></el-step>
+        <el-step title="课表查询"></el-step>
       </el-steps>
     </div>
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">

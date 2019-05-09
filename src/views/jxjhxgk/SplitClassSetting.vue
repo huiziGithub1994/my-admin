@@ -12,13 +12,13 @@
           <el-input placeholder="41" v-model.trim="search['theBestMaxQty']" clearable></el-input>
         </div>
         <div class="condition next">
-          <label>班级个数</label>
-          <el-input placeholder="8" v-model.trim="search['theClassSum']" clearable></el-input>
+          <label>平均人数/班</label>
+          <el-input placeholder="30" v-model.trim="search['theAvgQty']" clearable></el-input>
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain>估算分班</el-button>
-        <el-button type="primary" plain>保存并分班</el-button>
+        <el-button type="primary" plain @click="splitClass">估算分班</el-button>
+        <el-button type="primary" plain @click="saveClass">保存分班</el-button>
       </operation>
     </div>
     <div class="table-outer">
@@ -44,7 +44,7 @@
   </div>
 </template>
 <script>
-import { splitStu2AdminClass } from '@/api/jxjhXgk'
+import { splitStu2AdminClass, saveMoveCourseList } from '@/api/jxjhXgk'
 export default {
   data() {
     const h = 295
@@ -56,7 +56,7 @@ export default {
       search: {
         theBestMinQty: undefined,
         theBestMaxQty: undefined,
-        theClassSum: undefined
+        theAvgQty: undefined
       },
       activePos: {}, // input输入错误的位置
       tableColumns: [
@@ -68,130 +68,49 @@ export default {
         { label: '生物', property: 'swSum' },
         { label: '技术', property: 'jsSum' }
       ],
-      tableData: [
-        {
-          dlSum: 0,
-          stuSum: 32,
-          lsSum: 0,
-          teachingClass: '(定)高二1班',
-          zzSum: 0,
-          adminClassName: '1,化学选考,地理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 1
-        },
-        {
-          dlSum: 0,
-          stuSum: 29,
-          lsSum: 0,
-          teachingClass: '(定)高二2班',
-          zzSum: 0,
-          adminClassName: '2,地理选考,生物选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 2
-        },
-        {
-          dlSum: 0,
-          stuSum: 36,
-          lsSum: 0,
-          teachingClass: '(定)高二3班',
-          zzSum: 0,
-          adminClassName: '3,化学选考,物理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 3
-        },
-        {
-          dlSum: 0,
-          stuSum: 39,
-          lsSum: 0,
-          teachingClass: '(定)高二4班',
-          zzSum: 0,
-          adminClassName: '4,历史选考,政治选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 4
-        },
-        {
-          dlSum: 0,
-          stuSum: 32,
-          lsSum: 0,
-          teachingClass: '(定)高二5班',
-          zzSum: 0,
-          adminClassName: '5,政治选考,物理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 5
-        },
-        {
-          dlSum: 0,
-          stuSum: 37,
-          lsSum: 0,
-          teachingClass: '(定)高二6班',
-          zzSum: 0,
-          adminClassName: '6,历史选考,物理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 6
-        },
-        {
-          dlSum: 0,
-          stuSum: 34,
-          lsSum: 0,
-          teachingClass: '(定)高二7班',
-          zzSum: 0,
-          adminClassName: '7,化学选考,政治选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 7
-        },
-        {
-          dlSum: 0,
-          stuSum: 26,
-          lsSum: 0,
-          teachingClass: '(定)高二8班',
-          zzSum: 0,
-          adminClassName: '化学选考,历史选考,9',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 8
-        }
-      ]
+      tableData: []
     }
   },
   created() {
     this.getTableData()
   },
   methods: {
-    async getTableData() {
+    async getTableData() {},
+    // 估算分班按钮
+    async splitClass() {
+      const label = ['最小人数/班', '最大人数/班', '平均人数/班']
+      const keys = Object.keys(this.search)
+      let valid = true
+      for (let i = 0; i < label.length; i++) {
+        const val = this.search[keys[i]]
+        if (!/^[0-9]+$/.test(val)) {
+          this.$message.error(`"${label[i]}" 必须为数字`)
+          valid = false
+          break
+        }
+        this.search[keys[i]] = +val
+      }
+      if (!valid) return
       const res = await splitStu2AdminClass({
         arrangeId: this.arrangeId,
         ...this.search
       })
+      const h = this.$createElement
+      this.$notify({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, res.MSG),
+        duration: 8 * 1000
+      })
       this.tableData = res.DATA
     },
-    // 输入框的校验
-    validInput(val, property, seq) {
-      console.log(44)
-      const reg = /^\d+$/
-      this.$set(this.activePos, `${property}${seq}`, !reg.test(val))
+    // 保存分班
+    async saveClass() {
+      if (!this.tableData.length) {
+        this.$message.error('请先估算分班后，再点击保存分班')
+        return
+      }
+      const res = await saveMoveCourseList({ arrangeId: this.arrangeId })
+      this.$message.success(res.MSG)
     }
   }
 }

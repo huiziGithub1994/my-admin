@@ -1,4 +1,4 @@
-<!-- 授课录入-->
+<!-- 行政班教学任务-->
 <template>
   <div>
     <div class="opera-area">
@@ -14,6 +14,7 @@
 <script>
 import { HotTable } from '@handsontable/vue'
 import { qryCourseTaskList, splitTask } from '@/api/skrwPt'
+import { numValidator } from '@/utils/validate'
 export default {
   components: {
     HotTable
@@ -37,16 +38,11 @@ export default {
           chargeTeaName: null
         },
         rowHeaders: true,
-        colHeaders: ['学段/专业', '年级', '行政班', '班主任'],
+        colHeaders: ['学段/专业', '年级', '行政班'],
         columns: [
           { data: 'segName', readOnly: true, trimWhitespace: true },
           { data: 'gradeName', readOnly: true, trimWhitespace: true },
-          { data: 'className', readOnly: true, trimWhitespace: true },
-          {
-            data: 'chargeTeaName',
-            trimWhitespace: true,
-            className: 'columnClass'
-          }
+          { data: 'className', readOnly: true, trimWhitespace: true }
         ],
         height: document.body.clientHeight - 270
       }
@@ -83,7 +79,7 @@ export default {
         }
         if (i % 2 === 0) {
           Object.assign(temp, {
-            validator: this.numValidator,
+            validator: numValidator,
             allowInvalid: true
           })
         } else {
@@ -101,38 +97,6 @@ export default {
         this.hotInstance = this.$refs.hotTableComponent.hotInstance
         this.hotInstance.loadData(classList)
       })
-    },
-    numValidator(value, callback) {
-      if (value !== '' && value !== undefined && value !== null) {
-        if (value.indexOf('+') > -1) {
-          const splitArr = value.split('+')
-          let flag = true
-          for (let i = 0; i < splitArr.length; i++) {
-            const tVal = splitArr[i]
-            if (typeof +tVal !== 'number') {
-              flag = false
-              break
-            } else if (+tVal % 1 !== 0 || tVal.indexOf('.') > -1) {
-              flag = false
-              break
-            }
-          }
-          callback(flag)
-        } else {
-          if (typeof +value !== 'number') {
-            callback(false)
-          } else {
-            const valueStr = value + ''
-            if (+value % 1 === 0 && valueStr.indexOf('.') < 0) {
-              callback(true)
-            } else {
-              callback(false)
-            }
-          }
-        }
-      } else {
-        callback(true)
-      }
     },
     // 保存任课安排
     async saveArrange() {},

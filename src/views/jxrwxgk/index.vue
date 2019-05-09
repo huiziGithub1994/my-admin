@@ -5,6 +5,8 @@
         <el-step title="教学计划"></el-step>
         <el-step title="教学任务"></el-step>
         <el-step title="排课规则"></el-step>
+        <el-step title="排课过程"></el-step>
+        <el-step title="课表查询"></el-step>
       </el-steps>
     </div>
     <div class="jxjh-tabs">

@@ -30,3 +30,37 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+
+// 普通排课-授课录入、新高考排课-走班教学任务
+export function numValidator(value, callback) {
+  if (value !== '' && value !== undefined && value !== null) {
+    if (value.indexOf('+') > -1) {
+      const splitArr = value.split('+')
+      let flag = true
+      for (let i = 0; i < splitArr.length; i++) {
+        const tVal = splitArr[i]
+        if (typeof +tVal !== 'number') {
+          flag = false
+          break
+        } else if (+tVal % 1 !== 0 || tVal.indexOf('.') > -1) {
+          flag = false
+          break
+        }
+      }
+      callback(flag)
+    } else {
+      if (typeof +value !== 'number') {
+        callback(false)
+      } else {
+        const valueStr = value + ''
+        if (+value % 1 === 0 && valueStr.indexOf('.') < 0) {
+          callback(true)
+        } else {
+          callback(false)
+        }
+      }
+    }
+  } else {
+    callback(true)
+  }
+}
