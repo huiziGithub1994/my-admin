@@ -22,11 +22,10 @@
     </div>
     <div>
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :height="tableH" highlight-current-row style="width: 100%">
-        <el-table-column type="index" width="55" fixed></el-table-column>
-        <el-table-column label="姓名" property="segName"></el-table-column>
-        <el-table-column label="课程" property="gradeName"></el-table-column>
-        <el-table-column label="班级" property="className"></el-table-column>
-        <el-table-column label="每周节次" property="className"></el-table-column>
+        <el-table-column label="姓名" property="teaName" width="120px"></el-table-column>
+        <el-table-column label="课程" property="courseName"></el-table-column>
+        <el-table-column label="班级" property="className" show-overflow-tooltip></el-table-column>
+        <el-table-column label="每周节次" property="classHours"></el-table-column>
       </el-table>
     </div>
   </div>

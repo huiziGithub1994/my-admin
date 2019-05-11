@@ -108,21 +108,16 @@ export default {
       this.loading = true
       const res = await qryCourseTaskList({
         arrangeId: this.arrangeId,
-        gradeIdsStr: this.gradeStr
+        gradeIdsStr: this.gradeStr,
+        moveFlag: 0
       }).finally(() => {
         this.loading = false
       })
       if (!Object.keys(res.DATA).length) return
       const { headers, classList } = res.DATA
-      const headerArr = []
-      if (typeof headers === 'string') {
-        headerArr.push(...headers.split(','))
-      } else {
-        headerArr.push(...headers)
-      }
-      this.remoteHeaders = [...headerArr] // 保存任课安排时需要的参数
-      this.settings.colHeaders.push(...headerArr)
-      const len = headerArr.length
+      this.remoteHeaders = [...headers] // 保存任课安排时需要的参数
+      this.settings.colHeaders.push(...headers)
+      const len = headers.length
       const columns = []
       const dataSchema = {}
       for (let i = 1; i <= len; i++) {

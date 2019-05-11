@@ -3,6 +3,7 @@
   <div>
     <div class="opera-area">
       <div class="right">
+        <el-button type="primary" plain @click="splitTaskBtn" :loading="splitTaskLoading">分拆教学任务</el-button>
         <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">保存</el-button>
       </div>
     </div>
@@ -14,7 +15,7 @@
 <script>
 import { qryArrangeDetail } from '@/api/pkcx'
 import { HotTable } from '@handsontable/vue'
-import { qryCourseTaskList, saveCourseTaskList } from '@/api/skrwPt'
+import { qryCourseTaskList, saveCourseTaskList, splitTask } from '@/api/skrwPt'
 import { numValidator } from '@/utils/validate'
 export default {
   components: {
@@ -27,6 +28,7 @@ export default {
       tableH,
       loading: false,
       saveArrangeLoading: false, // 保存按钮
+      splitTaskLoading: false, // 分拆教学任务
       hotInstance: null,
       showTable: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
@@ -44,11 +46,16 @@ export default {
           chargeTeaName: null
         },
         rowHeaders: true,
-        colHeaders: ['学段/专业', '年 级', '班行政班级名称'],
+        colHeaders: ['学段/专业', '年 级', '班行政班级名称', '班 主 任'],
         columns: [
           { data: 'segName', readOnly: true, trimWhitespace: true },
           { data: 'gradeName', readOnly: true, trimWhitespace: true },
-          { data: 'className', readOnly: true, trimWhitespace: true }
+          { data: 'className', readOnly: true, trimWhitespace: true },
+          {
+            data: 'chargeTeaName',
+            trimWhitespace: true,
+            className: 'columnClass'
+          }
         ],
         height: document.body.clientHeight - 250
       }
@@ -58,6 +65,14 @@ export default {
     this.getTableData()
   },
   methods: {
+    // 分拆教学任务
+    async splitTaskBtn() {
+      this.splitTaskLoading = true
+      const res = await splitTask({ arrangeId: this.arrangeId }).finally(() => {
+        this.splitTaskLoading = false
+      })
+      if (res.SUCCESS) this.$message.success(res.MSG)
+    },
     async getTableData() {
       // 获取表单数据
       const base = await qryArrangeDetail({
