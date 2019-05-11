@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 分班及教室-->
+    <!-- 教学班教学设置-->
     <div class="opera-area">
       <p class="tip">
         <label>温馨提示：</label>下面表格中“常用教室”列所选中的数据不能相同。
@@ -28,6 +28,8 @@
 <script>
 import { qryArrangeDetail } from '@/api/pkcx'
 import { qryClassesByGradeId } from '@/api/njbj'
+import { qryMove2ClassList } from '@/api/jxjhXgk'
+
 export default {
   data() {
     const h = 295
@@ -38,96 +40,30 @@ export default {
       tableH,
       // 教室信息
       roomOptions: [],
-      tableData: [
-        {
-          dlSum: 0,
-          stuSum: 32,
-          lsSum: 0,
-          teachingClass: '(定)高二1班',
-          zzSum: 0,
-          adminClassName: '1,化学选考,地理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 1,
-          roomName: '101'
-        },
-        {
-          dlSum: 0,
-          stuSum: 29,
-          lsSum: 0,
-          teachingClass: '(定)高二2班',
-          zzSum: 0,
-          adminClassName: '2,地理选考,生物选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 2,
-          roomName: ''
-        },
-        {
-          dlSum: 0,
-          stuSum: 36,
-          lsSum: 0,
-          teachingClass: '(定)高二3班',
-          zzSum: 0,
-          adminClassName: '3,化学选考,物理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 3,
-          roomName: ''
-        },
-        {
-          dlSum: 0,
-          stuSum: 39,
-          lsSum: 0,
-          teachingClass: '(定)高二4班',
-          zzSum: 0,
-          adminClassName: '4,历史选考,政治选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 4,
-          roomName: ''
-        },
-        {
-          dlSum: 0,
-          stuSum: 32,
-          lsSum: 0,
-          teachingClass: '(定)高二5班',
-          zzSum: 0,
-          adminClassName: '5,政治选考,物理选考',
-          wlSum: 0,
-          jsSum: 0,
-          hxSum: 0,
-          swSum: 0,
-          seq: 5,
-          roomName: ''
-        }
-      ]
+      tableData: []
     }
   },
   created() {
     this.getArrangeDetail()
   },
   methods: {
-    // 获取任务信息
+    // 获取任务信息，得到年级id
     async getArrangeDetail() {
       const res = await qryArrangeDetail({
         arrangeId: this.arrangeId
       })
       this.getGradeData(res.DATA.gradeId)
     },
+    // 根据年级id获取教室信息
     async getGradeData(gradeId) {
       const res = await qryClassesByGradeId({ gradeId })
       this.roomOptions = res.DATA
+      this.getTableData()
     },
-    async getTableData(gradeId) {},
+    async getTableData() {
+      const res = await qryMove2ClassList({ arrangeId: this.arrangeId })
+      this.tableData = res.DATA
+    },
     // 保存按钮
     async saveBtn() {}
   }

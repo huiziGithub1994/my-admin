@@ -3,30 +3,36 @@
   <div>
     <div class="opera-area">
       <div class="right">
-        <el-button type="primary" plain @click="saveArrange" :loading="saveBtn">保存</el-button>
+        <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">保存</el-button>
       </div>
     </div>
     <div class="data-area" v-loading="loading">
-      <hot-table :settings="settings" ref="hotTableComponent"></hot-table>
+      <hot-table :settings="settings" ref="hotTableComponent" v-if="showTable"></hot-table>
     </div>
   </div>
 </template>
 <script>
+import { qryArrangeDetail } from '@/api/pkcx'
 import { HotTable } from '@handsontable/vue'
-import { qryCourseTaskList, splitTask } from '@/api/skrwPt'
+import { qryCourseTaskList, saveCourseTaskList } from '@/api/skrwPt'
 import { numValidator } from '@/utils/validate'
 export default {
   components: {
     HotTable
   },
   data() {
+    const h = 240
+    const tableH = document.body.clientHeight - h
     return {
+      tableH,
       loading: false,
-      saveBtn: false, // 保存任课安排
+      saveArrangeLoading: false, // 保存按钮
       hotInstance: null,
       showTable: false,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
-      gradeStr: sessionStorage.getItem('gradeStr'),
+      gradeStr: '',
+      // 表格数据
+      remoteHeaders: [], // 保存时需要的参数
       settings: {
         className: 'htCenter',
         fixedColumnsLeft: 4,
@@ -38,35 +44,37 @@ export default {
           chargeTeaName: null
         },
         rowHeaders: true,
-        colHeaders: ['学段/专业', '年级', '行政班'],
+        colHeaders: ['学段/专业', '年 级', '班行政班级名称'],
         columns: [
           { data: 'segName', readOnly: true, trimWhitespace: true },
           { data: 'gradeName', readOnly: true, trimWhitespace: true },
           { data: 'className', readOnly: true, trimWhitespace: true }
         ],
-        height: document.body.clientHeight - 270
+        height: document.body.clientHeight - 250
       }
     }
   },
   created() {
-    // this.getTableData()
+    this.getTableData()
   },
   methods: {
     async getTableData() {
+      // 获取表单数据
+      const base = await qryArrangeDetail({
+        arrangeId: this.arrangeId
+      })
+      const { gradeId } = base.DATA
       this.loading = true
       const res = await qryCourseTaskList({
         arrangeId: this.arrangeId,
-        gradeIdsStr: this.gradeStr
+        gradeId,
+        moveFlag: 1
       }).finally(() => {
         this.loading = false
       })
+      if (!Object.keys(res.DATA).length) return
       const { headers, classList } = res.DATA
-      const headerArr = []
-      if (typeof headers === 'string') {
-        headerArr.push(...headers.split(','))
-      } else {
-        headerArr.push(...headers)
-      }
+      const headerArr = headers
       this.remoteHeaders = [...headerArr] // 保存任课安排时需要的参数
       this.settings.colHeaders.push(...headerArr)
       const len = headerArr.length
@@ -98,36 +106,41 @@ export default {
         this.hotInstance.loadData(classList)
       })
     },
-    // 保存任课安排
-    async saveArrange() {},
-    validNullLine(data, len) {
-      const schemaKeys = Object.keys(this.settings.dataSchema)
-      const kLen = schemaKeys.length
-      let isContinue = true
-      for (let i = 0; i < len; i++) {
-        for (let j = 0; j < kLen; j++) {
-          const dataKey = schemaKeys[j]
-          if (!data[i][dataKey]) {
-            isContinue = false
-            break
-          }
-        }
-        if (!isContinue) break
+    // 保存按钮
+    async saveArrange() {
+      const tableData = this.hotInstance.getSourceData()
+      const params = {
+        arrangeId: this.arrangeId,
+        headerStr2: this.remoteHeaders.join(','),
+        classList: tableData
       }
-      return isContinue
-    },
-    // 分拆教学任务
-    async splitTaskBtn() {
-      this.splitTaskLoading = true
-      const res = await splitTask({ arrangeId: this.arrangeId }).finally(() => {
-        this.splitTaskLoading = false
+      const len = params.classList.length
+      const validateRows = []
+      for (let i = 0; i <= len; i++) {
+        tableData[i] && (tableData[i].moveFlag = 1)
+        validateRows.push(i)
+      }
+      this.hotInstance.validateRows(validateRows, async valid => {
+        if (valid) {
+          // if (!this.validNullLine(params.classList, len)) {
+          //   this.$message.warning('所有单元格都必须填写')
+          //   return
+          // }
+          this.saveArrangeLoading = true
+          const res = await saveCourseTaskList(params).finally(() => {
+            this.saveArrangeLoading = false
+          })
+          const { classList } = res.DATA
+          this.hotInstance.loadData(classList)
+          this.$message.success(res.MSG)
+        } else {
+          this.$message.warning('字段校验不通过')
+        }
       })
-      if (res.SUCCESS) this.$message.success(res.MSG)
     }
   }
 }
 </script>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
 .opera-area {
   overflow: hidden;
@@ -135,10 +148,8 @@ export default {
     float: right;
   }
 }
-.tree-wapper {
-  height: 300px;
-  border: 1px solid #dddddd;
-  overflow: auto;
+.data-area {
+  padding-top: 10px;
 }
 </style>
 <style>

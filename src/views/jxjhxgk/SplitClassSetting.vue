@@ -15,6 +15,10 @@
           <label>平均人数/班</label>
           <el-input placeholder="30" v-model.trim="search['theAvgQty']" clearable></el-input>
         </div>
+        <div class="condition next">
+          <label>最优人数/班</label>
+          <el-input placeholder="35" v-model.trim="search['theBestSum']" clearable></el-input>
+        </div>
       </condition>
       <operation>
         <el-button type="primary" plain @click="splitClass">估算分班</el-button>
@@ -44,7 +48,11 @@
   </div>
 </template>
 <script>
-import { splitStu2AdminClass, saveMoveCourseList } from '@/api/jxjhXgk'
+import {
+  splitStu2AdminClass,
+  saveMoveCourseList,
+  qrySplitClassesList
+} from '@/api/jxjhXgk'
 export default {
   data() {
     const h = 295
@@ -56,7 +64,8 @@ export default {
       search: {
         theBestMinQty: undefined,
         theBestMaxQty: undefined,
-        theAvgQty: undefined
+        theAvgQty: undefined,
+        theBestSum: undefined
       },
       activePos: {}, // input输入错误的位置
       tableColumns: [
@@ -75,10 +84,13 @@ export default {
     this.getTableData()
   },
   methods: {
-    async getTableData() {},
+    async getTableData() {
+      const res = await qrySplitClassesList({ arrangeId: this.arrangeId })
+      this.tableData = res.DATA
+    },
     // 估算分班按钮
     async splitClass() {
-      const label = ['最小人数/班', '最大人数/班', '平均人数/班']
+      const label = ['最小人数/班', '最大人数/班', '平均人数/班', '最优人数/班']
       const keys = Object.keys(this.search)
       let valid = true
       for (let i = 0; i < label.length; i++) {
@@ -123,14 +135,19 @@ export default {
   margin: 10px 0;
   border: 1px solid #dddddd;
 }
-.condition > label {
-  margin-right: 4px;
-  &::after {
-    content: '*';
-    color: red;
-    position: relative;
-    margin-left: 3px;
-    top: 3px;
+.condition {
+  > .el-input {
+    width: 80px !important;
+  }
+  > label {
+    margin-right: 4px;
+    &::after {
+      content: '*';
+      color: red;
+      position: relative;
+      margin-left: 3px;
+      top: 3px;
+    }
   }
 }
 .readOnly {

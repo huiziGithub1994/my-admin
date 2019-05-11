@@ -69,18 +69,20 @@ export default {
         arrangeId: this.arrangeId
       })
       const { gradeId } = base.DATA
-      this.gradeStr = gradeId
       this.loading = true
       const res = await qryCourseTaskList({
         arrangeId: this.arrangeId,
-        gradeIdsStr: gradeId
+        gradeId,
+        moveFlag: 2
       }).finally(() => {
         this.loading = false
       })
+      if (!Object.keys(res.DATA).length) return
       const { headers, classList } = res.DATA
-      this.remoteHeaders = [...headers] // 保存任课安排时需要的参数
-      this.settings.colHeaders.push(...headers)
-      const len = headers.length
+      const headerArr = headers[0].split(',')
+      this.remoteHeaders = [...headerArr] // 保存任课安排时需要的参数
+      this.settings.colHeaders.push(...headerArr)
+      const len = headerArr.length
       const columns = []
       const dataSchema = {}
       for (let i = 1; i <= len; i++) {
@@ -107,19 +109,35 @@ export default {
       this.$nextTick(() => {
         this.hotInstance = this.$refs.hotTableComponent.hotInstance
         this.hotInstance.loadData(classList)
+        this.tableCellReadOnly()
       })
+    },
+    tableCellReadOnly() {
+      // const datas = this.hotInstance.getSourceData()
+      // console.log(datas)
+      // this.hotInstance.updateSettings({
+      //   cells: function(row, col) {
+      //     const cellProperties = {}
+      //     console.log(datas[row])
+      //     if (datas[row][col] === 'Nissan') {
+      //       cellProperties.readOnly = true
+      //     }
+      //     return cellProperties
+      //   }
+      // })
     },
     // 保存按钮
     async saveArrange() {
+      const tableData = this.hotInstance.getSourceData()
       const params = {
         arrangeId: this.arrangeId,
         headerStr2: this.remoteHeaders.join(','),
-        gradeStr: this.gradeStr,
-        classList: this.hotInstance.getSourceData()
+        classList: tableData
       }
       const len = params.classList.length
       const validateRows = []
       for (let i = 0; i <= len; i++) {
+        tableData[i] && (tableData[i].moveFlag = 2)
         validateRows.push(i)
       }
       this.hotInstance.validateRows(validateRows, async valid => {
@@ -132,11 +150,9 @@ export default {
           const res = await saveCourseTaskList(params).finally(() => {
             this.saveArrangeLoading = false
           })
-          sessionStorage.setItem('gradeStr', this.gradeStr)
           const { classList } = res.DATA
           this.hotInstance.loadData(classList)
           this.$message.success(res.MSG)
-          this.$emit('updateTab', 'two')
         } else {
           this.$message.warning('字段校验不通过')
         }

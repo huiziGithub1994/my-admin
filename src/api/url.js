@@ -126,7 +126,9 @@ export default {
   /* 新高考排课 */
   // 教学计划-教学分班管理
   splitStu2AdminClass: `/zxx/split/splitStu2AdminClass`, // 教学分班设置排课详情接口
-  saveMoveCourseList: `/zxx/split/saveMoveCourseList`, // 教学分班设置排课详情接口
+  saveMoveCourseList: `/zxx/split/saveMoveCourseList`, // 教学分班设置保存接口
+  qrySplitClassesList: `/zxx/split/qrySplitClassesList`, // 教学分班设置查询接口
+  qryMove2ClassList: `/zxx/split/qryMove2ClassList`, // 教学班教学设置-列表查询接口
 
   /* 系统配置 */
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

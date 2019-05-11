@@ -112,6 +112,7 @@ export default {
       }).finally(() => {
         this.loading = false
       })
+      if (!Object.keys(res.DATA).length) return
       const { headers, classList } = res.DATA
       const headerArr = []
       if (typeof headers === 'string') {

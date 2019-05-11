@@ -1,4 +1,4 @@
-<!-- 选课查询-->
+<!--教学任务报表-->
 <template>
   <div>
     <div>
@@ -32,11 +32,14 @@
   </div>
 </template>
 <script>
+import { qryTeaCourseCount } from '@/api/skrwPt'
+
 export default {
   data() {
     const h = 240
     const tableH = document.body.clientHeight - h
     return {
+      arrangeId: sessionStorage.getItem('local_arrangeId'),
       search: {
         'a.class_name01': '',
         'a.finish_flag01': ''
@@ -50,10 +53,15 @@ export default {
       tableData: []
     }
   },
-  created() {},
+  created() {
+    this.queryBtn()
+  },
   methods: {
     // 查询按钮
-    queryBtn() {},
+    async queryBtn() {
+      const res = await qryTeaCourseCount({ arrangeId: this.arrangeId })
+      this.tableData = res.DATA
+    },
     // 获取表格信息
     async fetchJoinedStudents() {}
   }
