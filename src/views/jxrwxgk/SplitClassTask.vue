@@ -117,18 +117,27 @@ export default {
       })
     },
     tableCellReadOnly() {
-      // const datas = this.hotInstance.getSourceData()
-      // console.log(datas)
-      // this.hotInstance.updateSettings({
-      //   cells: function(row, col) {
-      //     const cellProperties = {}
-      //     console.log(datas[row])
-      //     if (datas[row][col] === 'Nissan') {
-      //       cellProperties.readOnly = true
-      //     }
-      //     return cellProperties
-      //   }
-      // })
+      const datas = this.hotInstance.getSourceData()
+      const theThis = this
+      this.hotInstance.updateSettings({
+        cells: function(row, col) {
+          const cellProperties = {}
+          if (col - 3 > -1) {
+            const property1 = theThis.remoteHeaders[col - 3]
+            const property2 = theThis.remoteHeaders[col - 4]
+            const className = datas[row].className
+            if (
+              className.indexOf(property1) > -1 ||
+              className.indexOf(property2) > -1
+            ) {
+              cellProperties.readOnly = false
+            } else {
+              cellProperties.readOnly = true
+            }
+          }
+          return cellProperties
+        }
+      })
     },
     // 保存按钮
     async saveArrange() {

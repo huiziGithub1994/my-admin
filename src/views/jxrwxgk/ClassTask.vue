@@ -46,7 +46,7 @@ export default {
           chargeTeaName: null
         },
         rowHeaders: true,
-        colHeaders: ['学段/专业', '年 级', '班行政班级名称', '班 主 任'],
+        colHeaders: ['学段/专业', '年 级', '行政班级', '班 主 任'],
         columns: [
           { data: 'segName', readOnly: true, trimWhitespace: true },
           { data: 'gradeName', readOnly: true, trimWhitespace: true },
