@@ -14,7 +14,7 @@
       </condition>
       <operation class="btns">
         <el-button type="primary" @click="queryBtn" plain>查询</el-button>
-        <el-button type="primary" @click="saveBtn" plain>保存</el-button>
+        <el-button type="primary" @click="saveBtn" plain :disabled="disabledSaveBtn">保存</el-button>
       </operation>
     </div>
     <p class="tip">
@@ -115,6 +115,7 @@ export default {
   },
   data() {
     return {
+      disabledSaveBtn: false,
       listQuery: {
         xn: '',
         xq: ''
@@ -332,22 +333,33 @@ export default {
           })
           if (!isContinue) return
           Object.assign(this.data, { calFixList: newData })
-          saveCalendar({
-            modelString: JSON.stringify(this.data)
-          }).then(res => {
-            if (res.SUCCESS) {
-              this.$message({ type: 'success', message: '保存成功' })
-              // 如果是新增
-              if (!this.calenderId) {
-                this.$store.commit('SET_CALENDERID', res.DATA)
-                setCookie('calenderId', res.DATA)
-                // this.updateStore()
-              }
-              this.$nextTick(function() {
-                this.$refs['baseInfoRef'].clearValidate()
-              })
-            }
+          // 如果是新增,提示保存后不可修改
+          this.$confirm('保存后校历信息不可修改, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           })
+            .then(() => {
+              saveCalendar({
+                modelString: JSON.stringify(this.data)
+              }).then(res => {
+                if (res.SUCCESS) {
+                  this.$message({ type: 'success', message: '保存成功' })
+                  this.$store.commit('SET_CALENDERID', res.DATA)
+                  this.disabledSaveBtn = true
+                  setCookie('calenderId', res.DATA)
+                  this.$nextTick(function() {
+                    this.$refs['baseInfoRef'].clearValidate()
+                  })
+                }
+              })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消保存'
+              })
+            })
         } else {
           return false
         }

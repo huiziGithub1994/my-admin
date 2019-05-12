@@ -126,7 +126,7 @@ export default {
       const tableData = this.hotInstance.getSourceData()
       const params = {
         arrangeId: this.arrangeId,
-        headerStr2: this.remoteHeaders.join(','),
+        headerStr: this.remoteHeaders.join(','),
         classList: tableData
       }
       const len = params.classList.length
