@@ -5,14 +5,14 @@
       <condition>
         <div class="condition">
           <label>教师名称</label>
-          <el-select v-model="search['a.finish_flag01']" clearable placeholder="请选择">
-            <el-option v-for="item in teachNameOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="search['a.teaName01']" clearable placeholder="请选择">
+            <el-option v-for="(item,index) in teachNameOptions" :key="index" :label="item.teaName" :value="item.teaName"></el-option>
           </el-select>
         </div>
         <div class="condition">
           <label>班级</label>
-          <el-select v-model="search['a.class_name01']" clearable placeholder="请选择">
-            <el-option v-for="item in classesOptions" :key="item.classId" :label="item.className" :value="item.className"></el-option>
+          <el-select v-model="search['a.className01']" clearable placeholder="请选择">
+            <el-option v-for="(item,index) in classesOptions" :key="index" :label="item.className" :value="item.className"></el-option>
           </el-select>
         </div>
       </condition>
@@ -32,6 +32,7 @@
 </template>
 <script>
 import { qryTeaCourseCount } from '@/api/skrwPt'
+import { qryTeaListByArrangeId, qryClassListByArrangeId } from '@/api/jxjhXgk'
 
 export default {
   data() {
@@ -40,8 +41,9 @@ export default {
     return {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       search: {
-        'a.class_name01': '',
-        'a.finish_flag01': ''
+        'a.arrangeId': sessionStorage.getItem('local_arrangeId'),
+        'a.className01': '',
+        'a.teaName01': ''
       },
       // 教师名称下拉选项数据
       teachNameOptions: [],
@@ -53,16 +55,32 @@ export default {
     }
   },
   created() {
+    this.getTeachers()
+    this.getClasses()
     this.queryBtn()
   },
   methods: {
+    // 获取教师下拉列表数据
+    async getTeachers() {
+      const res = await qryTeaListByArrangeId({
+        arrangeId: this.arrangeId
+      })
+      this.teachNameOptions = res.DATA
+    },
+    // 获取班级下拉列表数据
+    async getClasses() {
+      const res = await qryClassListByArrangeId({
+        arrangeId: this.arrangeId
+      })
+      this.classesOptions = res.DATA
+    },
     // 查询按钮
     async queryBtn() {
-      const res = await qryTeaCourseCount({ arrangeId: this.arrangeId })
+      const res = await qryTeaCourseCount({
+        ...this.search
+      })
       this.tableData = res.DATA
-    },
-    // 获取表格信息
-    async fetchJoinedStudents() {}
+    }
   }
 }
 </script>

@@ -68,7 +68,10 @@ export default {
     // 分拆教学任务
     async splitTaskBtn() {
       this.splitTaskLoading = true
-      const res = await splitTask({ arrangeId: this.arrangeId }).finally(() => {
+      const res = await splitTask({
+        arrangeId: this.arrangeId,
+        taskType: '1'
+      }).finally(() => {
         this.splitTaskLoading = false
       })
       if (res.SUCCESS) this.$message.success(res.MSG)

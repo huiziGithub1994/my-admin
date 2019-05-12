@@ -33,6 +33,10 @@ export function splitTask(listQuery) {
 export function qryTeaCourseCount(listQuery) {
   return request({
     url: URL.qryTeaCourseCount,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
     params: listQuery
   })
 }

@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     async fetchTableData() {
-      const res = await qryTeaCourseCount({ arrangeId: this.arrangeId })
+      const res = await qryTeaCourseCount({ 'a.arrangeId': this.arrangeId })
       this.tableData = res.DATA
     }
   }
