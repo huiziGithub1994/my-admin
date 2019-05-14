@@ -214,6 +214,18 @@ export default {
       await qryCalendarByXnXq(params)
         .then(
           res => {
+            const {
+              countInMorning,
+              countMorning,
+              countAfternoon,
+              countNight
+            } = res.DATA
+            const count =
+              Number(countInMorning) +
+              Number(countMorning) +
+              Number(countAfternoon) +
+              Number(countNight)
+            this.disabledSaveBtn = !!count
             setDatas(this.data, res.DATA)
             // 数据回填时的实现方式:先根据作息安排初始化表格的头部、行列、数据为空。再根据请求返回的数据填充表格
             this.initEditTableData()

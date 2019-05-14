@@ -16,7 +16,7 @@
       <div class="teaTableName">
         <el-button class="excel-btn" type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
       </div>
-      <el-table ref="singleTable" :data="tableData" style="width:850px" border :cell-class-name="cellClassName">
+      <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
           :label="item"
