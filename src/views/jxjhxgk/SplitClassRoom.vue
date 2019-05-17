@@ -42,7 +42,8 @@ export default {
       tableH,
       // 教室信息
       roomOptions: [],
-      tableData: []
+      tableData: [],
+      originDataIds: []
     }
   },
   created() {
@@ -67,10 +68,12 @@ export default {
       const res = await qryMove2ClassList({ arrangeId: this.arrangeId })
       this.loading = false
       this.tableData = res.DATA
+      this.originDataIds = this.tableData.map(item => item.relaClassId)
     },
     // 保存按钮
     async saveBtn() {
       const result = this.handleSaveData()
+      console.log(result)
       if (!result) return
       const res = await saveClassesList(result)
       this.$message.success(res.MSG)
@@ -83,7 +86,7 @@ export default {
       const uniqueIds = []
       for (let i = 0; i < len; i++) {
         const item = datas[i]
-        const { action, relaClassId } = item
+        const { relaClassId } = item
         if (!relaClassId) {
           this.$message.error(`第${i + 1}行常用教室不能为空`)
           flag = false
@@ -97,7 +100,9 @@ export default {
         }
         uniqueIds.push(relaClassId)
         result.push(
-          Object.assign({}, item, { action: action === undefined ? '0' : '1' })
+          Object.assign({}, item, {
+            action: this.originDataIds[i] === null ? '0' : '1'
+          })
         )
       }
       return result.length === len ? result : flag
