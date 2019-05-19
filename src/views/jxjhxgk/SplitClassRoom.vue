@@ -42,8 +42,7 @@ export default {
       tableH,
       // 教室信息
       roomOptions: [],
-      tableData: [],
-      originDataIds: []
+      tableData: []
     }
   },
   created() {
@@ -68,12 +67,10 @@ export default {
       const res = await qryMove2ClassList({ arrangeId: this.arrangeId })
       this.loading = false
       this.tableData = res.DATA
-      this.originDataIds = this.tableData.map(item => item.relaClassId)
     },
     // 保存按钮
     async saveBtn() {
       const result = this.handleSaveData()
-      console.log(result)
       if (!result) return
       const res = await saveClassesList(result)
       this.$message.success(res.MSG)
@@ -101,7 +98,7 @@ export default {
         uniqueIds.push(relaClassId)
         result.push(
           Object.assign({}, item, {
-            action: this.originDataIds[i] === null ? '0' : '1'
+            action: '1'
           })
         )
       }

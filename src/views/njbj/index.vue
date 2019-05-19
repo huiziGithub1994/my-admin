@@ -90,12 +90,12 @@ export default {
   },
   mounted() {
     this.hotInstance = this.$refs.hotTableComponent.hotInstance
-    // this.tableAddHook()
+    this.tableAddHook()
     this.getTreeData()
   },
   methods: {
     tableAddHook() {
-      addHooks(this.hotInstance)
+      addHooks(this.hotInstance, ['className', 'classRoom'])
     },
     // 学段(专业)/年级
     async getTreeData() {
