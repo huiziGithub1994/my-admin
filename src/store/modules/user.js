@@ -14,6 +14,7 @@ const user = {
     calenderId: getCookie('calenderId'),
     userType: getCookie('userType'),
     userName: getCookie('userName'),
+    schoolName: getCookie('schoolName'),
     arrangeName: sessionStorage.getItem('arrangeName')
   },
 
@@ -38,6 +39,9 @@ const user = {
     },
     SET_USERNAME: (state, userName) => {
       state.userName = userName
+    },
+    SET_SCHOOLNAME: (state, schoolName) => {
+      state.schoolName = schoolName
     },
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -103,12 +107,13 @@ const user = {
 
 function commitBaseInfo(commit, res) {
   const { curXq, curXn } = res.DATA
-  const { schoolId, userType, userName } = res.DATA.userInfo
+  const { schoolId, userType, userName, schoolName } = res.DATA.userInfo
   commit('SET_SCHOOLID', schoolId)
   commit('SET_CURYEAR', curXn)
   commit('SET_CURTERM', curXq)
   commit('SET_USERTYPE', userType)
   commit('SET_USERNAME', userName)
+  commit('SET_SCHOOLNAME', schoolName)
   setCookie('schoolId', schoolId)
   setCookie('curYear', curXn)
   setCookie('curTureYear', curXn)
@@ -116,6 +121,7 @@ function commitBaseInfo(commit, res) {
   setCookie('curTureTerm', curXq)
   setCookie('userType', userType)
   setCookie('userName', userName)
+  setCookie('schoolName', schoolName)
   if (userType === '2') {
     commit('SET_MENUTYPE', 'xk')
   } else {
@@ -132,7 +138,8 @@ function removeBaseInfo(commit, dispatch) {
     'SET_CURTERM',
     'SET_ARRANGENAME',
     'SET_USERTYPE',
-    'SET_USERNAME'
+    'SET_USERNAME',
+    'SET_SCHOOLNAME'
   ]
   commits.forEach(key => {
     commit(key, '')
@@ -148,7 +155,8 @@ function removeBaseInfo(commit, dispatch) {
     'curTureYear',
     'userType',
     'menutype',
-    'userName'
+    'userName',
+    'schoolName'
   ]
   removeCookies.forEach(key => {
     removeCookie(key)

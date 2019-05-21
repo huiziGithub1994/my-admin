@@ -7,7 +7,7 @@
         <p class="big">蓝墨水</p>
         <p class="small">教育云平台</p>
       </div>
-      <span class="schoolName">湖南蓝墨水实验中学</span>
+      <span class="schoolName">{{ schoolName }}</span>
       <div class="buttons">
         <!-- 菜单 -->
         <label v-for="item in menus" :key="item.command" :class="{choosedMenu:choosedMenu.command ==item.command }" @click="handleMenuChange(item)">{{ item.name }}</label>
@@ -101,7 +101,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menutype', 'userType']),
+    ...mapGetters(['menutype', 'userType', 'schoolName']),
     menus() {
       if (this.userType === '2') {
         return [{ command: 'xk', name: '选课平台' }]

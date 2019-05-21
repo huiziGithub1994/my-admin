@@ -1,21 +1,24 @@
 <template>
   <div>
+    <div class="checkboxGroup">
+      <el-checkbox-group v-model="showType" v-if="menutype == 'xgk'">
+        <el-checkbox label="1">教学班</el-checkbox>
+        <el-checkbox label="3">教师</el-checkbox>
+        <el-checkbox label="2">显示时间</el-checkbox>
+      </el-checkbox-group>
+      <el-checkbox-group v-model="showType" v-else>
+        <el-checkbox label="1">显示教室</el-checkbox>
+        <el-checkbox label="2">显示时间</el-checkbox>
+      </el-checkbox-group>
+      <el-button class="excel-btn" type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
+    </div>
     <div class="left">
-      <div class="checkboxGroup">
-        <el-checkbox-group v-model="showType">
-          <el-checkbox label="1">显示教室</el-checkbox>
-          <el-checkbox label="2">显示时间</el-checkbox>
-        </el-checkbox-group>
-      </div>
       <div class="treeWrapper" :style="{height:treeHeight+ 'px'}">
         <el-tree ref="treeRef" :data="treeData" node-key="id" default-expand-all :expand-on-click-node="false" highlight-current @node-click="treeNodeClick"></el-tree>
       </div>
     </div>
     <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
     <div class="right">
-      <div class="teaTableName">
-        <el-button class="excel-btn" type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
-      </div>
       <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
@@ -30,7 +33,8 @@
             <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
             <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
               <div>{{ scope.row[index-1].courseName }}</div>
-              <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1].classRoom }}</div>
+              <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1][menutype == 'xgk' ? 'className' : 'classRoom'] }}</div>
+              <div v-show="showType.length&&showType.includes('3')">{{ scope.row[index-1].teaName }}</div>
               <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
             </div>
             <template v-else>
@@ -43,6 +47,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import { qrySegGradeTree } from '@/api/njkc'
 import { qryClassTimetable, expCourse2Excel } from '@/api/kbcxPt'
 import { initTableData } from '@/utils/inlineEditTable'
@@ -61,6 +66,9 @@ export default {
       tableData: [],
       colHeaders: []
     }
+  },
+  computed: {
+    ...mapGetters(['menutype'])
   },
   created() {
     this.getTreeData()
@@ -150,16 +158,16 @@ export default {
   margin-right: 10px;
 }
 .checkboxGroup {
-  margin-bottom: 10px;
+  overflow: hidden;
+  > div {
+    float: left;
+  }
+  > button {
+    float: right;
+  }
 }
 .treeWrapper {
   border: 1px solid #dddddd;
   overflow: auto;
-}
-.teaTableName {
-  overflow: hidden;
-  .excel-btn {
-    float: right;
-  }
 }
 </style>

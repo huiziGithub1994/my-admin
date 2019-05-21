@@ -14,6 +14,7 @@ const getters = {
   calenderId: state => state.user.calenderId,
   arrangeName: state => state.user.arrangeName,
   userType: state => state.user.userType,
-  userName: state => state.user.userName
+  userName: state => state.user.userName,
+  schoolName: state => state.user.schoolName
 }
 export default getters
