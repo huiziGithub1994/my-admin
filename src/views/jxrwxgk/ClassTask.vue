@@ -165,9 +165,10 @@ export default {
   > .right {
     float: right;
   }
+  margin-bottom: 10px;
 }
 .data-area {
-  padding-top: 10px;
+  border: 1px solid #dddddd;
 }
 </style>
 <style>

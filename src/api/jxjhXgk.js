@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
+/** 教学计划-导入学生选课 */
+// 保存选课数据
+export function cleanArrangeDataAgain(params) {
+  return request({
+    url: URL.cleanArrangeDataAgain,
+    params
+  })
+}
+
 /** 教学计划-分班设置 */
 // 估算分班
 export function splitStu2AdminClass(params) {

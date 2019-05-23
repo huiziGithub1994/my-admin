@@ -130,9 +130,15 @@ export default {
   qrySplitClassesList: `/zxx/split/qrySplitClassesList`, // 教学分班设置查询接口
   qryMove2ClassList: `/zxx/split/qryMove2ClassList`, // 教学班教学设置-列表查询接口
 
+  // 教学计划-导入学生选课
+  cleanArrangeDataAgain: `/zxx/split/cleanArrangeDataAgain`, // 保存选课数据
+
   // 教学任务-教学任务报表
   qryTeaListByArrangeId: `/zxx/qryTeaListByArrangeId`, // 提取教师列表
   qryClassListByArrangeId: `/zxx/qryClassListByArrangeId`, // 提取班级列表
+
+  // 开始排课-自动排课
+  arrangeNewExam: `/zxx/split/arrangeNewExam`, // 开始排课
 
   /* 系统配置 */
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

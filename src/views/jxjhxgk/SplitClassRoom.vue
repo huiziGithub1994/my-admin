@@ -6,7 +6,7 @@
         <label>温馨提示：</label>下面表格中“常用教室”列所选中的数据不能相同。
       </p>
       <operation>
-        <el-button type="primary" plain @click="saveBtn">保存</el-button>
+        <el-button type="primary" plain @click="saveBtn">保存设置</el-button>
       </operation>
     </div>
     <div class="data-area table-outer">

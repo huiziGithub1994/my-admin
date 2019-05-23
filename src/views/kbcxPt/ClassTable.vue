@@ -71,6 +71,7 @@ export default {
     ...mapGetters(['menutype'])
   },
   created() {
+    if (this.menutype === 'xgk') this.showType.push('1')
     this.getTreeData()
   },
   methods: {

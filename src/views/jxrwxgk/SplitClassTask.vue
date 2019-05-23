@@ -2,10 +2,13 @@
 <template>
   <div>
     <div class="opera-area">
-      <div class="right">
+      <p class="tip">
+        <label>温馨提示：</label>请先在空白处填写任务，教学任务填写完毕后请点击“分拆教学任务”。
+      </p>
+      <operation>
         <el-button type="primary" plain @click="splitTaskBtn" :loading="splitTaskLoading">分拆教学任务</el-button>
-        <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">保存</el-button>
-      </div>
+        <el-button type="primary" plain @click="saveArrange" :loading="saveArrangeLoading">临时保存</el-button>
+      </operation>
     </div>
     <div class="data-area" v-loading="loading">
       <hot-table :settings="settings" ref="hotTableComponent" v-if="showTable"></hot-table>
@@ -115,8 +118,10 @@ export default {
       this.showTable = true
       this.$nextTick(() => {
         this.hotInstance = this.$refs.hotTableComponent.hotInstance
-        this.hotInstance.loadData(classList)
-        this.tableCellReadOnly()
+        if (classList.length) {
+          this.hotInstance.loadData(classList)
+          this.tableCellReadOnly()
+        }
       })
     },
     tableCellReadOnly() {
@@ -130,8 +135,8 @@ export default {
             const property2 = theThis.remoteHeaders[col - 4]
             const className = datas[row].className
             if (
-              className.indexOf(property1) > -1 ||
-              className.indexOf(property2) > -1
+              className.indexOf(property1.slice(0, 1)) > -1 ||
+              className.indexOf(property2.slice(0, 1)) > -1
             ) {
               cellProperties.readOnly = false
             } else {
@@ -178,14 +183,21 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+p.tip {
+  display: inline-block;
+  position: relative;
+  top: 14px;
+}
 .opera-area {
   overflow: hidden;
-  > .right {
+  margin-bottom: 10px;
+  > div {
+    display: inline-block;
     float: right;
   }
 }
 .data-area {
-  padding-top: 10px;
+  border: 1px solid #dddddd;
 }
 </style>
 <style>

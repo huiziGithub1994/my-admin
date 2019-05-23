@@ -38,6 +38,8 @@
 </template>
 <script>
 import { startAutoArrange } from '@/api/kspkPt'
+import { arrangeNewExam } from '@/api/kspkXgk'
+import { mapGetters } from 'vuex'
 export default {
   name: 'AutoArrange',
   data() {
@@ -50,13 +52,21 @@ export default {
       checkList: []
     }
   },
+  computed: {
+    ...mapGetters(['menutype'])
+  },
   methods: {
     async toAutoArrange() {
       this.autoArrangeBtnLoading = true
-      await startAutoArrange({ arrangeId: this.arrangeId }).finally(() => {
+      const params = { arrangeId: this.arrangeId }
+      const pro =
+        this.menutype === 'xgk'
+          ? arrangeNewExam(params)
+          : startAutoArrange(params)
+      const res = await pro.finally(() => {
         this.autoArrangeBtnLoading = false
       })
-      this.$message.success('排课任务完成')
+      this.$message.success(res.MSG)
     }
   }
 }

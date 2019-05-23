@@ -13,6 +13,7 @@
         </div>
       </condition>
       <operation>
+        <el-button v-if="menutype === 'xgk'" type="primary" plain @click="saveStuChoose">保存学生选课</el-button>
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
         <el-button type="primary" plain @click="downTemplate">下载导入模板</el-button>
         <el-upload
@@ -116,6 +117,7 @@
   </div>
 </template>
 <script>
+import { cleanArrangeDataAgain } from '@/api/jxjhXgk'
 import {
   getChooseClassListInfo,
   delChooseClassListInfo,
@@ -207,7 +209,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'menutype'])
   },
   async created() {
     Object.assign(this.httpHeaders, { x_auth_token: this.token })
@@ -219,6 +221,11 @@ export default {
     this.fetchTableData() // 表格数据
   },
   methods: {
+    // 新高考排课：保存学生选课
+    async saveStuChoose() {
+      const res = await cleanArrangeDataAgain({ arrangeId: this.arrangeId })
+      this.$message.success(res.MSG)
+    },
     // 下载导入模板
     async downTemplate() {
       const params = {
