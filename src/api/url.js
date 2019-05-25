@@ -139,6 +139,8 @@ export default {
 
   // 开始排课-自动排课
   arrangeNewExam: `/zxx/split/arrangeNewExam`, // 开始排课
+  // 课表查询-班级课表
+  qryAllClassTimetable: `/zxx/qryClassTimetable`, // 全部班级课表
 
   /* 系统配置 */
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据

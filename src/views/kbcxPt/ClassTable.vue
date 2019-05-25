@@ -10,7 +10,10 @@
         <el-checkbox label="1">显示教室</el-checkbox>
         <el-checkbox label="2">显示时间</el-checkbox>
       </el-checkbox-group>
-      <el-button class="excel-btn" type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
+      <div class="excel-btn">
+        <el-button type="primary" plain v-if="menutype == 'xgk'" @click="getAllSchedule">全部班级课表</el-button>
+        <el-button type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
+      </div>
     </div>
     <div class="left">
       <div class="treeWrapper" :style="{height:treeHeight+ 'px'}">
@@ -19,6 +22,7 @@
     </div>
     <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
     <div class="right">
+      <!-- <iframe v-show="showAllTable" src="/index.html"></iframe> -->
       <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName">
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
@@ -50,10 +54,11 @@
 import { mapGetters } from 'vuex'
 import { qrySegGradeTree } from '@/api/njkc'
 import { qryClassTimetable, expCourse2Excel } from '@/api/kbcxPt'
+import { qryAllClassTimetable } from '@/api/kbcxXgk'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
-    const h = 230
+    const h = 240
     const treeH = document.body.clientHeight - h
     return {
       // tree 高度
@@ -64,7 +69,8 @@ export default {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       showType: [],
       tableData: [],
-      colHeaders: []
+      colHeaders: [],
+      showAllTable: false
     }
   },
   computed: {
@@ -75,6 +81,13 @@ export default {
     this.getTreeData()
   },
   methods: {
+    // 全部班级课表
+    getAllSchedule() {
+      qryAllClassTimetable({
+        arrangeId: this.arrangeId,
+        classId: '66eac589488042198b22f3e0c330c9a1'
+      })
+    },
     // 获取树节点的数据
     async getTreeData() {
       const res = await qrySegGradeTree({ arrangeId: this.arrangeId })
@@ -160,10 +173,12 @@ export default {
 }
 .checkboxGroup {
   overflow: hidden;
+  margin-bottom: 5px;
   > div {
     float: left;
   }
-  > button {
+  > .excel-btn {
+    position: relative;
     float: right;
   }
 }

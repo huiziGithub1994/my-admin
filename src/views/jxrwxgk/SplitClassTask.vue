@@ -133,10 +133,10 @@ export default {
           if (col - 3 > -1) {
             const property1 = theThis.remoteHeaders[col - 3]
             const property2 = theThis.remoteHeaders[col - 4]
-            const className = datas[row].className
+            const classDesc = datas[row].classDesc
             if (
-              className.indexOf(property1.slice(0, 1)) > -1 ||
-              className.indexOf(property2.slice(0, 1)) > -1
+              classDesc.indexOf(property1) > -1 ||
+              classDesc.indexOf(property2) > -1
             ) {
               cellProperties.readOnly = false
             } else {

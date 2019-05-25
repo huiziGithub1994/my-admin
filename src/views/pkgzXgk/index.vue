@@ -15,7 +15,7 @@
           <el-tabs type="card" class="pkgzPt" v-model="gpjpTabActive">
             <el-tab-pane label="年级/班级禁排固排" name="1"></el-tab-pane>
             <el-tab-pane label="教师禁排固排" name="2"></el-tab-pane>
-            <el-tab-pane label="教研组禁排" name="3"></el-tab-pane>
+            <!-- <el-tab-pane label="教研组禁排" name="3"></el-tab-pane> -->
             <el-tab-pane label="课程禁排固排" name="4"></el-tab-pane>
           </el-tabs>
         </el-tab-pane>
@@ -26,14 +26,14 @@
           <teacher v-else-if="gpjpTabActive === '2'"></teacher>
           <!-- 教研组禁排 -->
           <teach-group v-else-if="gpjpTabActive === '3'"></teach-group>
-          <!-- 教研组禁排 -->
+          <!-- 课程禁排固排 -->
           <course v-else-if="gpjpTabActive === '4'"></course>
         </div>
         <!-- end  固排禁排 -->
         <el-tab-pane label="合班设置" name="two" :disabled="tabDisabled.two">
           <merge-class v-if="activeTabName === 'two'"></merge-class>
         </el-tab-pane>
-        <el-tab-pane label="其他规则" name="three" :disabled="tabDisabled.three"></el-tab-pane>
+        <!-- <el-tab-pane label="其他规则" name="three" :disabled="tabDisabled.three"></el-tab-pane> -->
       </el-tabs>
     </div>
   </div>

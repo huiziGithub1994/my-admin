@@ -159,8 +159,8 @@ export default {
         data: null,
         colHeaders: [],
         columns: [],
-        height: 300,
-        colWidths: '110px'
+        height: 300
+        // colWidths: '110px'
       },
       // 标记原始数据
       markTableData: {}
