@@ -30,7 +30,7 @@
         <el-table-column property="arrangeName" show-overflow-tooltip min-width="160px" label="排课名称"/>
         <el-table-column property="splitLayerType" label="分层类型" width="150px">
           <template slot-scope="scope">
-            <span>{{ scope.row.splitLayerType == 1 ? '学生自由选择分层' : '按成绩分层' }}</span>
+            <span>{{ scope.row.splitLayerType == 1 ? '学生自由选择分层' : scope.row.splitLayerType == 2 ? '按成绩分层' :'新高考选考' }}</span>
           </template>
         </el-table-column>
         <el-table-column property="curStatus" label="状态" width="80px">
