@@ -22,8 +22,8 @@
     </div>
     <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
     <div class="right">
-      <!-- <iframe v-show="showAllTable" src="/index.html"></iframe> -->
-      <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName">
+      <iframe v-if="showAllTable" :src="hrefSrc"></iframe>
+      <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName" v-else>
         <el-table-column
           :property="index === 0 ? 'lessionSeq' : index-1+''"
           :label="item"
@@ -53,8 +53,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import { qrySegGradeTree } from '@/api/njkc'
-import { qryClassTimetable, expCourse2Excel } from '@/api/kbcxPt'
-import { qryAllClassTimetable } from '@/api/kbcxXgk'
+import { expCourse2Excel } from '@/api/kbcxPt'
+import { qryClassTimetableXgk } from '@/api/kbcxXgk'
+import url from '@/api/url'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
@@ -70,7 +71,10 @@ export default {
       showType: [],
       tableData: [],
       colHeaders: [],
-      showAllTable: false
+      showAllTable: false,
+      hrefSrc: `${url.qryAllClassTimetable}arrangeId=${sessionStorage.getItem(
+        'local_arrangeId'
+      )}`
     }
   },
   computed: {
@@ -83,10 +87,7 @@ export default {
   methods: {
     // 全部班级课表
     getAllSchedule() {
-      qryAllClassTimetable({
-        arrangeId: this.arrangeId,
-        classId: '66eac589488042198b22f3e0c330c9a1'
-      })
+      this.showAllTable = true
     },
     // 获取树节点的数据
     async getTreeData() {
@@ -96,8 +97,8 @@ export default {
     // 班级的点击
     async treeNodeClick(data) {
       if (data.level !== '3') return
-
-      const res = await qryClassTimetable({
+      this.showAllTable = false
+      const res = await qryClassTimetableXgk({
         arrangeId: this.arrangeId,
         classId: data.id
       })

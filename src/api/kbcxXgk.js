@@ -8,3 +8,10 @@ export function qryAllClassTimetable(params) {
     params
   })
 }
+
+export function qryClassTimetableXgk(params) {
+  return request({
+    url: URL.qryClassTimetableXgk,
+    params
+  })
+}
