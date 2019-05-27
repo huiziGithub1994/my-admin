@@ -16,14 +16,19 @@
         <el-tab-pane label="教师课表" name="2">
           <teacher-table v-if="activeTabName == 2"/>
         </el-tab-pane>
-        <el-tab-pane label="场地课表" name="3"></el-tab-pane>
+        <el-tab-pane label="学生课表" name="3" v-if="menutype == 'xgk'">
+          <stu-table v-if="activeTabName == 3"/>
+        </el-tab-pane>
+        <el-tab-pane label="场地课表" name="4"></el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import TeacherTable from './TeacherTable' // 教师课表tab页组件
 import ClassTable from './ClassTable' // 班级课表tab页组件
+import StuTable from '../kbcxXgk/StuTable' // 学生课表tab页组件
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -46,13 +51,17 @@ export default {
   },
   components: {
     TeacherTable,
-    ClassTable
+    ClassTable,
+    StuTable
   },
   data() {
     return {
       tabsHeight: document.body.clientHeight - 160,
       activeTabName: sessionStorage.getItem('local_arrangeId') ? '1' : '' // tab页高亮
     }
+  },
+  computed: {
+    ...mapGetters(['menutype'])
   }
 }
 </script>

@@ -15,38 +15,39 @@
         <el-button type="primary" v-popover:popover plain @click="exportExcel">下载</el-button>
       </div>
     </div>
-    <div class="left">
+    <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
+
+    <div class="content">
       <div class="treeWrapper" :style="{height:treeHeight+ 'px'}">
         <el-tree ref="treeRef" :data="treeData" node-key="id" default-expand-all :expand-on-click-node="false" highlight-current @node-click="treeNodeClick"></el-tree>
       </div>
-    </div>
-    <el-popover ref="popover" placement="top" title="提示" width="200" trigger="hover" content="未选中班级时，下载所有班级的课表。选中某一个班级时，下载选中班级的课表。"></el-popover>
-    <div class="right">
-      <iframe v-if="showAllTable" :src="hrefSrc"></iframe>
-      <el-table ref="singleTable" :data="tableData" style="width:70%" border :cell-class-name="cellClassName" v-else>
-        <el-table-column
-          :property="index === 0 ? 'lessionSeq' : index-1+''"
-          :label="item"
-          v-for="(item,index) in colHeaders"
-          :key="index"
-          :width="index === 0 ? '100px':'auto'"
-          :align="index === 0 ? 'center':'left'"
-          header-align="center"
-        >
-          <template slot-scope="scope">
-            <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
-            <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
-              <div>{{ scope.row[index-1].courseName }}</div>
-              <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1][menutype == 'xgk' ? 'className' : 'classRoom'] }}</div>
-              <div v-show="showType.length&&showType.includes('3')">{{ scope.row[index-1].teaName }}</div>
-              <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
-            </div>
-            <template v-else>
-              <div class="scheduleCell"></div>
+      <div class="right">
+        <iframe v-if="showAllTable" :src="hrefSrc" :style="{height:treeHeight+ 'px'}"></iframe>
+        <el-table ref="singleTable" :data="tableData" style="width:90%;max-width:900px;" border :cell-class-name="cellClassName" v-else>
+          <el-table-column
+            :property="index === 0 ? 'lessionSeq' : index-1+''"
+            :label="item"
+            v-for="(item,index) in colHeaders"
+            :key="index"
+            :width="index === 0 ? '100px':'auto'"
+            :align="index === 0 ? 'center':'left'"
+            header-align="center"
+          >
+            <template slot-scope="scope">
+              <div v-if="index === 0">{{ scope.row.lessionSeq }}</div>
+              <div v-else-if="Object.keys(scope.row[index-1]).length" class="scheduleCell hasClass">
+                <div>{{ scope.row[index-1].courseName }}</div>
+                <div v-show="showType.length&&showType.includes('1')">{{ scope.row[index-1][menutype == 'xgk' ? 'className' : 'classRoom'] }}</div>
+                <div v-show="showType.length&&showType.includes('3')">{{ scope.row[index-1].teaName }}</div>
+                <div v-show="showType.length&&showType.includes('2')">{{ scope.row[index-1].courseTime }}</div>
+              </div>
+              <template v-else>
+                <div class="scheduleCell"></div>
+              </template>
             </template>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +60,7 @@ import url from '@/api/url'
 import { initTableData } from '@/utils/inlineEditTable'
 export default {
   data() {
-    const h = 240
+    const h = 245
     const treeH = document.body.clientHeight - h
     return {
       // tree 高度
@@ -167,11 +168,6 @@ export default {
 }
 </style>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.left {
-  float: left;
-  width: 250px;
-  margin-right: 10px;
-}
 .checkboxGroup {
   overflow: hidden;
   margin-bottom: 5px;
@@ -183,8 +179,20 @@ export default {
     float: right;
   }
 }
-.treeWrapper {
+.content {
+  display: flex;
+  > .treeWrapper {
+    width: 250px;
+    border: 1px solid #dddddd;
+    overflow: auto;
+  }
+  > .right {
+    padding-left: 10px;
+    flex: 1;
+  }
+}
+iframe {
   border: 1px solid #dddddd;
-  overflow: auto;
+  width: 100%;
 }
 </style>

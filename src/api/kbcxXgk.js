@@ -15,3 +15,11 @@ export function qryClassTimetableXgk(params) {
     params
   })
 }
+
+// 查询单个教师、学生课表
+export function qryOneStuTeaTimetable(params) {
+  return request({
+    url: URL.qryOneStuTeaTimetable,
+    params
+  })
+}

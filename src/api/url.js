@@ -142,6 +142,8 @@ export default {
   // 课表查询-班级课表
   qryAllClassTimetable: 'http://47.107.255.128:8089/zxx/qryClassTimetable?', // 全部班级课表
   qryClassTimetableXgk: `/zxx/qrySpecClassTimetable`, // 班级课表
+  // 课表查询-学生课表
+  qryOneStuTeaTimetable: `/zxx/qryOneStuTeaTimetable`,
 
   /* 系统配置 */
   qryKeyList: `/base/qryKeyList`, // 数据字典表格数据
