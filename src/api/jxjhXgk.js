@@ -9,16 +9,31 @@ export function cleanArrangeDataAgain(params) {
   })
 }
 
-/** 教学计划-分班设置 */
-// 估算分班
-export function splitStu2AdminClass(params) {
+/** 教学计划-教学分班管理 */
+// 分班估算- 列表查询
+export function qryCalGroupListByArrId(params) {
   return request({
-    url: URL.splitStu2AdminClass,
+    url: URL.qryCalGroupListByArrId,
+    params
+  })
+}
+// 分班估算- 分班估算按钮
+export function estimateClasses(params) {
+  return request({
+    url: URL.estimateClasses,
+    params,
+    timeout: 10000
+  })
+}
+// 分班估算- 详情
+export function qryOneSjsGroupFix2(params) {
+  return request({
+    url: URL.qryOneSjsGroupFix2,
     params
   })
 }
 
-// 保存并分班
+// 分班确认- 保存并分班
 export function saveMoveCourseList(params) {
   return request({
     url: URL.saveMoveCourseList,
@@ -26,7 +41,7 @@ export function saveMoveCourseList(params) {
   })
 }
 
-// 查询分班
+// 分班确认-查询分班
 export function qrySplitClassesList(params) {
   return request({
     url: URL.qrySplitClassesList,

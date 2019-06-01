@@ -59,7 +59,7 @@ export default {
       saveBtnLoading: false,
       btnDisabled: false, // 保存按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
-      areaHeight: document.body.clientHeight - 300,
+      areaHeight: document.body.clientHeight - 250,
       data: {
         gradeId: undefined,
         gradeName: undefined,

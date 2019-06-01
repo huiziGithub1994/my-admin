@@ -32,12 +32,12 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div class="next-wapper">
+    <!-- <div class="next-wapper">
       <div>
         <el-button type="success" @click="baseInfoPre" v-show="activeTabName != 1">上一步</el-button>
         <el-button type="success" @click="baseInfoNext">下一步</el-button>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>

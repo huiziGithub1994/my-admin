@@ -125,6 +125,9 @@ export default {
 
   /* 新高考排课 */
   // 教学计划-教学分班管理
+  qryCalGroupListByArrId: `/zxx/split/qryCalGroupListByArrId`, // 分班估算列表查询接口
+  qryOneSjsGroupFix2: `/zxx/split/qryOneSjsGroupFix2`, // 分班估算详情查询接口
+  estimateClasses: `/zxx/split/estimateClasses`, // 分班估算按钮
   splitStu2AdminClass: `/zxx/split/splitStu2AdminClass`, // 教学分班设置排课详情接口
   saveMoveCourseList: `/zxx/split/saveMoveCourseList`, // 教学分班设置保存接口
   qrySplitClassesList: `/zxx/split/qrySplitClassesList`, // 教学分班设置查询接口

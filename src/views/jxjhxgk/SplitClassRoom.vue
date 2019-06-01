@@ -10,7 +10,7 @@
       </operation>
     </div>
     <div class="data-area table-outer">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading" border>
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" v-loading="loading" border>
         <el-table-column label="序号" type="index" width="50px"></el-table-column>
         <el-table-column label="走班(定二)班级名称" property="className"></el-table-column>
         <el-table-column label="人数" property="stuSum" width="100px"></el-table-column>
@@ -34,12 +34,9 @@ import { saveClassesList } from '@/api/njbj'
 
 export default {
   data() {
-    const h = 295
-    const tableH = document.body.clientHeight - h
     return {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       loading: false, // 表格loading
-      tableH,
       // 教室信息
       roomOptions: [],
       tableData: []

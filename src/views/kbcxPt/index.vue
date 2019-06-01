@@ -45,7 +45,7 @@ export default {
           ),
           duration: 8 * 1000
         })
-        vm.$router.push({ name: 'PkcxPt' })
+        vm.$router.push({ name: vm.menutype === 'xgk' ? 'PkcxPt' : 'Xgkpkcx' })
       }
     })
   },

@@ -21,41 +21,26 @@
         </div>
       </condition>
       <operation>
-        <el-button type="primary" plain @click="splitClass">估算分班</el-button>
         <el-button type="primary" plain @click="saveClass">保存分班</el-button>
       </operation>
     </div>
     <div class="table-outer">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :height="tableH" v-loading="loading">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" v-loading="loading">
         <el-table-column label="走班(定二)班级名称" property="teachingClass" width="150px"></el-table-column>
-        <el-table-column label="人数" property="stuSum" width="70px"></el-table-column>
+        <el-table-column label="人数" property="stuSum" width="70px" header-align="center" align="center"></el-table-column>
         <el-table-column label="选考科目" property="adminClassName" width="250px"></el-table-column>
-        <el-table-column label="其他选考科目及走班人数">
-          <el-table-column v-for="item in tableColumns" :key="item.property" :label="item.label" :property="item.property">
-            <!-- <template slot-scope="scope">
-              <el-input
-                v-model.trim="scope.row[item.property]"
-                v-if="scope.row.adminClassName.indexOf(item.label)>-1"
-                @blur="validInput(scope.row[item.property],item.property,scope.row.seq)"
-                :class="{'splitClassSettingError': activePos[`${item.property}${scope.row.seq}`]== true }"
-              />
-              <div v-else class="readOnly">{{ scope.row[item.property] }}</div>
-            </template>-->
-          </el-table-column>
+        <el-table-column label="其他选考科目及走班人数" header-align="center">
+          <el-table-column v-for="item in tableColumns" :key="item.property" :label="item.label" :property="item.property" header-align="center" align="center"></el-table-column>
         </el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
-import {
-  splitStu2AdminClass,
-  saveMoveCourseList,
-  qrySplitClassesList
-} from '@/api/jxjhXgk'
+import { saveMoveCourseList, qrySplitClassesList } from '@/api/jxjhXgk'
 export default {
   data() {
-    const h = 295
+    const h = 255
     const tableH = document.body.clientHeight - h
     return {
       arrangeId: sessionStorage.getItem('local_arrangeId'),
@@ -86,33 +71,6 @@ export default {
   methods: {
     async getTableData() {
       const res = await qrySplitClassesList({ arrangeId: this.arrangeId })
-      this.tableData = res.DATA
-    },
-    // 估算分班按钮
-    async splitClass() {
-      const label = ['最小人数/班', '最大人数/班', '平均人数/班', '最优人数/班']
-      const keys = Object.keys(this.search)
-      let valid = true
-      for (let i = 0; i < label.length; i++) {
-        const val = this.search[keys[i]]
-        if (!/^[0-9]+$/.test(val)) {
-          this.$message.error(`"${label[i]}" 必须为数字`)
-          valid = false
-          break
-        }
-        this.search[keys[i]] = +val
-      }
-      if (!valid) return
-      const res = await splitStu2AdminClass({
-        arrangeId: this.arrangeId,
-        ...this.search
-      })
-      const h = this.$createElement
-      this.$notify({
-        title: '提示',
-        message: h('i', { style: 'color: teal' }, res.MSG),
-        duration: 8 * 1000
-      })
       this.tableData = res.DATA
     },
     // 保存分班

@@ -144,7 +144,7 @@ const initFromData = {
 }
 export default {
   data() {
-    const h = 330
+    const h = 280
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH + 30)
     return {
