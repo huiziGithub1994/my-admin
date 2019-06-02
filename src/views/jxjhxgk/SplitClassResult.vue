@@ -1,32 +1,32 @@
 <template>
   <div>
-    <div v-area>
-      <!-- 分班设置 -->
+    <div class="top">
+      <!-- 确认方案 -->
       <condition>
         <div class="condition">
           <label>最小人数/班</label>
-          <el-input placeholder="26" v-model.trim="search['theBestMinQty']" clearable></el-input>
+          {{ search['theBestMinQty'] }}
         </div>
         <div class="condition next">
           <label>最大人数/班</label>
-          <el-input placeholder="41" v-model.trim="search['theBestMaxQty']" clearable></el-input>
+          {{ search['theBestMaxQty'] }}
         </div>
-        <div class="condition next">
+        <!-- <div class="condition next">
           <label>平均人数/班</label>
           <el-input placeholder="30" v-model.trim="search['theAvgQty']" clearable></el-input>
         </div>
         <div class="condition next">
           <label>最优人数/班</label>
           <el-input placeholder="35" v-model.trim="search['theBestSum']" clearable></el-input>
-        </div>
+        </div>-->
       </condition>
-      <operation>
-        <el-button type="primary" plain @click="saveClass">保存分班</el-button>
-      </operation>
+      <!-- <operation>
+        <el-button type="primary" plain @click="saveClass">确认分班</el-button>
+      </operation>-->
     </div>
     <div class="table-outer">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" v-loading="loading">
-        <el-table-column label="走班(定二)班级名称" property="teachingClass" width="150px"></el-table-column>
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" v-loading="loading" :height="tableH">
+        <el-table-column label="走班(定二)班级名称" property="teachingClass" width="180px"></el-table-column>
         <el-table-column label="人数" property="stuSum" width="70px" header-align="center" align="center"></el-table-column>
         <el-table-column label="选考科目" property="adminClassName" width="250px"></el-table-column>
         <el-table-column label="其他选考科目及走班人数" header-align="center">
@@ -86,6 +86,9 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.top {
+  overflow: hidden;
+}
 .condition.next {
   margin-left: 15px;
 }

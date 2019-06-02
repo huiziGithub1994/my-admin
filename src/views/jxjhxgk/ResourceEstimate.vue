@@ -5,10 +5,11 @@
       <div class="tip">
         <label>温馨提示：</label>1、点击“分班估算”平台会自动估算可拆分的教学班方案。
         <p>2、选中行点击“确认分案”进行确认分班分案.</p>
+        <p>3、完成确认分班方案后，可在“分班结果”中查看结果</p>
       </div>
       <operation class="btns">
         <el-button type="primary" plain @click="estimate" :loading="estimateLoading">分班估算</el-button>
-        <el-button type="primary" plain @click="comfirm">确认方案</el-button>
+        <el-button type="primary" plain @click="comfirm" :loading="comfirmLoading">确认方案</el-button>
       </operation>
     </div>
     <div class="data-area table-outer">
@@ -39,7 +40,8 @@
 import {
   qryCalGroupListByArrId,
   qryOneSjsGroupFix2,
-  estimateClasses
+  estimateClasses,
+  splitStu2AdminClass
 } from '@/api/jxjhXgk'
 export default {
   data() {
@@ -49,6 +51,7 @@ export default {
       tableH,
       arrangeId: sessionStorage.getItem('local_arrangeId'),
       estimateLoading: false, // 分班估算按钮loading
+      comfirmLoading: false, // 确认方案按钮loading
       dialogTableVisible: false,
       loading: false, // 表格loading
       loadingDialog: false,
@@ -105,12 +108,23 @@ export default {
       this.currentRow = val
     },
     // 确认方案
-    comfirm() {
+    async comfirm() {
       if (!this.currentRow) {
         this.$message.warning('请先选中行，再点击“确认分案”进行确认分班分案')
         return
       }
-      this.$emit('changeTab', '2')
+      this.comfirmLoading = true
+      const { minQty, maxQty } = this.currentRow
+      const res = await splitStu2AdminClass({
+        arrangeId: this.arrangeId,
+        theBestMinQty: minQty,
+        theBestMaxQty: maxQty,
+        theAvgQty: 0,
+        theBestSum: 0
+      }).finally(() => {
+        this.comfirmLoading = false
+      })
+      this.$message.success(res.MSG)
     }
   }
 }

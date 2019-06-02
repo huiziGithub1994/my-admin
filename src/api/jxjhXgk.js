@@ -25,6 +25,13 @@ export function estimateClasses(params) {
     timeout: 10000
   })
 }
+// 分班估算- 确认方案
+export function splitStu2AdminClass(params) {
+  return request({
+    url: URL.splitStu2AdminClass,
+    params
+  })
+}
 // 分班估算- 详情
 export function qryOneSjsGroupFix2(params) {
   return request({
