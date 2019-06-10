@@ -13,9 +13,12 @@
         </div>
       </condition>
       <operation>
-        <el-button v-if="menutype === 'xgk'" type="primary" plain @click="saveStuChoose">保存学生选课</el-button>
+        <el-button v-if="moveMode!='2'" type="primary" plain @click="saveStuChoose">保存学生选课</el-button>
         <el-button type="primary" plain @click="queryBtn">查询</el-button>
-        <el-button type="primary" plain @click="downTemplate">下载导入模板</el-button>
+        <a :href="downloadUrl" download="蓝墨水-新高考学生选课模板.xls" v-if="menutype == 'xgk'">
+          <el-button type="primary" plain>下载导入模板</el-button>
+        </a>
+        <el-button type="primary" plain @click="downTemplate" v-else>下载导入模板</el-button>
         <el-upload
           class="uploadBtn"
           action="http://47.107.255.128:8089/zxx/upChoseLayer"
@@ -29,7 +32,7 @@
         >
           <el-button type="primary" plain :disabled="btnDisabled">导入</el-button>
         </el-upload>
-        <el-button type="primary" plain>导出</el-button>
+        <el-button type="primary" plain v-if="moveMode!='2'">导出</el-button>
         <!-- <el-button type="primary" @click="addBtn" plain :disabled="btnDisabled">增加</el-button>
         <el-button type="primary" @click="editBtn" plain :disabled="btnDisabled">修改</el-button>
         <el-button type="primary" @click="deleteBtn" plain :disabled="btnDisabled">删除</el-button>-->
@@ -117,6 +120,7 @@
   </div>
 </template>
 <script>
+import apUrl from '@/api/url'
 import { cleanArrangeDataAgain } from '@/api/jxjhXgk'
 import {
   getChooseClassListInfo,
@@ -148,6 +152,7 @@ export default {
     const tableH = document.body.clientHeight - h
     const pageSizes = getTableBestRows(tableH + 30)
     return {
+      downloadUrl: apUrl.xgkStuChooseCourseExcelTemplate, // 下载模板地址
       loading: false,
       btnDisabled: false, // 按钮的禁用
       arrangeId: sessionStorage.getItem('local_arrangeId'),
@@ -205,7 +210,8 @@ export default {
       },
       layersData: {}, // 选课分层数据
       // 行政班数据
-      xzbOptions: []
+      xzbOptions: [],
+      moveMode: undefined // 走班模式
     }
   },
   computed: {
@@ -282,9 +288,11 @@ export default {
         termCode,
         segId,
         splitLayerType,
-        stepArrangeState
+        stepArrangeState,
+        moveMode // 新高考排课-走班模式
       } = res.DATA
       this.splitLayerType = splitLayerType // 学生分层方式
+      this.moveMode = moveMode
       this.btnDisabled = +stepArrangeState > 3
       Object.assign(this.editForm, {
         arrangeId,

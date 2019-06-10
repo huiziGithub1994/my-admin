@@ -33,6 +33,13 @@
             <span>{{ scope.row.splitLayerType == 1 ? '学生自由选择分层' : scope.row.splitLayerType == 2 ? '按成绩分层' :'新高考选考' }}</span>
           </template>
         </el-table-column>
+        <template v-if="menutype == 'xgk'">
+          <el-table-column property="moveMode" label="走班模式" width="130px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.moveMode == '1' ? '全走班' : '定二走一' }}</span>
+            </template>
+          </el-table-column>
+        </template>
         <el-table-column property="curStatus" label="状态" width="80px">
           <template slot-scope="scope">
             <span v-if="scope.row.curStatus === '1'" class="success">完成</span>

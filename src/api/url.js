@@ -177,5 +177,6 @@ export default {
   coursePlainExcelTemplate: `/static/template/coursePlain.xls`, // 课程计划
   subjectLayerExcelTemplate: `/static/template/subjectLayer.xls`, // 走班排课-教学计划-学科分层及课时-走班学科课程分层定义
   chooseCourseExcelTemplate: `/static/template/chooseCourse.xls`, // 走班排课-教学计划-导入学生选课 分层教学学生选课结果
-  joinedStudentExcelTemplate: `/static/template/joinedStudent.xls` // 选课平台-选课设置 - 参选学生tab
+  joinedStudentExcelTemplate: `/static/template/joinedStudent.xls`, // 选课平台-选课设置 - 参选学生tab
+  xgkStuChooseCourseExcelTemplate: `/static/template/xgkStuChooseCourse.xls` // 新高考选考-教学计划-导入学生选课-下载导入模板
 }

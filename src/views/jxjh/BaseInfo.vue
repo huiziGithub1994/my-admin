@@ -40,6 +40,16 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="10" v-if="menutype === 'xgk'">
+          <el-col :span="18">
+            <el-form-item prop="moveMode" label="走班模式">
+              <el-radio-group v-model="data.moveMode" :disabled="btnDisabled">
+                <el-radio :label="1">全走班</el-radio>
+                <el-radio :label="2">定二走一</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
   </div>
@@ -70,7 +80,8 @@ export default {
         selectedGrade: [],
         splitLayerType: 1,
         arrangeType: '2',
-        stepArrangeState: undefined // 步骤
+        stepArrangeState: undefined, // 步骤
+        moveMode: '0' // 走班模式
       },
       selectProps: {
         value: 'gradeId',
@@ -95,6 +106,9 @@ export default {
         ],
         splitLayerType: [
           { required: true, message: '请选择学生分层方式', trigger: 'change' }
+        ],
+        moveMode: [
+          { required: true, message: '请选择走班模式', trigger: 'change' }
         ]
       }
     }
@@ -139,13 +153,20 @@ export default {
         arrangeId: this.arrangeId
       })
       setDatas(this.data, res.DATA)
-      const { segId, gradeId, splitLayerType, stepArrangeState } = this.data
+      const {
+        segId,
+        gradeId,
+        splitLayerType,
+        stepArrangeState,
+        moveMode
+      } = this.data
       this.btnDisabled = +stepArrangeState > 1
       this.data.selectedGrade = [segId, gradeId]
       this.$nextTick(function() {
         this.$refs['baseInfoRef'].clearValidate()
       })
       this.$emit('changeTab', splitLayerType) // 根据 ‘学生分层方式’展示不同的tab页
+      this.$emit('changeMoveMode', moveMode) // 根据 ‘学生分层方式’展示不同的tab页
     },
     saveBtn() {
       this.$refs['baseInfoRef'].validate(async valid => {
@@ -173,6 +194,7 @@ export default {
             this.$refs['baseInfoRef'].clearValidate()
           })
           this.$emit('changeTab', this.data.splitLayerType) // 根据 ‘学生分层方式’展示不同的tab页
+          this.$emit('changeMoveMode', this.data.moveMode) // 根据 ‘学生分层方式’展示不同的tab页
           // 存储数据
           const { schoolYear, termCode, arrangeName } = this.data
           sessionStorage.setItem('local_curYear', schoolYear)

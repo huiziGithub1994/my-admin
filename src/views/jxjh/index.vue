@@ -12,10 +12,13 @@
     <div class="jxjh-tabs" :style="{'min-height':tabsHeight+'px'}">
       <el-tabs v-model="activeTabName">
         <el-tab-pane label="基础信息" name="1">
-          <base-info :visible.sync="tabDisabled" v-if="activeTabName == 1" @changeTab="changeTab"/>
+          <base-info :visible.sync="tabDisabled" v-if="activeTabName == 1" @changeTab="changeTab" @changeMoveMode="changeMoveMode"/>
         </el-tab-pane>
         <el-tab-pane label="学科分层及课时" name="2" :disabled="tabDisabled">
-          <subject-layer v-if="activeTabName == 2"/>
+          <template v-if="activeTabName == 2">
+            <subject-layer-xgk v-if="menutype == 'xgk'"></subject-layer-xgk>
+            <subject-layer v-else/>
+          </template>
         </el-tab-pane>
         <el-tab-pane :label="splitLayerType === 2 ? '学生成绩' : '导入学生选课'" name="3" :disabled="tabDisabled">
           <template v-if="activeTabName == 3">
@@ -23,21 +26,19 @@
             <choose-course v-else/>
           </template>
         </el-tab-pane>
-        <el-tab-pane label="教学分班管理" name="4" :disabled="tabDisabled">
-          <split-class-manage v-if="activeTabName == 4&&menutype!='xgk'"/>
-          <split-class-xgk v-if="activeTabName == 4&&menutype=='xgk'"/>
+        <el-tab-pane :label="labelNameByMoveMode" name="4" :disabled="tabDisabled">
+          <template v-if="activeTabName == 4">
+            <template v-if="menutype=='xgk'">
+              <split-class-xgk v-if="moveMode&&moveMode==2"/>
+            </template>
+            <split-class-manage v-else/>
+          </template>
         </el-tab-pane>
         <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
           <zb-classroom v-if="activeTabName == 5"/>
         </el-tab-pane>
       </el-tabs>
     </div>
-    <!-- <div class="next-wapper">
-      <div>
-        <el-button type="success" @click="baseInfoPre" v-show="activeTabName != 1">上一步</el-button>
-        <el-button type="success" @click="baseInfoNext">下一步</el-button>
-      </div>
-    </div>-->
   </div>
 </template>
 <script>
@@ -47,6 +48,7 @@ import SubjectLayer from './SubjectLayer' // 学科分层及学时tab页组件
 import StuGrade from './StuGrade' // 学科分层及学时tab页组件（按成绩分层时）
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 import SplitClassXgk from '../jxjhxgk/SplitClassXgk' // 新高考-选课分班
+import SubjectLayerXgk from '../jxjhxgk/SubjectLayerXgk' // 新高考-学科分层及课时
 
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
@@ -80,18 +82,29 @@ export default {
     ChooseCourse,
     SplitClassManage,
     ZbClassroom,
-    SplitClassXgk
+    SplitClassXgk,
+    SubjectLayerXgk
   },
   data() {
     return {
       tabsHeight: document.body.clientHeight - 190,
       activeTabName: '1', // tab页高亮
       tabDisabled: true,
-      splitLayerType: undefined
+      splitLayerType: undefined,
+      moveMode: undefined // 新高考排课-走班模式
     }
   },
   computed: {
-    ...mapGetters(['menutype'])
+    ...mapGetters(['menutype']),
+    labelNameByMoveMode() {
+      const moveMode = +this.moveMode
+      if (moveMode === 0 || moveMode === 1) {
+        return '教学分班管理'
+      } else if (moveMode === 2) {
+        return '教学开班方案'
+      }
+      return ''
+    }
   },
   created() {
     if (
@@ -127,6 +140,10 @@ export default {
     // 根据 ‘学生分层方式’展示不同的tab页 1:学生自由选择分层  2:按成绩分层
     changeTab(val) {
       this.splitLayerType = val
+    },
+    changeMoveMode(val) {
+      console.log(val)
+      this.moveMode = val
     }
   }
 }

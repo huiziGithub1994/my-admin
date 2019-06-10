@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 教学班教学设置-->
+    <!-- 上课教室安排-->
     <div class="opera-area">
       <p class="tip">
         <label>温馨提示：</label>下面表格中“常用教室”列所选中的数据不能相同。
