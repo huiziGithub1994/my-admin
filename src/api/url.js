@@ -133,6 +133,9 @@ export default {
   qrySplitClassesList: `/zxx/split/qrySplitClassesList`, // 教学分班设置查询接口
   qryMove2ClassList: `/zxx/split/qryMove2ClassList`, // 教学班教学设置-列表查询接口
 
+  // 教学计划-教学开班方案
+  qryClassCountList: `/zxx/qryClassCountList`, // 列表查询接口
+  updClassCountList: `/zxx/updClassCountList`, // 保存列表数据
   // 教学计划-导入学生选课
   cleanArrangeDataAgain: `/zxx/split/cleanArrangeDataAgain`, // 保存选课数据
 

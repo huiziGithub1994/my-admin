@@ -29,7 +29,9 @@
         <el-tab-pane :label="labelNameByMoveMode" name="4" :disabled="tabDisabled">
           <template v-if="activeTabName == 4">
             <template v-if="menutype=='xgk'">
-              <split-class-xgk v-if="moveMode&&moveMode==2"/>
+              <!--  全走班 教学开班方案-->
+              <teach-class-plain v-if="moveMode==1"/>
+              <split-class-xgk v-if="moveMode==2"/>
             </template>
             <split-class-manage v-else/>
           </template>
@@ -49,6 +51,7 @@ import StuGrade from './StuGrade' // 学科分层及学时tab页组件（按成�
 import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 import SplitClassXgk from '../jxjhxgk/SplitClassXgk' // 新高考-选课分班
 import SubjectLayerXgk from '../jxjhxgk/SubjectLayerXgk' // 新高考-学科分层及课时
+import TeachClassPlain from '../jxjhxgk/TeachClassPlain' // 新高考-教学开班方案
 
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
@@ -83,7 +86,8 @@ export default {
     SplitClassManage,
     ZbClassroom,
     SplitClassXgk,
-    SubjectLayerXgk
+    SubjectLayerXgk,
+    TeachClassPlain
   },
   data() {
     return {
@@ -97,10 +101,10 @@ export default {
   computed: {
     ...mapGetters(['menutype']),
     labelNameByMoveMode() {
-      const moveMode = +this.moveMode
-      if (moveMode === 0 || moveMode === 1) {
+      const moveMode = this.moveMode
+      if (+moveMode === 0 || +moveMode === 2) {
         return '教学分班管理'
-      } else if (moveMode === 2) {
+      } else if (+moveMode === 1) {
         return '教学开班方案'
       }
       return ''
@@ -142,7 +146,6 @@ export default {
       this.splitLayerType = val
     },
     changeMoveMode(val) {
-      console.log(val)
       this.moveMode = val
     }
   }

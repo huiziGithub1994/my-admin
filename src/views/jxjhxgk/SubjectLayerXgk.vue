@@ -169,7 +169,7 @@ export default {
     // 获取基础信息
     await this.getBaseInfo()
     this.fetchData()
-    this.getCourseName()
+    if (this.moveMode !== 1) this.getCourseName()
   },
   methods: {
     // 导入教学任务
@@ -191,8 +191,9 @@ export default {
       const res = await qryArrangeDetail({
         arrangeId: this.query.arrangeId
       })
-      const { stepArrangeState } = res.DATA
+      const { stepArrangeState, moveMode } = res.DATA
       this.btnDisabled = +stepArrangeState > 2
+      this.moveMode = +moveMode
     },
     // 获取表格数据
     async fetchData() {

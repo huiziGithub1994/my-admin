@@ -44,8 +44,8 @@
           <el-col :span="18">
             <el-form-item prop="moveMode" label="走班模式">
               <el-radio-group v-model="data.moveMode" :disabled="btnDisabled">
-                <el-radio :label="1">全走班</el-radio>
-                <el-radio :label="2">定二走一</el-radio>
+                <el-radio label="1">全走班</el-radio>
+                <el-radio label="2">定二走一</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

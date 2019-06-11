@@ -1,5 +1,27 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
+
+/** 教学计划-教学开班管理 */
+// 列表查询接口
+export function qryClassCountList(params) {
+  return request({
+    url: URL.qryClassCountList,
+    params
+  })
+}
+
+// 保存分班接口
+export function updClassCountList(params) {
+  return request({
+    url: URL.updClassCountList,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    params
+  })
+}
+
 /** 教学计划-导入学生选课 */
 // 保存选课数据
 export function cleanArrangeDataAgain(params) {
