@@ -13,7 +13,7 @@
     </div>
     <div class="table-wapper">
       <el-table ref="multipleTable" :data="tableData" row-key="layerId" fit tooltip-effect="dark" highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"/>
+        <el-table-column type="selection" width="55" v-if="moveMode == 2"/>
         <el-table-column type="index" width="55" label="序号"></el-table-column>
         <el-table-column label="课程名称">
           <template slot-scope="scope">

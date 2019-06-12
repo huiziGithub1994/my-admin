@@ -25,6 +25,7 @@ axiosIns.interceptors.request.use(
 // response 拦截器
 axiosIns.interceptors.response.use(
   response => {
+    // 如果有token、是获取验证码接口、且请求成功，则存token
     const token = response.headers['x_auth_token']
     const isGetCode = response.config.url.indexOf('createValidateCode') !== -1
     if (response.data.SUCCESS && token && isGetCode) {
@@ -34,6 +35,7 @@ axiosIns.interceptors.response.use(
     return response.data
   },
   error => {
+    // 请求网络错误
     console.log('interceptors.response-err' + error) // for debug
     Message({
       message: error.message,
@@ -71,20 +73,24 @@ export default function service(settings) {
     axiosIns
       .request(defaultOption)
       .then(res => {
-        if (res.SUCCESS) {
+        const { SUCCESS, type } = res
+        // 接口返回成功
+        if (SUCCESS) {
           resolve(res)
         } else {
+          // 接口返回失败
           if (defaultOption.responseType === 'blob') {
             resolve(res)
           } else {
-            Message({
-              message: res.MSG || res.DATA || '请求处理异常,请稍后再试',
-              type: 'error'
-            })
-
-            if (res.type === 'invalidSession') {
+            let msg = ''
+            if (type === 'invalidSession' || type === 'noLogin') {
+              msg = '请重新登陆'
               router.push({ path: '/login' })
             }
+            Message({
+              message: msg || res.MSG || res.DATA || '请求处理异常,请稍后再试',
+              type: 'error'
+            })
             reject(res)
           }
         }

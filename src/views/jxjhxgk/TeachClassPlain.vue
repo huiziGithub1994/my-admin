@@ -17,7 +17,7 @@
         <el-table-column label="选课人数" property="stuSelCount" width="150px"></el-table-column>
         <el-table-column label="预计教学开班个数" property="teachingClassCount">
           <template slot-scope="scope">
-            <el-input type="text" clearable v-model="scope.row.teachingClassCount"></el-input>
+            <el-input type="text" clearable v-model.trim="scope.row.teachingClassCount"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="每班人数" property="averageCount"></el-table-column>
@@ -56,10 +56,34 @@ export default {
       this.tableData = res.DATA
     },
     async comfirm() {
+      // 校验数据
+      const data = this.tableData
+      const len = data.length
+      let isContinue = true
+      for (let i = 0; i < len; i++) {
+        if (!this.validField(data[i].teachingClassCount, i)) {
+          isContinue = false
+          break
+        }
+      }
+      if (!isContinue) return
       this.comfirmLoading = true
-      await updClassCountList(this.tableData).finally(() => {
+      const res = await updClassCountList(this.tableData).finally(() => {
         this.comfirmLoading = false
       })
+      this.$message.success(res.MSG)
+    },
+    validField(filed, row) {
+      if (filed === '' || filed === null || filed === undefined) {
+        this.$message.warning(`第${row + 1}行数据不能为空`)
+        return false
+      }
+      const test = /^[1-9]\d*$/.test(filed)
+      if (!test) {
+        this.$message.warning(`第${row + 1}行数据必须为正整数`)
+        return false
+      }
+      return true
     }
   }
 }
