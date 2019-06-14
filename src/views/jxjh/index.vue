@@ -37,7 +37,11 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
-          <zb-classroom v-if="activeTabName == 5"/>
+          <template v-if="activeTabName == 5">
+            <full-class-xgk v-if="moveMode==1"></full-class-xgk>
+            <!-- 新高考  走班模式为：全走班  页面：教学计划-走班教师-->
+            <zb-classroom v-if="moveMode===0 || moveMode===2"/>
+          </template>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -52,6 +56,7 @@ import ChooseCourse from './ChooseCourse' // 导入学生选课tab页组件
 import SplitClassXgk from '../jxjhxgk/SplitClassXgk' // 新高考-选课分班
 import SubjectLayerXgk from '../jxjhxgk/SubjectLayerXgk' // 新高考-学科分层及课时
 import TeachClassPlain from '../jxjhxgk/TeachClassPlain' // 新高考-教学开班方案
+import FullClassXgk from '../jxjhxgk/FullClassXgk' // 新高考-全走班-走班教室
 
 import SplitClassManage from './SplitClassManage' // 学生分班管理tab页组件
 import ZbClassroom from './ZbClassroom' // 走班教室tab页组件
@@ -87,7 +92,8 @@ export default {
     ZbClassroom,
     SplitClassXgk,
     SubjectLayerXgk,
-    TeachClassPlain
+    TeachClassPlain,
+    FullClassXgk
   },
   data() {
     return {
@@ -146,7 +152,7 @@ export default {
       this.splitLayerType = val
     },
     changeMoveMode(val) {
-      this.moveMode = val
+      this.moveMode = +val
     }
   }
 }
