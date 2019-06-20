@@ -1,9 +1,10 @@
 <template>
   <div>
-    <!-- 教学开班方案 -->
+    <!-- 新高考排课-教学计划-走班教室(全走班) -->
     <div class="opera-area">
       <div class="tip">
-        <label>温馨提示：</label>选课总人数XX人，原行政班每班大概XX人，至少需要X间教室
+        <label>温馨提示：</label>
+        选课总人数{{ tip.stuSelCount }}人，原行政班每班大概XX人，至少需要{{ tip.needRoomCount }}间教室
       </div>
       <operation class="btns">
         <el-button type="primary" plain @click="addBtn" :disabled="btnDisabled">增加</el-button>
@@ -54,11 +55,13 @@
   </div>
 </template>
 <script>
+import { qryArrangeDetail } from '@/api/pkcx'
 import {
-  getZbClassroomListInfo,
-  qryArrangeDetail,
-  saveArrangeClassRoom
-} from '@/api/pkcx'
+  qryMoveClassRoomList,
+  qryTeachingRoom,
+  inUpTeachingRoom
+} from '@/api/jxjhXgk'
+import { setDatas } from '@/utils/businessUtil'
 const arrangeId = sessionStorage.getItem('local_arrangeId')
 const initSearch = {
   'a.arrange_id01': arrangeId,
@@ -70,7 +73,8 @@ const initFormData = () => ({
   buildingName: '',
   roomName: '',
   canHoldCount: null,
-  otherDesc: null
+  otherDesc: null,
+  schoolId: null
 })
 export default {
   data() {
@@ -83,6 +87,7 @@ export default {
       },
       currentRow: null, // 表格当前选中行
       tableData: [],
+      tip: {}, // 表格顶部提示信息
       // 表格高度
       // 新增修改弹窗的显示和隐藏
       editDialogFormVisible: false,
@@ -127,32 +132,48 @@ export default {
     async fetchData() {
       Object.assign(this.search)
       this.loading = true
-      const res = await getZbClassroomListInfo({
+      const res = await qryMoveClassRoomList({
         dataStr: JSON.stringify(this.search)
       }).finally(() => {
         this.loading = false
       })
-      this.tableData = res.DATA
+      const { DATA, stuSelCount, needRoomCount } = res
+      this.tableData = DATA
+      this.tip = { stuSelCount, needRoomCount }
     },
     addBtn() {
       Object.assign(this.editForm, initFormData())
       this.editDialogTitle = '新增'
       this.editDialogFormVisible = true
     },
-    editBtn() {
+    async editBtn() {
+      if (!this.currentRow) {
+        this.$message.info('请选择要修改的数据')
+        return
+      }
+      const { roomId } = this.currentRow
+      const res = await qryTeachingRoom({ roomId })
+      setDatas(this.editForm, res.DATA)
+
+      this.editDialogFormVisible = true
       this.editDialogTitle = '修改'
     },
     deleteBtn() {},
     saveEditDialog() {
       this.$refs['ruleFormRef'].validate(async valid => {
         if (valid) {
-          await saveArrangeClassRoom({
+          const params = {
             ...this.editForm
-          })
+          }
+          if (this.editDialogTitle === '修改') {
+            params.roomId = this.currentRow.roomId
+          }
+          await inUpTeachingRoom(params)
           if (this.editDialogTitle === '修改') {
             this.editDialogFormVisible = false
           }
           this.$message.success('保存成功')
+          this.fetchData() // 获取表格数据
         } else {
           return false
         }

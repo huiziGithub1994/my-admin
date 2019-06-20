@@ -139,6 +139,11 @@ export default {
   // 教学计划-导入学生选课
   cleanArrangeDataAgain: `/zxx/split/cleanArrangeDataAgain`, // 保存选课数据
 
+  // 教学计划-全走班-走班教室
+  qryMoveClassRoomList: `/zxx/teachingRoom/qryMoveClassRoomList`, // 保存列表数据
+  qryTeachingRoom: `/zxx/teachingRoom/qryTeachingRoom`, // 单个列表数据查询接口
+  inUpTeachingRoom: `zxx/teachingRoom/inUpTeachingRoom`, // 保存
+
   // 教学任务-教学任务报表
   qryTeaListByArrangeId: `/zxx/qryTeaListByArrangeId`, // 提取教师列表
   qryClassListByArrangeId: `/zxx/qryClassListByArrangeId`, // 提取班级列表

@@ -38,8 +38,8 @@
         </el-tab-pane>
         <el-tab-pane label="走班教室" name="5" :disabled="tabDisabled">
           <template v-if="activeTabName == 5">
+            <!-- 新高考  走班模式为：全走班  页面：教学计划-走班教室-->
             <full-class-xgk v-if="moveMode==1"></full-class-xgk>
-            <!-- 新高考  走班模式为：全走班  页面：教学计划-走班教师-->
             <zb-classroom v-if="moveMode===0 || moveMode===2"/>
           </template>
         </el-tab-pane>

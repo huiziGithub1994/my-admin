@@ -1,5 +1,31 @@
 import request from '@/utils/request'
 import URL from '@/api/url'
+/** 教学计划-全走班的走班教室 */
+// 列表查询接口
+export function qryMoveClassRoomList(params) {
+  return request({
+    url: URL.qryMoveClassRoomList,
+    params
+  })
+}
+// 单个列表数据查询接口
+export function qryTeachingRoom(params) {
+  return request({
+    url: URL.qryTeachingRoom,
+    params
+  })
+}
+// 保存
+export function inUpTeachingRoom(params) {
+  return request({
+    url: URL.inUpTeachingRoom,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    params
+  })
+}
 
 /** 教学计划-教学开班管理 */
 // 列表查询接口
