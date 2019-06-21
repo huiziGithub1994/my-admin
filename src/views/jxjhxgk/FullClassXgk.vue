@@ -59,7 +59,8 @@ import { qryArrangeDetail } from '@/api/pkcx'
 import {
   qryMoveClassRoomList,
   qryTeachingRoom,
-  inUpTeachingRoom
+  inUpTeachingRoom,
+  delTeachingRoom
 } from '@/api/jxjhXgk'
 import { setDatas } from '@/utils/businessUtil'
 const arrangeId = sessionStorage.getItem('local_arrangeId')
@@ -158,7 +159,30 @@ export default {
       this.editDialogFormVisible = true
       this.editDialogTitle = '修改'
     },
-    deleteBtn() {},
+    async deleteBtn() {
+      if (!this.currentRow) {
+        this.$message.info('请选择要删除的数据')
+        return
+      }
+
+      this.$confirm('确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const { roomId } = this.currentRow
+          await delTeachingRoom({ roomId })
+          this.$message.success('删除成功')
+          this.fetchData() // 获取表格数据
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     saveEditDialog() {
       this.$refs['ruleFormRef'].validate(async valid => {
         if (valid) {

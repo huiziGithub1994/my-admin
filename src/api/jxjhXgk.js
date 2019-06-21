@@ -26,6 +26,13 @@ export function inUpTeachingRoom(params) {
     params
   })
 }
+// 删除
+export function delTeachingRoom(params) {
+  return request({
+    url: URL.delTeachingRoom,
+    params
+  })
+}
 
 /** 教学计划-教学开班管理 */
 // 列表查询接口

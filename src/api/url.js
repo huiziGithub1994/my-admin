@@ -143,6 +143,7 @@ export default {
   qryMoveClassRoomList: `/zxx/teachingRoom/qryMoveClassRoomList`, // 保存列表数据
   qryTeachingRoom: `/zxx/teachingRoom/qryTeachingRoom`, // 单个列表数据查询接口
   inUpTeachingRoom: `zxx/teachingRoom/inUpTeachingRoom`, // 保存
+  delTeachingRoom: `/zxx/teachingRoom/delTeachingRoom`, // 删除
 
   // 教学任务-教学任务报表
   qryTeaListByArrangeId: `/zxx/qryTeaListByArrangeId`, // 提取教师列表
