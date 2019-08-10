@@ -125,6 +125,12 @@ export const zbRouterMap = [
         name: 'kbcx',
         component: () => import('@/views/kbcx/index'),
         meta: { title: '课表查询', icon: 'table' }
+      },
+      {
+        path: 'drag',
+        name: 'Drag',
+        component: () => import('@/views/drag/index'),
+        meta: { title: '表格拖拽', icon: 'table' }
       }
     ]
   }

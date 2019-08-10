@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>  
+<html>  
+<head>  
+<script type="text/javascript">  
+	function allowDrop(ev){  
+		ev.preventDefault();  
+	}  
+	  
+	var srcdiv = null;  
+	function drag(ev,divdom){  
+		srcdiv = divdom;  
+		ev.dataTransfer.setData("text/html",divdom.innerHTML);  
+	}  
+	  
+	function drop(ev,divdom){
+		ev.preventDefault();  
+		console.log("srcdiv id=="+srcdiv.id);
+		console.log("divdom id=="+divdom.id);
+		if(srcdiv != divdom){  
+			srcdiv.innerHTML = divdom.innerHTML;  
+			divdom.innerHTML = ev.dataTransfer.getData("text/html");  
+		}  
+	}  
+</script>  
+</head>  
+	<body>  
+		<table border="1" align="center" width="500px;" border="1">
+			<tr>
+				<td>
+					<div id="0,0" style="width: 80%;height:50px;background-color:red;"  ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+					  这是中文1!
+					</div>  
+				</td>
+				<td>
+					<div id="0,1"  style="width: 80%;height:50px;background-color:gray;" ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+						div2!  
+					</div>  
+				</td>
+				<td>
+					<div id="0,2"  style="width: 80%;height:50px;" ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+						div3  
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="1,0"  style="width: 80%;height:50px;background-color:purple;"  ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+					  这是中文2! 
+					</div>  
+				</td>
+				<td>
+					<div id="1,1"  style="width: 80%;height:50px;background-color:orange;" ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+						div2!  
+					</div>  
+				</td>
+				<td>
+					<div id="1,2"  style="width: 80%;height:50px;background-color:aqua;" ondrop="drop(event,this)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event, this)">  
+						div3  
+					</div>
+				</td>
+			</tr>			
+		</table>
+	</body>  
+</html>
